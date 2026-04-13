@@ -320,7 +320,7 @@ textarea.fc{resize:vertical;min-height:66px;}
   </div>
   <div class="sbft">
 
-  <button onclick="window.open('https://docs.google.com/spreadsheets/d/1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU/edit#gid=0','_blank')" style="display:flex;align-items:center;gap:7px;width:100%;padding:7px 10px;background:rgba(99,102,241,.12);border:1.5px solid rgba(99,102,241,.25);border-radius:7px;color:#a5b4fc;font-size:11.5px;font-weight:600;cursor:pointer;margin-bottom:8px;font-family:var(--sans)">
+  <button onclick="window.open('https://docs.google.com/spreadsheets/d/1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w/edit#gid=0','_blank')" style="display:flex;align-items:center;gap:7px;width:100%;padding:7px 10px;background:rgba(99,102,241,.12);border:1.5px solid rgba(99,102,241,.25);border-radius:7px;color:#a5b4fc;font-size:11.5px;font-weight:600;cursor:pointer;margin-bottom:8px;font-family:var(--sans)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     Manage FPI Agents
   </button>
@@ -344,11 +344,11 @@ textarea.fc{resize:vertical;min-height:66px;}
   <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="mrow5">
-      <div class="mc b"><div class="ml">Total Cases</div><div class="mv">27</div><div class="md">All types</div></div>
-      <div class="mc r"><div class="ml">Active</div><div class="mv">12</div><div class="md"><span>+3</span> this week</div></div>
-      <div class="mc y"><div class="ml">Unassigned</div><div class="mv">3</div><div class="md">Need POC</div></div>
-      <div class="mc g"><div class="ml">Closed/Month</div><div class="mv">8</div><div class="md"><span>67%</span> recovery</div></div>
-      <div class="mc p"><div class="ml">Value at Risk</div><div class="mv">&#8377;2.4L</div><div class="md">Open cases</div></div>
+      <div class="mc b"><div class="ml">Total Cases</div><div class="mv" id="db-total">—</div><div class="md" id="db-total-sub">All types</div></div>
+      <div class="mc r"><div class="ml">Active</div><div class="mv" id="db-active">—</div><div class="md" id="db-active-sub">In progress</div></div>
+      <div class="mc y"><div class="ml">Unassigned</div><div class="mv" id="db-unassigned">—</div><div class="md">Need POC</div></div>
+      <div class="mc g"><div class="ml">Closed</div><div class="mv" id="db-closed">—</div><div class="md" id="db-closed-sub">recovery</div></div>
+      <div class="mc p"><div class="ml">Value at Risk</div><div class="mv" id="db-value">—</div><div class="md" id="db-value-sub">Open cases</div></div>
     </div>
     <div style="font-family:var(--disp);font-weight:700;font-size:13.5px;color:var(--navy);margin-bottom:11px;display:flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Case Type Summary</div>
     <div class="ctgrid" id="ct-summary-cards"></div>
@@ -570,7 +570,7 @@ textarea.fc{resize:vertical;min-height:66px;}
       <button class="btn btn-dk btn-sm" onclick="downloadCaseSummary()" style="flex-shrink:0;margin-left:10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download CSV</button>
     </div>
     <div class="srch-wrap"><svg class="srch-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" class="srch" placeholder="Search by Case ID, type, FPI, hub, city..." oninput="searchCases(this.value)"></div>
-    <div class="card"><div class="tw"><table><thead><tr><th>Case ID</th><th>Category</th><th>Type</th><th>Hub &middot; City</th><th>FPI POC</th><th>Value</th><th>Priority</th><th>Status</th><th></th></tr></thead><tbody id="cases-tbody"></tbody></table></div></div>
+    <div class="card"><div class="tw"><table><thead><tr><th>Case ID</th><th>Category</th><th>Type</th><th>Hub &middot; City</th><th>Zone</th><th>FPI POC</th><th>Value</th><th>Priority</th><th>Status</th><th></th></tr></thead><tbody id="cases-tbody"></tbody></table></div></div>
   </div>
 
   <!-- MOBILE ALERTS -->
@@ -645,7 +645,7 @@ function showPage(id){
   document.getElementById("page-"+id).classList.add("active");
   document.getElementById("page-title").textContent=PT[id]||id;
   document.querySelectorAll(".ni").forEach(n=>{if(n.getAttribute("onclick")&&n.getAttribute("onclick").includes("'"+id+"'"))n.classList.add("active");});
-  const R={dashboard:()=>{renderCaseTypeSummary();renderShipmentDrill();renderRecentCases();renderPodView();renderFraudDist("fraud-dist");},trends:()=>{renderTrendsPage();},"all-cases":()=>renderCasesTable(filteredCases),tracker:renderTracker,performance:renderPerf,assignment:()=>{renderAssignTab();renderReassignTab();updateClosedBadge();}};
+  const R={dashboard:()=>{updateDashboardMetrics();renderCaseTypeSummary();renderShipmentDrill();renderRecentCases();renderPodView();renderFraudDist("fraud-dist");},trends:()=>{renderTrendsPage();},"all-cases":()=>renderCasesTable(filteredCases),tracker:renderTracker,performance:renderPerf,assignment:()=>{renderAssignTab();renderReassignTab();updateClosedBadge();}};
   if(R[id])R[id]();
 }
 function switchCaseTab(id,el){document.querySelectorAll("#page-new-case .tbb").forEach(b=>b.classList.remove("active"));el.classList.add("active");document.querySelectorAll("#page-new-case .tab-panel").forEach(p=>p.classList.remove("active"));document.getElementById("ct-"+id).classList.add("active");}
@@ -1154,10 +1154,105 @@ function refreshClosedCases(){
 function reassignCase(cid){const np=document.getElementById("rp-"+cid).value,rr=document.getElementById("rr-"+cid).value;if(!np||!rr){showToast("Select new POC and reason","warn");return;}const c=cases.find(x=>x.id===cid),newP=FPI.find(p=>p.id===np);if(!c.rh)c.rh=[];c.rh.push({date:new Date().toLocaleDateString("en-IN"),from:c.pn,to:newP.name,reason:rr});c.poc=newP.id;c.pn=newP.name;c.pocName=newP.name;c.pc=newP.color;c.poc_pod=newP.pod||"";c.poc_email=(newP.email||"").toLowerCase();renderReassignTab();syncCasesToStorage();showToast(`✓ ${cid} reassigned to ${newP.name}`);}
 
 // ALL CASES TABLE
+// Zone assignment map — add your Hub→Zone mappings here
+// Format: "Hub Name": "Zone Name"
+// You can populate this once you provide the hub-to-zone list.
+// Currently defaults to detecting zone from hub prefix (BLR=South, DEL=North, etc.)
+var HUB_ZONE_MAP = {
+  // Example entries — replace with your actual mapping:
+  // "BLR_Kudlugate": "South Zone",
+  // "DEL_Burari": "North Zone",
+};
+
+// Auto-detect zone from common hub prefixes (fallback until full map is provided)
+function getZoneFromHub(hub) {
+  if (!hub) return "";
+  var stored = HUB_ZONE_MAP[hub];
+  if (stored) return stored;
+  var prefix = (hub.split("_")[0]||"").toUpperCase();
+  var prefixZones = {
+    // South Zone
+    BLR:"South Zone",BNG:"South Zone",MYS:"South Zone",HYD:"South Zone",
+    CHN:"South Zone",MAA:"South Zone",CBE:"South Zone",COK:"South Zone",
+    TVC:"South Zone",CLT:"South Zone",MDU:"South Zone",TEN:"South Zone",
+    // North Zone
+    DEL:"North Zone",NDL:"North Zone",NCR:"North Zone",GGN:"North Zone",
+    NOI:"North Zone",GZB:"North Zone",AGR:"North Zone",MTC:"North Zone",
+    LKO:"North Zone",CNB:"North Zone",LDH:"North Zone",CDG:"North Zone",
+    JDP:"North Zone",JAI:"North Zone",ASR:"North Zone",DDN:"North Zone",
+    // East Zone
+    CCU:"East Zone",IXR:"East Zone",BBS:"East Zone",GHY:"East Zone",
+    PAT:"East Zone",BGR:"East Zone",RNC:"East Zone",
+    // West Zone
+    BOM:"West Zone",MUM:"West Zone",PNQ:"West Zone",AMD:"West Zone",
+    SRT:"West Zone",RJT:"West Zone",BRC:"West Zone",
+    // Central Zone
+    BPL:"Central Zone",IDR:"Central Zone",NGP:"Central Zone",
+    RPR:"Central Zone",JAB:"Central Zone",GWL:"Central Zone"
+  };
+  return prefixZones[prefix] || "";
+}
+
+var ZONE_OPTIONS = ["", "North Zone", "South Zone", "East Zone", "West Zone", "Central Zone", "Northeast Zone"];
+
 function renderCasesTable(data){
   const tb=document.getElementById("cases-tbody");if(!data||!tb)return;
-  if(!data.length){tb.innerHTML=`<tr><td colspan="9"><div style="text-align:center;padding:24px;color:var(--txt3)">No cases found</div></td></tr>`;return;}
-  tb.innerHTML=data.map(c=>{const s=SL[c.st]||{l:c.st,c:"bgr"};return`<tr onclick="openModal('${c.id}')" style="cursor:pointer"><td><span style="font-family:var(--mono);font-size:10.5px">${c.id}</span></td><td><span class="ct-tag ${CC[c.cat]||"ct-oth"}">${c.cat}</span></td><td><span class="fp ${c.fp}">${c.type}</span></td><td><div style="font-size:11px"><div style="font-weight:600">${c.hub||"—"}</div><div style="color:var(--txt3);font-size:9.5px;font-family:var(--mono)">${c.city||"—"}, ${c.state||"—"}</div></div></td><td>${c.poc?`<div class="av-row"><div class="av" style="background:${c.pc}">${c.poc}</div><div style="font-size:11.5px">${c.pn}</div></div>`:`<span style="color:var(--yel);font-size:10px">⚠ Unassigned</span>`}</td><td style="font-family:var(--mono);font-size:11.5px">₹${c.val.toLocaleString()}</td><td>${c.pri?`<span class="bdg ${c.pri==="High"?"br":c.pri==="Medium"?"by":"bgr"}">${c.pri}</span>`:`<span style="color:var(--txt3)">—</span>`}</td><td><span class="bdg ${s.c}">${s.l}</span></td><td><button class="btn btn-g btn-sm" onclick="event.stopPropagation();openModal('${c.id}')">View</button></td></tr>`;}).join("");
+  if(!data.length){tb.innerHTML=`<tr><td colspan="10"><div style="text-align:center;padding:24px;color:var(--txt3)">No cases found</div></td></tr>`;return;}
+  tb.innerHTML=data.map(c=>{
+    const s=SL[c.st]||{l:c.st,c:"bgr"};
+    const cid=(c.id||"").replace(/'/g,"");
+    const zone = c.zone || getZoneFromHub(c.hub) || "";
+    const zoneColor = zone.startsWith("North")?"#1d4ed8":zone.startsWith("South")?"#16a34a":
+      zone.startsWith("East")?"#d97706":zone.startsWith("West")?"#7c3aed":
+      zone.startsWith("Central")?"#ea580c":zone.startsWith("North")?"#0891b2":"#64748b";
+    return`<tr onclick="openModal('${cid}')" style="cursor:pointer">
+      <td><span style="font-family:var(--mono);font-size:10.5px">${c.id}</span></td>
+      <td><span class="ct-tag ${CC[c.cat]||"ct-oth"}">${c.cat}</span></td>
+      <td><span class="fp ${c.fp}">${c.type}</span></td>
+      <td><div style="font-size:11px"><div style="font-weight:600">${c.hub||"—"}</div><div style="color:var(--txt3);font-size:9.5px;font-family:var(--mono)">${c.city||"—"}, ${c.state||"—"}</div></div></td>
+      <td onclick="event.stopPropagation()">
+        <select onchange="updateCaseZone('${cid}',this.value)" style="font-size:10px;padding:2px 6px;border:1.5px solid var(--bd);border-radius:6px;background:#fff;color:${zone?zoneColor:"var(--txt3)"};font-family:var(--mono);cursor:pointer;outline:none;min-width:100px;font-weight:${zone?"600":"400"}">
+          ${ZONE_OPTIONS.map(z=>`<option value="${z}" ${z===zone?"selected":""}>${z||"— Zone —"}</option>`).join("")}
+        </select>
+      </td>
+      <td>${c.poc?`<div class="av-row"><div class="av" style="background:${c.pc}">${c.poc}</div><div style="font-size:11.5px">${c.pn}</div></div>`:`<span style="color:var(--yel);font-size:10px">⚠ Unassigned</span>`}</td>
+      <td style="font-family:var(--mono);font-size:11.5px">₹${c.val.toLocaleString()}</td>
+      <td>${c.pri?`<span class="bdg ${c.pri==="High"?"br":c.pri==="Medium"?"by":"bgr"}">${c.pri}</span>`:`<span style="color:var(--txt3)">—</span>`}</td>
+      <td><span class="bdg ${s.c}">${s.l}</span></td>
+      <td><button class="btn btn-g btn-sm" onclick="event.stopPropagation();openModal('${cid}')">View</button></td>
+    </tr>`;
+  }).join("");
+}
+
+function updateCaseZone(caseId, zone) {
+  const c = cases.find(x=>x.id===caseId);
+  if (!c) return;
+  c.zone = zone;
+  filteredCases = filteredCases.map(x=>x.id===caseId?{...x,zone}:x);
+  // Persist locally
+  try{
+    const all=JSON.parse(localStorage.getItem("fpi_cases")||"[]");
+    const idx=all.findIndex(x=>x.id===caseId);
+    if(idx>=0){all[idx].zone=zone;localStorage.setItem("fpi_cases",JSON.stringify(all));}
+  }catch(e){}
+  // Sync zone update to sheet via upsert
+  try{
+    const cb="fpiZoneCb_"+Date.now();
+    const params=new URLSearchParams({
+      action:"update_case_status",
+      case_id:caseId,
+      status:c.st||"",
+      zone:zone,
+      callback:cb
+    });
+    window[cb]=function(r){try{delete window[cb];}catch(e){}};
+    const s=document.createElement("script");
+    s.src=APPS_SCRIPT_URL_CM+"?"+params.toString();
+    s.onerror=()=>{try{delete window[cb];}catch(e){}};
+    document.head.appendChild(s);
+    setTimeout(()=>{try{s.remove();delete window[cb];}catch(e){}},8000);
+  }catch(e){}
+  showToast("Zone set: "+(zone||"cleared")+" for "+caseId);
 }
 function filterCases(f,el){
   document.querySelectorAll("#filter-chips .chip").forEach(c=>c.classList.remove("active"));
@@ -11153,11 +11248,53 @@ function downloadTemplate(){
   showToast("Template downloaded — fill and upload");
 }
 
-function updateBadges(){const u=cases.filter(c=>c.st==="unassigned").length;document.getElementById("nb-u").textContent=u;document.getElementById("nb-all").textContent=cases.length;const tc=document.getElementById("tab-u-cnt");if(tc)tc.textContent=u;}
+function updateBadges(){
+  const u=cases.filter(c=>c.st==="unassigned").length;
+  document.getElementById("nb-u").textContent=u;
+  document.getElementById("nb-all").textContent=cases.length;
+  const tc=document.getElementById("tab-u-cnt");if(tc)tc.textContent=u;
+  updateDashboardMetrics();
+}
+
+function updateDashboardMetrics(){
+  if(!cases) return;
+  const total      = cases.length;
+  const active     = cases.filter(c=>c.st!=="closed"&&c.st!=="unassigned").length;
+  const unassigned = cases.filter(c=>c.st==="unassigned").length;
+  const closed     = cases.filter(c=>c.st==="closed").length;
+  const openVal    = cases.filter(c=>c.st!=="closed").reduce((s,c)=>s+(c.val||0),0);
+  const recovAmt   = cases.filter(c=>c.st==="closed").reduce((s,c)=>s+(c.recovery||0),0);
+  const closedVal  = cases.filter(c=>c.st==="closed").reduce((s,c)=>s+(c.val||0),0);
+  const recPct     = closedVal>0?Math.round((recovAmt/closedVal)*100):0;
+
+  function fmtVal(n){
+    if(n>=10000000) return "₹"+(n/10000000).toFixed(1)+"Cr";
+    if(n>=100000)   return "₹"+(n/100000).toFixed(1)+"L";
+    if(n>=1000)     return "₹"+(n/1000).toFixed(0)+"K";
+    return "₹"+n.toLocaleString("en-IN");
+  }
+
+  function setEl(id,val){ const el=document.getElementById(id);if(el)el.textContent=val; }
+  setEl("db-total",      total);
+  setEl("db-active",     active);
+  setEl("db-unassigned", unassigned);
+  setEl("db-closed",     closed);
+  setEl("db-value",      fmtVal(openVal));
+  setEl("db-active-sub", active+" in progress");
+  setEl("db-closed-sub", recPct+"% recovery");
+  setEl("db-value-sub",  "₹"+(openVal>0?(openVal/1000).toFixed(0)+"K":"0")+" at risk");
+}
 // GOOGLE SHEETS SYNC
 // Replace SHEET_URL with your deployed Apps Script Web App URL
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║           ★  CASE MANAGEMENT PORTAL — CHANGE THESE WHEN NEEDED  ★      ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  APPS_SCRIPT_URL_CM → Deployed Apps Script Web App URL                  ║
+// ║    How to update: Apps Script → Deploy → Manage deployments → copy URL  ║
+// ║  The Sheet ID is loaded dynamically via the Manage FPI Agents button     ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 let SHEET_URL = localStorage.getItem("fpi_sheet_url") || "";
-const APPS_SCRIPT_URL_CM = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";
+const APPS_SCRIPT_URL_CM = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";  // ← APPS SCRIPT URL
 function saveSheetURL(){
   const url = document.getElementById("sheet-url-input").value.trim();
   if(url){
@@ -11764,6 +11901,7 @@ function cmLoginSuccess(email, name){
   document.getElementById("cm-app").style.display="flex";
   cmSetUserDisplay(name||email);
   loadFPIFromSheet().then(()=>{
+    updateDashboardMetrics();
     renderCaseTypeSummary();renderShipmentDrill();renderRecentCases();
     renderPodView();renderFraudDist("fraud-dist");renderCasesTable(filteredCases);
     renderAssignTab();renderReassignTab();updateBadges();
@@ -11836,6 +11974,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     // Always load fresh from sheet on login — localStorage is only a backup
     loadFPIFromSheet().then(()=>{
       renderCaseTypeSummary();renderShipmentDrill();renderRecentCases();
+      updateDashboardMetrics();
       renderPodView();renderFraudDist("fraud-dist");renderCasesTable(filteredCases);
       renderAssignTab();renderReassignTab();updateBadges();updateClosedBadge();
       // If sheet returned 0 cases, show a helpful message
@@ -11896,7 +12035,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
           <div class="fgrp" style="margin:0">
             <label class="fl">Google Sheet ID</label>
-            <input type="text" class="fc" id="agents-sheet-id" placeholder="1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU">
+            <input type="text" class="fc" id="agents-sheet-id" placeholder="1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w">
           </div>
           <button class="btn btn-p" onclick="loadAgentsFromSheet()">Load Agents</button>
         </div>
@@ -11918,7 +12057,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 // ['#3b8ef8','#27c77a','#9b72f9','#f5c542','#f04f2b','#ff7eb3','#22d3ee','#a78bfa','#fb923c','#34d399','#60a5fa','#f472b6','#4ade80','#facc15','#c084fc'];
 function showAgentsSetup(){
   const modal=document.getElementById("agents-modal");
-  const saved=localStorage.getItem("fpi_agents_sheet_id")||"1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU";
+  const saved=localStorage.getItem("fpi_agents_sheet_id")||"1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";
   localStorage.setItem("fpi_agents_sheet_id",saved);
   document.getElementById("agents-sheet-id").value=saved;
   refreshAgentsPreview();
@@ -12008,7 +12147,7 @@ function parseCSVRowSimple(row){
 document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("agents-count").textContent=FPI.length;
   // Always auto-load from the configured sheet ID
-  const saved=localStorage.getItem("fpi_agents_sheet_id")||"1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU";
+  const saved=localStorage.getItem("fpi_agents_sheet_id")||"1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";
   document.getElementById("agents-sheet-id").value=saved;
   localStorage.setItem("fpi_agents_sheet_id",saved);
   loadAgentsFromSheet();
