@@ -453,16 +453,61 @@ textarea.fc{resize:none;min-height:76px;}
 
       <!-- START WORKING BANNER (shown if not yet started) -->
       <div id="start-working-banner" style="display:none;margin-bottom:13px">
-        <div style="background:rgba(29,78,216,.06);border:1.5px solid rgba(29,78,216,.2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px">
-          <div style="flex:1">
-            <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Not started yet</div>
-            <div style="font-size:11px;color:var(--txt3)">Tap to mark this case as actively in progress</div>
+        <div style="background:rgba(29,78,216,.06);border:1.5px solid rgba(29,78,216,.2);border-radius:10px;padding:13px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Case Not Started Yet</div>
+              <div style="font-size:11px;color:var(--txt3)">Upload 3 hub photos below, then tap Start Working.</div>
+            </div>
           </div>
-          <button class="btn btn-p btn-sm" onclick="markStartWorking()">
+          <!-- Hub Image Upload (3 photos, one-time) -->
+          <div style="margin-bottom:11px">
+            <label class="fl" style="margin-bottom:6px;display:flex;align-items:center;gap:5px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Hub Site Photos <span class="fr">*</span>
+              <span style="font-size:9px;color:var(--acc);font-family:var(--mono);margin-left:2px">(3 required · upload once)</span>
+            </label>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+              <div class="hub-img-slot" id="hub-slot-1" onclick="document.getElementById('hub-img-1').click()" style="aspect-ratio:1;border:2px dashed var(--bd2);border-radius:9px;background:var(--sf2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden;transition:border-color .15s">
+                <input type="file" id="hub-img-1" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(1,this)">
+                <div id="hub-slot-1-icon" style="font-size:22px">🏢</div>
+                <div id="hub-slot-1-lbl" style="font-size:9px;color:var(--txt3);font-family:var(--mono)">Image 1</div>
+                <img id="hub-slot-1-prev" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px" src="" alt="">
+                <div id="hub-slot-1-ok" style="display:none;position:absolute;bottom:4px;right:4px;background:var(--grn);border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" style="width:9px;height:9px"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+              <div class="hub-img-slot" id="hub-slot-2" onclick="document.getElementById('hub-img-2').click()" style="aspect-ratio:1;border:2px dashed var(--bd2);border-radius:9px;background:var(--sf2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden;transition:border-color .15s">
+                <input type="file" id="hub-img-2" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(2,this)">
+                <div id="hub-slot-2-icon" style="font-size:22px">🏢</div>
+                <div id="hub-slot-2-lbl" style="font-size:9px;color:var(--txt3);font-family:var(--mono)">Image 2</div>
+                <img id="hub-slot-2-prev" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px" src="" alt="">
+                <div id="hub-slot-2-ok" style="display:none;position:absolute;bottom:4px;right:4px;background:var(--grn);border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" style="width:9px;height:9px"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+              <div class="hub-img-slot" id="hub-slot-3" onclick="document.getElementById('hub-img-3').click()" style="aspect-ratio:1;border:2px dashed var(--bd2);border-radius:9px;background:var(--sf2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden;transition:border-color .15s">
+                <input type="file" id="hub-img-3" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(3,this)">
+                <div id="hub-slot-3-icon" style="font-size:22px">🏢</div>
+                <div id="hub-slot-3-lbl" style="font-size:9px;color:var(--txt3);font-family:var(--mono)">Image 3</div>
+                <img id="hub-slot-3-prev" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px" src="" alt="">
+                <div id="hub-slot-3-ok" style="display:none;position:absolute;bottom:4px;right:4px;background:var(--grn);border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" style="width:9px;height:9px"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+            </div>
+            <div id="hub-img-status" style="font-size:10.5px;color:var(--txt3);text-align:center;font-family:var(--mono)">0 / 3 photos selected</div>
+          </div>
+          <button class="btn btn-p" style="width:100%" id="start-working-btn" onclick="markStartWorking()" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Start Working
           </button>
         </div>
+      </div>
+      <!-- Hub images already uploaded notice -->
+      <div id="hub-images-uploaded-notice" style="display:none;margin-bottom:13px;background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.25);border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:9px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--grn)" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div style="font-size:11.5px;color:var(--grn);font-weight:600">Hub images already uploaded for this case.</div>
       </div>
 
       <div class="fgrp"><label class="fl">Action Date <span class="fr">*</span></label><input type="date" class="fc" id="us-date"></div>
@@ -680,30 +725,197 @@ function openUpdate(caseId,sub){
   if(slipDone) slipDone.style.display="none";
   window._slipBase64 = null;
   document.getElementById("cl-utr").value="";
+  // Reset hub image slots for fresh case
+  _resetHubImageSlots();
   // Show "Start Working" banner if case hasn't been started yet
   const c = myCases.find(x=>x.id===caseId);
   const isFeatured = c && caseStatusCategory(c.st)==="featured";
-  document.getElementById("start-working-banner").style.display = isFeatured ? "block" : "none";
+  const startBanner   = document.getElementById("start-working-banner");
+  const uploadedNotice= document.getElementById("hub-images-uploaded-notice");
+  if(isFeatured){
+    // Check if images already uploaded
+    const alreadyUploaded = c && (c.hubImagesUploaded || (c["Hub_Image_Uploaded"]||"").toUpperCase()==="YES");
+    if(alreadyUploaded){
+      startBanner.style.display   = "none";
+      if(uploadedNotice) uploadedNotice.style.display = "flex";
+      // Still allow them to mark start working without re-uploading
+      // Show a simple start button
+      if(uploadedNotice){
+        uploadedNotice.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="var(--grn)" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+          +'<div style="flex:1;font-size:11.5px;color:var(--grn);font-weight:600">Hub images already uploaded.</div>'
+          +'<button class="btn btn-p btn-sm" onclick="markStartWorkingAlreadyUploaded()">▶ Start Working</button>';
+        uploadedNotice.style.display = "flex";
+      }
+    } else {
+      startBanner.style.display = "block";
+      if(uploadedNotice) uploadedNotice.style.display = "none";
+    }
+  } else {
+    startBanner.style.display = "none";
+    if(uploadedNotice) uploadedNotice.style.display = "none";
+  }
   document.getElementById("sh-update").classList.add("open");
 }
 
-function markStartWorking(){
+// Called when hub images are already uploaded — just stamp start date
+function markStartWorkingAlreadyUploaded() {
   const caseId = document.getElementById("us-id").textContent;
   const c = myCases.find(x=>x.id===caseId);
-  if(!c) return;
-  // Move to "rider_inv" (actively working)
+  if (!c) return;
   c.st = "rider_inv";
-  // Persist to shared cases
-  try{
-    const all = JSON.parse(localStorage.getItem("fpi_cases")||"[]");
-    const idx = all.findIndex(x=>x.id===caseId);
-    if(idx>=0){all[idx].st="rider_inv";localStorage.setItem("fpi_cases",JSON.stringify(all));}
-  }catch(e){}
-  document.getElementById("start-working-banner").style.display="none";
-  // Pre-select status
-  document.getElementById("us-status").value="rider_inv";
+  try {
+    const cb = "fpiStartCb_"+Date.now();
+    const params = new URLSearchParams({ action:"start_working", case_id:caseId, callback:cb });
+    window[cb] = function(r){ try{ delete window[cb]; }catch(e){} };
+    const s = document.createElement("script");
+    s.src = APPS_SCRIPT_URL + "?" + params.toString();
+    document.head.appendChild(s);
+    setTimeout(()=>{ try{ s.remove(); delete window[cb]; }catch(e){} }, 8000);
+  } catch(ex) {}
+  const notice = document.getElementById("hub-images-uploaded-notice");
+  if (notice) notice.style.display = "none";
+  document.getElementById("us-status").value = "rider_inv";
   showToast("✅ Case marked as In Progress");
   renderOpenCases(); renderFeaturedCases();
+}
+
+// Hub image state
+var _hubImages = { 1:null, 2:null, 3:null };
+
+function handleHubImage(slot, input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    _hubImages[slot] = { base64: e.target.result, name: "Hub_Image_"+slot };
+    var prev  = document.getElementById("hub-slot-"+slot+"-prev");
+    var icon  = document.getElementById("hub-slot-"+slot+"-icon");
+    var lbl   = document.getElementById("hub-slot-"+slot+"-lbl");
+    var ok    = document.getElementById("hub-slot-"+slot+"-ok");
+    var slot_el = document.getElementById("hub-slot-"+slot);
+    if (prev) { prev.src = e.target.result; prev.style.display = "block"; }
+    if (icon) icon.style.display = "none";
+    if (lbl)  lbl.style.display  = "none";
+    if (ok)   { ok.style.display = "flex"; }
+    if (slot_el) slot_el.style.borderColor = "var(--grn)";
+    _updateHubImgStatus();
+  };
+  reader.readAsDataURL(file);
+}
+
+function _updateHubImgStatus() {
+  var count = [1,2,3].filter(function(s){ return !!_hubImages[s]; }).length;
+  var statusEl = document.getElementById("hub-img-status");
+  var btn      = document.getElementById("start-working-btn");
+  if (statusEl) {
+    statusEl.textContent = count + " / 3 photos selected";
+    statusEl.style.color = count === 3 ? "var(--grn)" : "var(--txt3)";
+  }
+  if (btn) btn.disabled = count < 3;
+}
+
+function _resetHubImageSlots() {
+  _hubImages = { 1:null, 2:null, 3:null };
+  [1,2,3].forEach(function(s) {
+    var prev  = document.getElementById("hub-slot-"+s+"-prev");
+    var icon  = document.getElementById("hub-slot-"+s+"-icon");
+    var lbl   = document.getElementById("hub-slot-"+s+"-lbl");
+    var ok    = document.getElementById("hub-slot-"+s+"-ok");
+    var slot_el = document.getElementById("hub-slot-"+s);
+    var inp   = document.getElementById("hub-img-"+s);
+    if (prev) { prev.src=""; prev.style.display="none"; }
+    if (icon) icon.style.display = "block";
+    if (lbl)  lbl.style.display  = "block";
+    if (ok)   ok.style.display   = "none";
+    if (slot_el) slot_el.style.borderColor = "";
+    if (inp)  inp.value = "";
+  });
+  _updateHubImgStatus();
+}
+
+async function markStartWorking() {
+  var caseId = document.getElementById("us-id").textContent;
+  var c = myCases.find(function(x){ return x.id === caseId; });
+  if (!c) return;
+
+  // Validate all 3 hub images selected
+  var imgCount = [1,2,3].filter(function(s){ return !!_hubImages[s]; }).length;
+  if (imgCount < 3) {
+    showToast("Please select all 3 hub photos first");
+    return;
+  }
+
+  // Disable button, show uploading state
+  var btn = document.getElementById("start-working-btn");
+  if (btn) { btn.disabled = true; btn.innerHTML = "⏳ Uploading images…"; }
+  showToast("Uploading hub images to Drive…");
+
+  try {
+    // Send images via POST to Apps Script (base64 too large for GET)
+    var images = [1,2,3].map(function(s) {
+      return { name: "Hub_Image_"+s, base64: _hubImages[s].base64 };
+    });
+    var payload = JSON.stringify({
+      action:   "upload_hub_images",
+      case_id:  caseId,
+      images:   images
+    });
+    var resp = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload
+    });
+    var result = await resp.json();
+    if (result && result.alreadyUploaded) {
+      showToast("Hub images already uploaded for this case");
+    } else if (result && result.ok) {
+      showToast("✅ Hub images uploaded to Drive");
+    } else {
+      showToast("⚠ Image upload failed — " + ((result&&result.error)||"unknown error"));
+      console.warn("[HubImages] Upload failed:", result);
+    }
+  } catch(ex) {
+    console.warn("[HubImages] POST error:", ex.message);
+    showToast("⚠ Could not upload images — continuing anyway");
+  }
+
+  // Now stamp Case_Started_Date via JSONP GET
+  try {
+    var cb = "fpiStartCb_"+Date.now();
+    var params = new URLSearchParams({
+      action:   "start_working",
+      case_id:  caseId,
+      callback: cb
+    });
+    window[cb] = function(r) {
+      try{ delete window[cb]; }catch(e){}
+      if (r && r.alreadyStarted) {
+        showToast("Case already started — updating status");
+      }
+    };
+    var s = document.createElement("script");
+    s.src = APPS_SCRIPT_URL + "?" + params.toString();
+    s.onerror = function(){ try{ delete window[cb]; }catch(e){}; };
+    document.head.appendChild(s);
+    setTimeout(function(){ try{ s.remove(); delete window[cb]; }catch(e){}; }, 8000);
+  } catch(ex) { console.warn("[StartWorking] JSONP error:", ex); }
+
+  // Update local state
+  c.st = "rider_inv";
+  c.hubImagesUploaded = true;
+  try {
+    var all = JSON.parse(localStorage.getItem("fpi_cases")||"[]");
+    var idx2 = all.findIndex(function(x){ return x.id === caseId; });
+    if (idx2 >= 0) { all[idx2].st = "rider_inv"; localStorage.setItem("fpi_cases", JSON.stringify(all)); }
+  } catch(e) {}
+
+  document.getElementById("start-working-banner").style.display = "none";
+  document.getElementById("us-status").value = "rider_inv";
+  if (btn) { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Working'; }
+  _resetHubImageSlots();
+  showToast("✅ Case started — images saved");
+  renderOpenCases();
+  renderFeaturedCases();
 }
 function openRecovery(caseId){
   document.getElementById("rs-id").textContent=caseId;
@@ -757,23 +969,27 @@ function submitUpdate(){
   const utr   =document.getElementById("cl-utr").value.trim();
   const amt   =parseInt(document.getElementById("cl-amt")?.value||"0")||0;
   const police=document.getElementById("us-police").value;
-  // Update local case
   const c=myCases.find(x=>x.id===caseId);
+  const nowStr=new Date().toLocaleDateString("en-IN");
+
   if(c){
     c.st=status;
     if(police)c.policeAction=police;
     if(amt>0)c.recovery=amt;
     if(utr)c.utr=utr;
+    // Stamp closed date locally
+    if(status==="closed"){
+      c.closedDate = nowStr;
+    }
     if(!c.updates)c.updates=[];
-    c.updates.push({date:new Date().toLocaleDateString("en-IN"),status,notes,police,recovery:amt,utr,photos:0});
-    // Persist locally
+    c.updates.push({date:nowStr,status,notes,police,recovery:amt,utr,photos:0});
     try{
       const all=JSON.parse(localStorage.getItem("fpi_cases")||"[]");
       const idx=all.findIndex(x=>x.id===caseId);
-      if(idx>=0){all[idx]=Object.assign(all[idx],{st:c.st,policeAction:c.policeAction,recovery:c.recovery,utr:c.utr,updates:c.updates});}
+      if(idx>=0){all[idx]=Object.assign(all[idx],{st:c.st,policeAction:c.policeAction,recovery:c.recovery,utr:c.utr,updates:c.updates,closedDate:c.closedDate||""});}
       localStorage.setItem("fpi_cases",JSON.stringify(all));
     }catch(e){}
-    // Sync status update to Apps Script via JSONP GET (reliable cross-origin)
+    // Sync status update to Apps Script — update_case_status now handles closed date + ageing
     try{
       const syncCb="fpiUpdCb_"+Date.now();
       const syncParams=new URLSearchParams({
@@ -789,12 +1005,7 @@ function submitUpdate(){
       setTimeout(()=>{try{syncS.remove();delete window[syncCb];}catch(e){}},8000);
     }catch(e){}
   }
-  // Attach slip reference if uploaded
-  // _slipBase64 cleared by triggerClosureEmail after use
-  // If case closed, trigger email notification
   if(status==="closed"){
-    // Always use currentUser.email as the agent email — this is guaranteed to be set
-    // because the agent is logged in. c.poc_email may be empty if the case came from sheet.
     var emailPayload = {
       id          : caseId,
       cat         : c ? (c.cat||""  ) : "",
@@ -806,14 +1017,14 @@ function submitUpdate(){
       recovery    : amt,
       utr         : utr,
       policeAction: police,
-      closureNotes: (document.getElementById("us-notes")||{}).value||notes||"",
+      closureNotes: (document.getElementById("cl-notes")||document.getElementById("us-notes")||{}).value||notes||"",
       pn          : currentUser.name  || (c ? c.pn  : "") || "",
       poc_email   : currentUser.email || (c ? c.poc_email : "") || "",
       slipBase64  : window._slipBase64 || ""
     };
-    console.log("[Close] Sending closure email with payload:", JSON.stringify(emailPayload).substring(0,200));
+    console.log("[Close] Sending closure email:", JSON.stringify(emailPayload).substring(0,200));
     triggerClosureEmail(emailPayload);
-    showToast("✓ Case closed — sending notification…");
+    showToast("✓ Case closed — sending closure email…");
   } else {
     showToast("✓ Update submitted"+(utr?" · UTR: "+utr:""));
   }
@@ -10520,8 +10731,15 @@ document.addEventListener("DOMContentLoaded",()=>{
 // ══════════════════════════════════════════════════════════
 // FPI FIELD PORTAL — AUTH · ONBOARDING · CASES
 // ══════════════════════════════════════════════════════════
-const PORTAL_SHEET_ID = "1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtG-mkDh2bwlFRJaX3UxBI39tszTBNvq9tyKEwWRDJ6IwY_YXrQFWv6TjxKhdagG2vMQ/exec";
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║              ★  FIELD PORTAL — CHANGE THESE WHEN NEEDED  ★             ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  PORTAL_SHEET_ID → Google Sheet ID (from the sheet URL after /d/)       ║
+// ║  APPS_SCRIPT_URL → Deployed Apps Script Web App URL                     ║
+// ║    How to update: Apps Script → Deploy → Manage deployments → copy URL  ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+const PORTAL_SHEET_ID = "1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";  // ← SHEET ID
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";  // ← APPS SCRIPT URL
 const COLORS = ["#3b8ef8","#27c77a","#9b72f9","#f5c542","#f04f2b","#ff7eb3","#22d3ee","#a78bfa","#fb923c","#34d399"];
 
 let currentUser  = {name:"",email:"",initials:"",pod:"",zone:"",desig:"",color:""};
