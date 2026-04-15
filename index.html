@@ -346,7 +346,7 @@ textarea.fc{resize:vertical;min-height:66px;}
   </div>
   <div class="sbft">
 
-  <button onclick="window.open('https://docs.google.com/spreadsheets/d/1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU/edit#gid=0','_blank')" style="display:flex;align-items:center;gap:7px;width:100%;padding:7px 10px;background:rgba(99,102,241,.12);border:1.5px solid rgba(99,102,241,.25);border-radius:7px;color:#a5b4fc;font-size:11.5px;font-weight:600;cursor:pointer;margin-bottom:8px;font-family:var(--sans)">
+  <button onclick="window.open('https://docs.google.com/spreadsheets/d/1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w/edit#gid=0','_blank')" style="display:flex;align-items:center;gap:7px;width:100%;padding:7px 10px;background:rgba(99,102,241,.12);border:1.5px solid rgba(99,102,241,.25);border-radius:7px;color:#a5b4fc;font-size:11.5px;font-weight:600;cursor:pointer;margin-bottom:8px;font-family:var(--sans)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     Manage FPI Agents
   </button>
@@ -11771,7 +11771,7 @@ function updateBadges(){const u=cases.filter(c=>c.st==="unassigned").length;docu
 // GOOGLE SHEETS SYNC
 // Replace SHEET_URL with your deployed Apps Script Web App URL
 let SHEET_URL = localStorage.getItem("fpi_sheet_url") || "";
-const APPS_SCRIPT_URL_CM = "https://script.google.com/macros/s/AKfycbxtG-mkDh2bwlFRJaX3UxBI39tszTBNvq9tyKEwWRDJ6IwY_YXrQFWv6TjxKhdagG2vMQ/exec";
+const APPS_SCRIPT_URL_CM = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";
 function saveSheetURL(){
   const url = document.getElementById("sheet-url-input").value.trim();
   if(url){
@@ -12510,7 +12510,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
           <div class="fgrp" style="margin:0">
             <label class="fl">Google Sheet ID</label>
-            <input type="text" class="fc" id="agents-sheet-id" placeholder="1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU">
+            <input type="text" class="fc" id="agents-sheet-id" placeholder="1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w">
           </div>
           <button class="btn btn-p" onclick="loadAgentsFromSheet()">Load Agents</button>
         </div>
@@ -12532,7 +12532,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 // ['#3b8ef8','#27c77a','#9b72f9','#f5c542','#f04f2b','#ff7eb3','#22d3ee','#a78bfa','#fb923c','#34d399','#60a5fa','#f472b6','#4ade80','#facc15','#c084fc'];
 function showAgentsSetup(){
   const modal=document.getElementById("agents-modal");
-  const saved=localStorage.getItem("fpi_agents_sheet_id")||"1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU";
+  const saved=localStorage.getItem("fpi_agents_sheet_id")||"1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";
   localStorage.setItem("fpi_agents_sheet_id",saved);
   document.getElementById("agents-sheet-id").value=saved;
   refreshAgentsPreview();
@@ -12622,7 +12622,7 @@ function parseCSVRowSimple(row){
 document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("agents-count").textContent=FPI.length;
   // Always auto-load from the configured sheet ID
-  const saved=localStorage.getItem("fpi_agents_sheet_id")||"1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU";
+  const saved=localStorage.getItem("fpi_agents_sheet_id")||"1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";
   document.getElementById("agents-sheet-id").value=saved;
   localStorage.setItem("fpi_agents_sheet_id",saved);
   loadAgentsFromSheet();
