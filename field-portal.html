@@ -23,11 +23,11 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:var(--sa
 .shell{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:430px;margin:0 auto;background:var(--sf2);position:relative;overflow:hidden;box-shadow:0 0 40px rgba(15,23,42,.15);}
 /* HEADER */
 .hdr{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.35);}
-.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:10px 15px 0;}.hdr-brand{display:flex;align-items:center;gap:10px;}.hdr-user{display:flex;align-items:center;gap:8px;}.sfx-logo-icon{width:28px;height:28px;background:#FF6B00;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}.sfx-logo-text{font-family:"Syne","DM Sans",sans-serif;font-weight:800;font-size:14px;color:#fff;margin-left:7px;}.sfx-logo-sub{font-family:var(--mono);font-size:7.5px;color:rgba(255,255,255,.35);letter-spacing:.18em;text-transform:uppercase;margin-left:7px;margin-top:-2px;}.hdr-divider{width:1px;height:24px;background:rgba(255,255,255,.15);margin:0 2px;}.hdr-welcome{padding:10px 15px 12px;}.welcome-line{font-size:13.5px;font-weight:700;color:#fff;margin-bottom:3px;}.welcome-sub{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}.welcome-tag{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-family:var(--mono);color:rgba(255,255,255,.5);}.welcome-tag svg{width:10px;height:10px;opacity:.6;}
-.lp{background:rgba(255,107,0,.18);color:#FF6B00;font-family:var(--disp);font-weight:800;font-size:11px;padding:3px 8px;border-radius:4px;letter-spacing:.06em;border:1px solid rgba(255,107,0,.3);}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:10px 15px 0;}.hdr-brand{display:flex;align-items:center;gap:10px;}.hdr-user{display:flex;align-items:center;gap:8px;}.sfx-logo-icon{width:28px;height:28px;background:#16a34a;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}.sfx-logo-text{font-family:"Syne","DM Sans",sans-serif;font-weight:800;font-size:14px;color:#fff;margin-left:7px;}.sfx-logo-sub{font-family:var(--mono);font-size:7.5px;color:rgba(255,255,255,.35);letter-spacing:.18em;text-transform:uppercase;margin-left:7px;margin-top:-2px;}.hdr-divider{width:1px;height:24px;background:rgba(255,255,255,.15);margin:0 2px;}.hdr-welcome{padding:10px 15px 12px;}.welcome-line{font-size:13.5px;font-weight:700;color:#fff;margin-bottom:3px;}.welcome-sub{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}.welcome-tag{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-family:var(--mono);color:rgba(255,255,255,.5);}.welcome-tag svg{width:10px;height:10px;opacity:.6;}
+.lp{background:rgba(22,163,74,.15);color:#16a34a;font-family:var(--disp);font-weight:800;font-size:11px;padding:3px 8px;border-radius:4px;letter-spacing:.06em;border:1px solid rgba(22,163,74,.3);}
 .ht{font-family:var(--disp);font-size:12.5px;font-weight:700;color:rgba(255,255,255,.75);}
 .hs{font-family:var(--mono);font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.12em;}
-.hav{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#FF6B00,#e55a00);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:12px;color:#fff;border:2px solid rgba(255,255,255,.2);flex-shrink:0;}
+.hav{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#15803d);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:12px;color:#fff;border:2px solid rgba(255,255,255,.2);flex-shrink:0;}
 .hnm{font-size:12px;font-weight:600;color:#fff;text-align:right;line-height:1.2;}
 .hrl{font-size:9px;color:rgba(255,255,255,.38);font-family:var(--mono);text-align:right;line-height:1.4;}
 /* CONTENT */
@@ -217,19 +217,10 @@ textarea.fc{resize:none;min-height:76px;}
 <!-- LOGIN SCREEN -->
 <div class="login-screen" id="login-screen">
   <div class="login-card">
-    <div class="login-logo" style="flex-direction:column;gap:6px">
-      <!-- Shadowfax brand on login screen -->
-      <div style="display:flex;align-items:center;gap:9px;justify-content:center">
-        <div style="width:36px;height:36px;background:#FF6B00;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(255,107,0,.3)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#fff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div>
-          <div style="font-family:'Syne','DM Sans',sans-serif;font-weight:800;font-size:18px;color:var(--navy);line-height:1.1">Shadowfax</div>
-          <div style="font-family:var(--mono);font-size:8px;color:var(--txt3);letter-spacing:.16em;text-transform:uppercase">FPI Field Portal</div>
-        </div>
-      </div>
+    <div class="login-logo" style="flex-direction:column;align-items:center;gap:4px">
+      <img src="data:image/png;base64,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" alt="Shadowfax" style="width:64px;height:64px;border-radius:14px;object-fit:contain;display:block;">
+      <div style="font-family:'Syne','DM Sans',sans-serif;font-weight:800;font-size:15px;color:var(--navy);margin-top:4px">Shadowfax</div>
+      <div style="font-family:var(--mono);font-size:8px;color:var(--txt3);letter-spacing:.16em;text-transform:uppercase">FPI Field Portal</div>
     </div>
     <div class="login-title">Sign In</div>
     <div class="login-sub">Enter your @shadowfax.in email</div>
@@ -351,7 +342,7 @@ textarea.fc{resize:none;min-height:76px;}
     <div class="hdr-top">
       <div class="hdr-brand">
         <div style="display:flex;align-items:center;gap:0">
-          <div class="sfx-logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#fff" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+          <div class="sfx-logo-icon" style="background:transparent;padding:0;overflow:hidden"><img src="data:image/png;base64,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" style="width:28px;height:28px;border-radius:6px;object-fit:contain;display:block"></div>
           <div><div class="sfx-logo-text">Shadowfax</div><div class="sfx-logo-sub">FPI Field Portal</div></div>
         </div>
         <div class="hdr-divider"></div>
@@ -453,61 +444,16 @@ textarea.fc{resize:none;min-height:76px;}
 
       <!-- START WORKING BANNER (shown if not yet started) -->
       <div id="start-working-banner" style="display:none;margin-bottom:13px">
-        <div style="background:rgba(29,78,216,.06);border:1.5px solid rgba(29,78,216,.2);border-radius:10px;padding:13px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Case Not Started Yet</div>
-              <div style="font-size:11px;color:var(--txt3)">Upload 3 hub photos below, then tap Start Working.</div>
-            </div>
+        <div style="background:rgba(29,78,216,.06);border:1.5px solid rgba(29,78,216,.2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px">
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Not started yet</div>
+            <div style="font-size:11px;color:var(--txt3)">Tap to mark this case as actively in progress</div>
           </div>
-          <!-- Hub Image Upload (3 photos, one-time) -->
-          <div style="margin-bottom:11px">
-            <label class="fl" style="margin-bottom:6px;display:flex;align-items:center;gap:5px">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              Hub Site Photos <span class="fr">*</span>
-              <span style="font-size:9px;color:var(--acc);font-family:var(--mono);margin-left:2px">(3 required · upload once)</span>
-            </label>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
-              <div class="hub-img-slot" id="hub-slot-1" onclick="document.getElementById('hub-img-1').click()" style="aspect-ratio:1;border:2px dashed var(--bd2);border-radius:9px;background:var(--sf2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden;transition:border-color .15s">
-                <input type="file" id="hub-img-1" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(1,this)">
-                <div id="hub-slot-1-icon" style="font-size:22px">🏢</div>
-                <div id="hub-slot-1-lbl" style="font-size:9px;color:var(--txt3);font-family:var(--mono)">Image 1</div>
-                <img id="hub-slot-1-prev" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px" src="" alt="">
-                <div id="hub-slot-1-ok" style="display:none;position:absolute;bottom:4px;right:4px;background:var(--grn);border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" style="width:9px;height:9px"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-              </div>
-              <div class="hub-img-slot" id="hub-slot-2" onclick="document.getElementById('hub-img-2').click()" style="aspect-ratio:1;border:2px dashed var(--bd2);border-radius:9px;background:var(--sf2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden;transition:border-color .15s">
-                <input type="file" id="hub-img-2" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(2,this)">
-                <div id="hub-slot-2-icon" style="font-size:22px">🏢</div>
-                <div id="hub-slot-2-lbl" style="font-size:9px;color:var(--txt3);font-family:var(--mono)">Image 2</div>
-                <img id="hub-slot-2-prev" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px" src="" alt="">
-                <div id="hub-slot-2-ok" style="display:none;position:absolute;bottom:4px;right:4px;background:var(--grn);border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" style="width:9px;height:9px"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-              </div>
-              <div class="hub-img-slot" id="hub-slot-3" onclick="document.getElementById('hub-img-3').click()" style="aspect-ratio:1;border:2px dashed var(--bd2);border-radius:9px;background:var(--sf2);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden;transition:border-color .15s">
-                <input type="file" id="hub-img-3" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(3,this)">
-                <div id="hub-slot-3-icon" style="font-size:22px">🏢</div>
-                <div id="hub-slot-3-lbl" style="font-size:9px;color:var(--txt3);font-family:var(--mono)">Image 3</div>
-                <img id="hub-slot-3-prev" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px" src="" alt="">
-                <div id="hub-slot-3-ok" style="display:none;position:absolute;bottom:4px;right:4px;background:var(--grn);border-radius:50%;width:16px;height:16px;display:none;align-items:center;justify-content:center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" style="width:9px;height:9px"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-              </div>
-            </div>
-            <div id="hub-img-status" style="font-size:10.5px;color:var(--txt3);text-align:center;font-family:var(--mono)">0 / 3 photos selected</div>
-          </div>
-          <button class="btn btn-p" style="width:100%" id="start-working-btn" onclick="markStartWorking()" disabled>
+          <button class="btn btn-p btn-sm" onclick="markStartWorking()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Start Working
           </button>
         </div>
-      </div>
-      <!-- Hub images already uploaded notice -->
-      <div id="hub-images-uploaded-notice" style="display:none;margin-bottom:13px;background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.25);border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:9px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="var(--grn)" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <div style="font-size:11.5px;color:var(--grn);font-weight:600">Hub images already uploaded for this case.</div>
       </div>
 
       <div class="fgrp"><label class="fl">Action Date <span class="fr">*</span></label><input type="date" class="fc" id="us-date"></div>
@@ -532,7 +478,7 @@ textarea.fc{resize:none;min-height:76px;}
           <option value="FIR Filed">FIR Filed</option>
         </select>
       </div>
-      <div class="fgrp"><label class="fl">Update Notes</label><textarea class="fc" placeholder="Describe today's ground activity, findings, next steps..." id="us-notes"></textarea></div>
+      <div class="fgrp"><label class="fl">Remarks</label><textarea class="fc" placeholder="Describe today's ground activity, findings, next steps..." id="us-notes"></textarea></div>
 
       <!-- EVIDENCE UPLOAD -->
       <div style="margin-bottom:13px">
@@ -716,7 +662,6 @@ function openUpdate(caseId,sub){
   document.getElementById("cl-box").style.display="none";
   document.getElementById("ev-gal").innerHTML="";
   document.getElementById("ev-prev").innerHTML="";
-  // Reset slip upload
   const slipImg = document.getElementById("slip-preview");
   const slipPh  = document.getElementById("slip-placeholder");
   const slipDone= document.getElementById("slip-done");
@@ -725,197 +670,62 @@ function openUpdate(caseId,sub){
   if(slipDone) slipDone.style.display="none";
   window._slipBase64 = null;
   document.getElementById("cl-utr").value="";
-  // Reset hub image slots for fresh case
-  _resetHubImageSlots();
-  // Show "Start Working" banner if case hasn't been started yet
+
   const c = myCases.find(x=>x.id===caseId);
-  const isFeatured = c && caseStatusCategory(c.st)==="featured";
-  const startBanner   = document.getElementById("start-working-banner");
-  const uploadedNotice= document.getElementById("hub-images-uploaded-notice");
-  if(isFeatured){
-    // Check if images already uploaded
-    const alreadyUploaded = c && (c.hubImagesUploaded || (c["Hub_Image_Uploaded"]||"").toUpperCase()==="YES");
-    if(alreadyUploaded){
-      startBanner.style.display   = "none";
-      if(uploadedNotice) uploadedNotice.style.display = "flex";
-      // Still allow them to mark start working without re-uploading
-      // Show a simple start button
-      if(uploadedNotice){
-        uploadedNotice.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="var(--grn)" stroke-width="2" style="width:15px;height:15px;flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
-          +'<div style="flex:1;font-size:11.5px;color:var(--grn);font-weight:600">Hub images already uploaded.</div>'
-          +'<button class="btn btn-p btn-sm" onclick="markStartWorkingAlreadyUploaded()">▶ Start Working</button>';
-        uploadedNotice.style.display = "flex";
-      }
-    } else {
-      startBanner.style.display = "block";
-      if(uploadedNotice) uploadedNotice.style.display = "none";
-    }
-  } else {
-    startBanner.style.display = "none";
-    if(uploadedNotice) uploadedNotice.style.display = "none";
+
+  // ── Inform agent if case was previously closed (can still update — new row added) ──
+  var alreadyClosed = c && c.st === "closed";
+  var existingBanner = document.getElementById("already-closed-banner");
+  if(!existingBanner){
+    existingBanner = document.createElement("div");
+    existingBanner.id = "already-closed-banner";
+    existingBanner.style.cssText = "background:rgba(217,119,6,.08);border:1.5px solid rgba(217,119,6,.3);border-radius:8px;padding:10px 13px;font-size:12px;color:var(--yel);font-weight:600;margin-bottom:12px;display:none";
+    existingBanner.innerHTML = "⚠ This case was previously closed. Submitting will add a new row in the sheet for this re-opened update.";
+    var shBody = document.querySelector("#sh-update .sbody");
+    if(shBody) shBody.insertBefore(existingBanner, shBody.firstChild);
   }
+  existingBanner.style.display = alreadyClosed ? "block" : "none";
+
+  const isFeatured = c && caseStatusCategory(c.st)==="featured";
+  document.getElementById("start-working-banner").style.display = isFeatured ? "block" : "none";
   document.getElementById("sh-update").classList.add("open");
 }
 
-// Called when hub images are already uploaded — just stamp start date
-function markStartWorkingAlreadyUploaded() {
+function markStartWorking(){
   const caseId = document.getElementById("us-id").textContent;
   const c = myCases.find(x=>x.id===caseId);
-  if (!c) return;
+  if(!c) return;
+  const startDate = new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
   c.st = "rider_inv";
-  try {
-    const cb = "fpiStartCb_"+Date.now();
-    const params = new URLSearchParams({ action:"start_working", case_id:caseId, callback:cb });
-    window[cb] = function(r){ try{ delete window[cb]; }catch(e){} };
-    const s = document.createElement("script");
-    s.src = APPS_SCRIPT_URL + "?" + params.toString();
-    document.head.appendChild(s);
-    setTimeout(()=>{ try{ s.remove(); delete window[cb]; }catch(e){} }, 8000);
-  } catch(ex) {}
-  const notice = document.getElementById("hub-images-uploaded-notice");
-  if (notice) notice.style.display = "none";
-  document.getElementById("us-status").value = "rider_inv";
-  showToast("✅ Case marked as In Progress");
+  c.startDate = startDate;
+  // Persist to localStorage
+  try{
+    const all = JSON.parse(localStorage.getItem("fpi_cases")||"[]");
+    const idx = all.findIndex(x=>x.id===caseId);
+    if(idx>=0){all[idx].st="rider_inv"; all[idx].startDate=startDate;}
+    else{all.push(Object.assign({},c,{st:"rider_inv",startDate}));}
+    localStorage.setItem("fpi_cases",JSON.stringify(all));
+  }catch(e){}
+  // Sync to sheet — status + Case Start Date
+  try{
+    const swCb="fpiSwCb_"+Date.now();
+    const swParams=new URLSearchParams({
+      action:"update_case_status", case_id:caseId,
+      status:"Rider Investigation",
+      case_start_date:startDate,
+      callback:swCb
+    });
+    window[swCb]=function(r){try{delete window[swCb];}catch(e){}};
+    const swS=document.createElement("script");
+    swS.src=APPS_SCRIPT_URL+"?"+swParams.toString();
+    swS.onerror=()=>{try{delete window[swCb];}catch(e){}};
+    document.head.appendChild(swS);
+    setTimeout(()=>{try{swS.remove();delete window[swCb];}catch(e){}},8000);
+  }catch(e){}
+  document.getElementById("start-working-banner").style.display="none";
+  document.getElementById("us-status").value="rider_inv";
+  showToast("✅ Case marked as In Progress — "+startDate);
   renderOpenCases(); renderFeaturedCases();
-}
-
-// Hub image state
-var _hubImages = { 1:null, 2:null, 3:null };
-
-function handleHubImage(slot, input) {
-  var file = input.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    _hubImages[slot] = { base64: e.target.result, name: "Hub_Image_"+slot };
-    var prev  = document.getElementById("hub-slot-"+slot+"-prev");
-    var icon  = document.getElementById("hub-slot-"+slot+"-icon");
-    var lbl   = document.getElementById("hub-slot-"+slot+"-lbl");
-    var ok    = document.getElementById("hub-slot-"+slot+"-ok");
-    var slot_el = document.getElementById("hub-slot-"+slot);
-    if (prev) { prev.src = e.target.result; prev.style.display = "block"; }
-    if (icon) icon.style.display = "none";
-    if (lbl)  lbl.style.display  = "none";
-    if (ok)   { ok.style.display = "flex"; }
-    if (slot_el) slot_el.style.borderColor = "var(--grn)";
-    _updateHubImgStatus();
-  };
-  reader.readAsDataURL(file);
-}
-
-function _updateHubImgStatus() {
-  var count = [1,2,3].filter(function(s){ return !!_hubImages[s]; }).length;
-  var statusEl = document.getElementById("hub-img-status");
-  var btn      = document.getElementById("start-working-btn");
-  if (statusEl) {
-    statusEl.textContent = count + " / 3 photos selected";
-    statusEl.style.color = count === 3 ? "var(--grn)" : "var(--txt3)";
-  }
-  if (btn) btn.disabled = count < 3;
-}
-
-function _resetHubImageSlots() {
-  _hubImages = { 1:null, 2:null, 3:null };
-  [1,2,3].forEach(function(s) {
-    var prev  = document.getElementById("hub-slot-"+s+"-prev");
-    var icon  = document.getElementById("hub-slot-"+s+"-icon");
-    var lbl   = document.getElementById("hub-slot-"+s+"-lbl");
-    var ok    = document.getElementById("hub-slot-"+s+"-ok");
-    var slot_el = document.getElementById("hub-slot-"+s);
-    var inp   = document.getElementById("hub-img-"+s);
-    if (prev) { prev.src=""; prev.style.display="none"; }
-    if (icon) icon.style.display = "block";
-    if (lbl)  lbl.style.display  = "block";
-    if (ok)   ok.style.display   = "none";
-    if (slot_el) slot_el.style.borderColor = "";
-    if (inp)  inp.value = "";
-  });
-  _updateHubImgStatus();
-}
-
-async function markStartWorking() {
-  var caseId = document.getElementById("us-id").textContent;
-  var c = myCases.find(function(x){ return x.id === caseId; });
-  if (!c) return;
-
-  // Validate all 3 hub images selected
-  var imgCount = [1,2,3].filter(function(s){ return !!_hubImages[s]; }).length;
-  if (imgCount < 3) {
-    showToast("Please select all 3 hub photos first");
-    return;
-  }
-
-  // Disable button, show uploading state
-  var btn = document.getElementById("start-working-btn");
-  if (btn) { btn.disabled = true; btn.innerHTML = "⏳ Uploading images…"; }
-  showToast("Uploading hub images to Drive…");
-
-  try {
-    // Send images via POST to Apps Script (base64 too large for GET)
-    var images = [1,2,3].map(function(s) {
-      return { name: "Hub_Image_"+s, base64: _hubImages[s].base64 };
-    });
-    var payload = JSON.stringify({
-      action:   "upload_hub_images",
-      case_id:  caseId,
-      images:   images
-    });
-    var resp = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: payload
-    });
-    var result = await resp.json();
-    if (result && result.alreadyUploaded) {
-      showToast("Hub images already uploaded for this case");
-    } else if (result && result.ok) {
-      showToast("✅ Hub images uploaded to Drive");
-    } else {
-      showToast("⚠ Image upload failed — " + ((result&&result.error)||"unknown error"));
-      console.warn("[HubImages] Upload failed:", result);
-    }
-  } catch(ex) {
-    console.warn("[HubImages] POST error:", ex.message);
-    showToast("⚠ Could not upload images — continuing anyway");
-  }
-
-  // Now stamp Case_Started_Date via JSONP GET
-  try {
-    var cb = "fpiStartCb_"+Date.now();
-    var params = new URLSearchParams({
-      action:   "start_working",
-      case_id:  caseId,
-      callback: cb
-    });
-    window[cb] = function(r) {
-      try{ delete window[cb]; }catch(e){}
-      if (r && r.alreadyStarted) {
-        showToast("Case already started — updating status");
-      }
-    };
-    var s = document.createElement("script");
-    s.src = APPS_SCRIPT_URL + "?" + params.toString();
-    s.onerror = function(){ try{ delete window[cb]; }catch(e){}; };
-    document.head.appendChild(s);
-    setTimeout(function(){ try{ s.remove(); delete window[cb]; }catch(e){}; }, 8000);
-  } catch(ex) { console.warn("[StartWorking] JSONP error:", ex); }
-
-  // Update local state
-  c.st = "rider_inv";
-  c.hubImagesUploaded = true;
-  try {
-    var all = JSON.parse(localStorage.getItem("fpi_cases")||"[]");
-    var idx2 = all.findIndex(function(x){ return x.id === caseId; });
-    if (idx2 >= 0) { all[idx2].st = "rider_inv"; localStorage.setItem("fpi_cases", JSON.stringify(all)); }
-  } catch(e) {}
-
-  document.getElementById("start-working-banner").style.display = "none";
-  document.getElementById("us-status").value = "rider_inv";
-  if (btn) { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Working'; }
-  _resetHubImageSlots();
-  showToast("✅ Case started — images saved");
-  renderOpenCases();
-  renderFeaturedCases();
 }
 function openRecovery(caseId){
   document.getElementById("rs-id").textContent=caseId;
@@ -962,77 +772,211 @@ function handlePhotos(inputId,galleryId,previewId){
   showToast(`${files.length} file${files.length>1?"s":""} attached ✓`);
 }
 function submitUpdate(){
-  const status=document.getElementById("us-status").value;
-  if(!status){showToast("Select a status first");return;}
-  const caseId=document.getElementById("us-id").textContent;
-  const notes =document.getElementById("us-notes").value.trim();
-  const utr   =document.getElementById("cl-utr").value.trim();
-  const amt   =parseInt(document.getElementById("cl-amt")?.value||"0")||0;
-  const police=document.getElementById("us-police").value;
-  const c=myCases.find(x=>x.id===caseId);
-  const nowStr=new Date().toLocaleDateString("en-IN");
+  const status = document.getElementById("us-status").value;
+  if(!status){ showToast("Select a status first","warn"); return; }
 
+  const caseId = document.getElementById("us-id").textContent.trim();
+  const c      = myCases.find(x=>x.id===caseId);
+
+  // Case was previously closed — sheet will add new row (handled server-side)
+
+  const notes  = document.getElementById("us-notes").value.trim();
+  const utr    = document.getElementById("cl-utr").value.trim();
+  const amt    = parseInt(document.getElementById("cl-amt")?.value||"0")||0;
+  const police = document.getElementById("us-police").value;
+  const closureNotes = (document.getElementById("cl-notes")||{}).value||notes||"";
+  const closedDate   = (status==="closed") ? new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"}) : "";
+
+  // ── Collect evidence images from es-ph input ─────────────────────
+  var evidenceBase64List = [];
+  var esInput = document.getElementById("es-ph");
+  if(esInput && esInput.files && esInput.files.length){
+    var esFiles = Array.from(esInput.files);
+    esFiles.forEach(function(f){
+      var reader2 = new FileReader();
+      reader2.onload = function(ev){
+        evidenceBase64List.push({base64: ev.target.result, name: f.name, type: f.type});
+      };
+      reader2.readAsDataURL(f);
+    });
+  }
+
+  // ── Update local state immediately ──────────────────────────────
   if(c){
-    c.st=status;
-    if(police)c.policeAction=police;
-    if(amt>0)c.recovery=amt;
-    if(utr)c.utr=utr;
-    // Stamp closed date locally
-    if(status==="closed"){
-      c.closedDate = nowStr;
-    }
-    if(!c.updates)c.updates=[];
-    c.updates.push({date:nowStr,status,notes,police,recovery:amt,utr,photos:0});
+    c.st = status;
+    if(police)   c.policeAction = police;
+    if(amt > 0)  c.recovery     = amt;
+    if(utr)      c.utr          = utr;
+    if(closedDate) c.closedDate = closedDate;
+    if(!c.updates) c.updates    = [];
+    c.updates.push({date:new Date().toLocaleDateString("en-IN"),status,notes,police,recovery:amt,utr,photos:evidenceBase64List.length});
+    // Save to localStorage
     try{
-      const all=JSON.parse(localStorage.getItem("fpi_cases")||"[]");
-      const idx=all.findIndex(x=>x.id===caseId);
-      if(idx>=0){all[idx]=Object.assign(all[idx],{st:c.st,policeAction:c.policeAction,recovery:c.recovery,utr:c.utr,updates:c.updates,closedDate:c.closedDate||""});}
+      const all = JSON.parse(localStorage.getItem("fpi_cases")||"[]");
+      const idx = all.findIndex(x=>x.id===caseId);
+      if(idx>=0){ all[idx]=Object.assign(all[idx],{st:c.st,policeAction:c.policeAction,recovery:c.recovery,utr:c.utr,updates:c.updates,startDate:c.startDate||all[idx].startDate||"",closedDate:c.closedDate||""}); }
       localStorage.setItem("fpi_cases",JSON.stringify(all));
     }catch(e){}
-    // Sync status update to Apps Script — update_case_status now handles closed date + ageing
-    try{
-      const syncCb="fpiUpdCb_"+Date.now();
-      const syncParams=new URLSearchParams({
-        action:"update_case_status",
-        case_id:caseId, status, recovery:amt, utr, police,
-        callback:syncCb
-      });
-      window[syncCb]=function(r){try{delete window[syncCb];}catch(e){}};
-      const syncS=document.createElement("script");
-      syncS.src=APPS_SCRIPT_URL+"?"+syncParams.toString();
-      syncS.onerror=()=>{try{delete window[syncCb];}catch(e){}};
-      document.head.appendChild(syncS);
-      setTimeout(()=>{try{syncS.remove();delete window[syncCb];}catch(e){}},8000);
-    }catch(e){}
+    renderHistory();
   }
+
+  // ── SHEET UPDATE FIRST — then email + UI ─────────────────────────
+  // Step 1: Sync base status fields via JSONP GET
+  const syncCb = "fpiUpdCb_"+Date.now();
+  const syncParams = new URLSearchParams({
+    action         : "update_case_status",
+    case_id        : caseId,
+    status         : status,
+    recovery       : amt,
+    utr            : utr,
+    police         : police,
+    remarks        : notes,
+    case_closed_date: closedDate,
+    callback       : syncCb
+  });
+
+  window[syncCb] = function(sheetResult){
+    try{ delete window[syncCb]; }catch(e){}
+
+    // Step 2: If closure — upload evidence images + slip, then trigger email
+    if(status==="closed"){
+      var slipB64   = window._slipBase64 || "";
+      var evidImgs  = evidenceBase64List.slice(); // snapshot
+
+      // Upload evidence images to Drive (fire-and-forget, store URLs in sheet)
+      if(evidImgs.length > 0){
+        _uploadEvidenceImages(caseId, evidImgs, function(evidUrls){
+          // Save evidence links to sheet
+          if(evidUrls.length){
+            var ecb = "fpiEvCb_"+Date.now();
+            var ep  = new URLSearchParams({action:"update_case_status",case_id:caseId,evidence_images:evidUrls.join(", "),callback:ecb});
+            window[ecb]=function(){try{delete window[ecb];}catch(e){}};
+            var es3=document.createElement("script");es3.src=APPS_SCRIPT_URL+"?"+ep.toString();document.head.appendChild(es3);
+            setTimeout(function(){try{es3.remove();delete window[ecb];}catch(e){}},8000);
+          }
+          // Now trigger email with first evidence image as attachment
+          _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, evidUrls, closedDate);
+        });
+      } else {
+        _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, [], closedDate);
+      }
+    }
+  };
+
+  const syncS = document.createElement("script");
+  syncS.src   = APPS_SCRIPT_URL+"?"+syncParams.toString();
+  syncS.onerror = function(){ try{delete window[syncCb];}catch(e){} if(status==="closed") _doClosureEmail(caseId,c,amt,utr,police,closureNotes,window._slipBase64||"",[],closedDate); };
+  document.head.appendChild(syncS);
+  setTimeout(function(){ try{syncS.remove();delete window[syncCb];}catch(e){}},10000);
+
+  closeSheet("sh-update");
+
+  // ── UI update ────────────────────────────────────────────────────
   if(status==="closed"){
-    var emailPayload = {
-      id          : caseId,
-      cat         : c ? (c.cat||""  ) : "",
-      type        : c ? (c.type||"" ) : "",
-      hub         : c ? (c.hub||""  ) : "",
-      city        : c ? (c.city||"" ) : "",
-      state       : c ? (c.state||"") : "",
-      val         : c ? (c.val||0   ) : 0,
-      recovery    : amt,
-      utr         : utr,
-      policeAction: police,
-      closureNotes: (document.getElementById("cl-notes")||document.getElementById("us-notes")||{}).value||notes||"",
-      pn          : currentUser.name  || (c ? c.pn  : "") || "",
-      poc_email   : currentUser.email || (c ? c.poc_email : "") || "",
-      slipBase64  : window._slipBase64 || ""
-    };
-    console.log("[Close] Sending closure email:", JSON.stringify(emailPayload).substring(0,200));
-    triggerClosureEmail(emailPayload);
-    showToast("✓ Case closed — sending closure email…");
+    showToast("✓ Case closed — updating sheet & sending email…");
+    // Move to Closed tab after short delay so sheet write completes
+    setTimeout(function(){
+      renderPortalCases();
+      // Auto-navigate to closed tab
+      var closedBtn=document.querySelector(".nb[onclick*=\"closed-cases\"]");
+      if(closedBtn) closedBtn.click();
+    }, 800);
   } else {
     showToast("✓ Update submitted"+(utr?" · UTR: "+utr:""));
+    renderPortalCases();
   }
-  closeSheet("sh-update");
-  renderPortalCases();
+}
+
+// ── Upload evidence images to Drive (parallel) ────────────────────
+function _uploadEvidenceImages(caseId, imgList, callback){
+  var urls   = [];
+  var pending = imgList.length;
+  if(!pending){ callback([]); return; }
+  imgList.forEach(function(img){
+    var rawB64   = img.base64.replace(/^data:[^;]+;base64,/,"");
+    var mimeType = (img.base64.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
+    fetch(APPS_SCRIPT_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({action:"upload_slip",case_id:caseId,base64:rawB64,mime_type:mimeType,agent_email:currentUser.email||""})
+    })
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data && data.url) urls.push(data.url);
+      pending--;
+      if(pending===0) callback(urls);
+    })
+    .catch(function(){ pending--; if(pending===0) callback(urls); });
+  });
+}
+
+// ── Fire closure email after sheet is updated ─────────────────────
+function _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, evidUrls, closedDate){
+  var emailPayload = {
+    id          : caseId,
+    cat         : c ? (c.cat ||"") : "",
+    type        : c ? (c.type||"") : "",
+    hub         : c ? (c.hub ||"") : "",
+    city        : c ? (c.city||"") : "",
+    state       : c ? (c.state||"") : "",
+    val         : c ? (c.val ||0)  : 0,
+    recovery    : amt,
+    utr         : utr,
+    policeAction: police,
+    closureNotes: closureNotes,
+    pn          : currentUser.name  || (c ? c.pn        : "") || "",
+    poc_email   : currentUser.email || (c ? c.poc_email : "") || "",
+    slipBase64  : slipB64,
+    utrSlipUrl  : window._utrSlipUrl || "",
+    evidenceUrls: evidUrls.join(", "),
+    closedDate  : closedDate
+  };
+  console.log("[Close] Triggering closure email for", caseId);
+  triggerClosureEmail(emailPayload);
 }
 
 // ── OCR: extract UTR from payment slip image ──────────────
+// Upload slip image to Google Drive via Apps Script doPost, store URL in sheet
+function uploadSlipToDrive(caseId, base64DataUrl, syncCbName){
+  try{
+    // Remove data URL prefix to get raw base64
+    var base64 = base64DataUrl.replace(/^data:[^;]+;base64,/, "");
+    var mimeType = (base64DataUrl.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
+    fetch(APPS_SCRIPT_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        action: "upload_slip",
+        case_id: caseId,
+        base64: base64,
+        mime_type: mimeType,
+        agent_email: currentUser.email||""
+      })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data && data.url){
+        // Now store the Drive URL in the sheet column
+        var cb2 = "fpiSlipCb_"+Date.now();
+        var p2 = new URLSearchParams({
+          action:"update_case_status",
+          case_id: caseId,
+          utr_slip_url: data.url,
+          callback: cb2
+        });
+        window[cb2]=function(r2){try{delete window[cb2];}catch(e){}};
+        var s2=document.createElement("script");
+        s2.src=APPS_SCRIPT_URL+"?"+p2.toString();
+        document.head.appendChild(s2);
+        setTimeout(function(){try{s2.remove();delete window[cb2];}catch(e){}},8000);
+        window._utrSlipUrl = data.url; // store for inclusion in closure email
+        console.log("[Slip] Uploaded to Drive:", data.url);
+      }
+    })
+    .catch(function(err){ console.warn("[Slip] Upload failed:", err); });
+  }catch(e){ console.warn("[Slip] Upload error:", e); }
+}
+
 function handleSlipUpload(event){
   const file = event.target.files[0];
   if(!file) return;
@@ -10608,58 +10552,97 @@ function getSelfieForSheet(){
 
 // ── Case closure email trigger ────────────────────────────
 function triggerClosureEmail(caseData){
-  // JSONP GET — no-cors POST body is silently dropped by Apps Script
-  console.log("[Email] triggerClosureEmail CALLED", caseData);
-  try{
-    var ts = Date.now();
-    var cb = "fpEmailCb_" + ts;
-    // Slip image too large for JSONP URL — send via separate POST if available
-    // Store slip globally so Apps Script email can reference it if needed
-    var hasSlip = !!(caseData.slipBase64);
-    var params = "action=close_case_email" +
-      "&case_id="       + encodeURIComponent(caseData.id||"") +
-      "&category="      + encodeURIComponent(caseData.cat||"") +
-      "&fraud_type="    + encodeURIComponent(caseData.type||"") +
-      "&hub="           + encodeURIComponent(caseData.hub||"") +
-      "&city="          + encodeURIComponent(caseData.city||"") +
-      "&state="         + encodeURIComponent(caseData.state||"") +
-      "&value="         + encodeURIComponent(caseData.val||0) +
-      "&recovery="      + encodeURIComponent(caseData.recovery||0) +
-      "&utr="           + encodeURIComponent(caseData.utr||"") +
-      "&poc_name="      + encodeURIComponent(caseData.pn||"") +
-      "&poc_email="     + encodeURIComponent(caseData.poc_email||"") +
-      "&police_action=" + encodeURIComponent(caseData.policeAction||"") +
-      "&closure_notes=" + encodeURIComponent(caseData.closureNotes||"") +
-      "&has_slip="      + (hasSlip ? "1" : "0") +
-      "&callback="      + cb;
-    // Clear the global slip reference now
-    window._slipBase64 = null;
-    window[cb] = function(r){
-      try{delete window[cb];}catch(ex){}
-      if(r && r.ok){
-        showToast("📧 Closure email sent to manager");
-        console.log("[Email] Success:", r.msg, r.debug);
-      } else if(r){
-        // Show the actual error so we can debug
-        var errMsg = r.msg || "Unknown error";
-        showToast("⚠ Email error: " + errMsg.substring(0,60));
-        console.error("[Email] Failed:", r.msg, r.debug);
-      } else {
-        showToast("Case closed ✓ (email status unknown)");
-        console.warn("[Email] No response from Apps Script");
+  console.log("[Email] triggerClosureEmail CALLED", caseData.id);
+  var slipB64 = caseData.slipBase64 || "";
+  window._slipBase64 = null; // clear global
+
+  // If slip image present, upload to Drive first → get URL → then send email with both
+  // This ensures the email always has the attachment AND the Drive link
+  if(slipB64){
+    var rawB64   = slipB64.replace(/^data:[^;]+;base64,/,"");
+    var mimeType = (slipB64.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
+    fetch(APPS_SCRIPT_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        action:"upload_slip",
+        case_id: caseData.id||"",
+        base64: rawB64,
+        mime_type: mimeType,
+        agent_email: caseData.poc_email||""
+      })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(driveData){
+      var driveUrl = (driveData && driveData.url) ? driveData.url : "";
+      window._utrSlipUrl = driveUrl;
+      // Store Drive URL in sheet column
+      if(driveUrl){
+        var cb3="fpiSlipSh_"+Date.now();
+        var p3=new URLSearchParams({action:"update_case_status",case_id:caseData.id||"",utr_slip_url:driveUrl,callback:cb3});
+        window[cb3]=function(){try{delete window[cb3];}catch(e){}};
+        var s3=document.createElement("script");s3.src=APPS_SCRIPT_URL+"?"+p3.toString();
+        document.head.appendChild(s3);
+        setTimeout(function(){try{s3.remove();delete window[cb3];}catch(e){}},8000);
       }
-    };
-    var fullUrl = APPS_SCRIPT_URL + "?" + params;
-    console.log("[Email] JSONP URL:", fullUrl.substring(0,120)+"...");
-    var s = document.createElement("script");
-    s.src = fullUrl;
-    s.onerror = function(){
-      console.error("[Email] JSONP script load FAILED — network/CORS error");
-      try{delete window[cb];}catch(ex){}
-    };
-    document.head.appendChild(s);
-    setTimeout(function(){ try{s.remove(); delete window[cb];}catch(ex){} }, 12000);
-  }catch(e){}
+      // Now send closure email — with both base64 attachment AND Drive URL
+      _sendClosureEmailPost(caseData, slipB64, driveUrl);
+    })
+    .catch(function(err){
+      console.warn("[Email] Slip upload failed, sending email without attachment:", err);
+      _sendClosureEmailPost(caseData, slipB64, "");
+    });
+  } else {
+    // No slip — send email immediately
+    _sendClosureEmailPost(caseData, "", caseData.utrSlipUrl||"");
+  }
+}
+
+function _sendClosureEmailPost(caseData, slipB64, driveUrl){
+  // JSONP GET — the only reliable cross-origin method for Apps Script web apps.
+  // Evidence images + slip are passed as Drive URLs (already uploaded).
+  // slip_base64 NOT sent in URL (too large) — Apps Script attaches from Drive URL instead.
+  var cb = "fpEmailCb_"+Date.now();
+  var params = new URLSearchParams({
+    action         : "close_case_email",
+    case_id        : caseData.id            || "",
+    category       : caseData.cat           || "",
+    fraud_type     : caseData.type          || "",
+    hub            : caseData.hub           || "",
+    city           : caseData.city          || "",
+    state          : caseData.state         || "",
+    value          : caseData.val           || 0,
+    recovery       : caseData.recovery      || 0,
+    utr            : caseData.utr           || "",
+    poc_name       : caseData.pn            || "",
+    poc_email      : caseData.poc_email     || "",
+    police_action  : caseData.policeAction  || "",
+    closure_notes  : caseData.closureNotes  || "",
+    utr_slip_url   : driveUrl               || "",
+    evidence_urls  : caseData.evidenceUrls  || "",
+    closed_date    : caseData.closedDate    || "",
+    callback       : cb
+  });
+  window[cb] = function(data){
+    try{ delete window[cb]; }catch(e){}
+    if(data && data.ok){
+      showToast("📧 Closure email sent to manager");
+      console.log("[Email] Sent OK for", caseData.id);
+    } else {
+      var msg = data ? (data.error||data.msg||"Unknown error") : "No response";
+      showToast("⚠ Email: "+String(msg).substring(0,60));
+      console.error("[Email] Failed:", data);
+    }
+  };
+  var s = document.createElement("script");
+  s.src = APPS_SCRIPT_URL + "?" + params.toString();
+  s.onerror = function(){
+    try{ delete window[cb]; }catch(e){}
+    console.error("[Email] JSONP load failed");
+    showToast("Case closed ✓ (email delivery unknown)");
+  };
+  document.head.appendChild(s);
+  setTimeout(function(){ try{ s.remove(); delete window[cb]; }catch(e){} }, 15000);
 }
 
 // ── OCR — extract UTR from uploaded image using regex on canvas ──
@@ -10694,12 +10677,7 @@ function extractUTRFromImage(base64){
       // Always re-fetch agents to pick up new additions
       loadAgentsFromSheet().then(()=>{
         loadMyCases();
-        // Auto-refresh cases every 60s so newly assigned cases appear
-        if(!window._caseRefreshTimer){
-          window._caseRefreshTimer = setInterval(function(){
-            if(document.visibilityState!=="hidden") loadMyCases();
-          }, 60000);
-        }
+        // Refresh timer is already started in the main login flow — no duplicate needed
       });
       return;
     }catch(e){}
@@ -10731,15 +10709,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 // ══════════════════════════════════════════════════════════
 // FPI FIELD PORTAL — AUTH · ONBOARDING · CASES
 // ══════════════════════════════════════════════════════════
-// ╔══════════════════════════════════════════════════════════════════════════╗
-// ║              ★  FIELD PORTAL — CHANGE THESE WHEN NEEDED  ★             ║
-// ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  PORTAL_SHEET_ID → Google Sheet ID (from the sheet URL after /d/)       ║
-// ║  APPS_SCRIPT_URL → Deployed Apps Script Web App URL                     ║
-// ║    How to update: Apps Script → Deploy → Manage deployments → copy URL  ║
-// ╚══════════════════════════════════════════════════════════════════════════╝
-const PORTAL_SHEET_ID = "1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";  // ← SHEET ID
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";  // ← APPS SCRIPT URL
+const PORTAL_SHEET_ID = "1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtG-mkDh2bwlFRJaX3UxBI39tszTBNvq9tyKEwWRDJ6IwY_YXrQFWv6TjxKhdagG2vMQ/exec";
 const COLORS = ["#3b8ef8","#27c77a","#9b72f9","#f5c542","#f04f2b","#ff7eb3","#22d3ee","#a78bfa","#fb923c","#34d399"];
 
 let currentUser  = {name:"",email:"",initials:"",pod:"",zone:"",desig:"",color:""};
@@ -11024,41 +10995,83 @@ async function completeOnboarding(){
 function getSharedCases(){try{const r=localStorage.getItem("fpi_cases");return r?JSON.parse(r):[];}catch(e){return[];}}
 
 async function loadMyCases(){
-  await new Promise(resolve=>{
-    const cb="fpicb_"+Date.now();
-    const url=APPS_SCRIPT_URL+"?action=get_cases&email="+encodeURIComponent(currentUser.email)+"&callback="+cb;
-    const timer=setTimeout(()=>{cleanup();resolve();},8000);
-    function cleanup(){try{delete window[cb];}catch(e){}const s=document.getElementById("fpi-cases-s");if(s)s.remove();clearTimeout(timer);}
-    window[cb]=function(data){
+  // Snapshot locally-stored cases keyed by id BEFORE fetching from sheet.
+  // This preserves agent-made changes (status, startDate, updates) across refreshes.
+  var localMap = {};
+  try{
+    var _local = JSON.parse(localStorage.getItem("fpi_cases")||"[]");
+    _local.forEach(function(c){ if(c.id) localMap[c.id]=c; });
+  }catch(_e){}
+
+  await new Promise(function(resolve){
+    var cb    = "fpicb_"+Date.now();
+    var url   = APPS_SCRIPT_URL+"?action=get_cases&email="+encodeURIComponent(currentUser.email)+"&callback="+cb;
+    var timer = setTimeout(function(){ cleanup(); resolve(); }, 8000);
+    function cleanup(){
+      try{delete window[cb];}catch(e){}
+      var _s=document.getElementById("fpi-cases-s"); if(_s)_s.remove();
+      clearTimeout(timer);
+    }
+    window[cb] = function(data){
       cleanup();
       try{
-        if(data&&data.cases){
-          myCases=data.cases.map(row=>{
-            // Support both new column names and old fallbacks
-            var lossType  = row["Loss Type"]||row["Fraud Type"]||"";
-            var prodVal   = parseFloat(row["Product Value"]||row["Value"]||0)||0;
-            var awbList   = row["AWB Numbers"]||row["AWB_Numbers"]||"";
-            var sfxStatus = row["SFX Status"]||row["SFX_Status"]||"";
-            var cxRider   = row["Cx as Rider - Rider Id"]||"";
-            var lmRider   = row["Last attempt LM rider id"]||"";
-            var cxName    = row["Customer name"]||row["Customer Name"]||"";
-            return{
-              id          : row["Case ID"]||"",
+        if(data && data.cases && data.cases.length){
+          var seenIds = {};
+          myCases = [];
+          data.cases.forEach(function(row){
+            var id = String(row["Case ID"]||"").trim();
+            if(!id || seenIds[id]) return; // skip blank or duplicate Case IDs
+            seenIds[id] = true;
+
+            var lossType = row["Loss Type"]||row["Fraud Type"]||"";
+            var prodVal  = parseFloat(row["Product Value"]||row["Value"]||0)||0;
+            var awbList  = row["AWB Numbers"]||row["AWB_Numbers"]||"";
+            var sheetSt  = statusKeyFromLabel(row["Status"]||"");
+
+            // ── Merge local changes ──────────────────────────────────
+            // The sheet is authoritative for "closed".
+            // For all other statuses, if the agent has locally set a
+            // non-default status, keep it so refreshes don't revert work.
+            var local = localMap[id];
+            var mergedSt         = sheetSt;
+            var mergedUpdates    = [];
+            var mergedStartDate  = String(row["Case Start Date"]||"");
+            var mergedClosedDate = String(row["Case Closed Date"]||"");
+
+            if(local){
+              if(sheetSt === "closed" && local.st === "closed"){
+                // Both sheet and local agree: case is closed → stay closed
+                mergedSt = "closed";
+              } else if(sheetSt === "closed" && local.st && local.st !== "closed"){
+                // Sheet says closed but local has a newer re-open → local wins
+                mergedSt = local.st;
+              } else if(local.st && local.st !== "pending_date" && local.st !== sheetSt){
+                // Agent has updated locally to a non-default status → keep it
+                mergedSt = local.st;
+              }
+              // else: keep sheetSt (default)
+              if(local.updates && local.updates.length)    mergedUpdates    = local.updates;
+              if(local.startDate  && !mergedStartDate)     mergedStartDate  = local.startDate;
+              if(local.closedDate && !mergedClosedDate)    mergedClosedDate = local.closedDate;
+            }
+
+            myCases.push({
+              id          : id,
               cat         : row["Category"]||"Shipment Fraud",
               type        : lossType,
               fp          : fpFromType(lossType),
-              sfxStatus   : sfxStatus,
+              sfxStatus   : row["SFX Status"]||row["SFX_Status"]||"",
               hub         : row["Hub"]||"",
               city        : row["City"]||"",
               state       : row["State"]||"",
               awbList     : awbList,
-              awbs        : awbList.split(/[,\n]+/).filter(a=>a.trim()).length||1,
+              awbs        : awbList.split(/[,\n]+/).filter(function(a){return a.trim();}).length||1,
               val         : prodVal,
               desc        : row["Product Description"]||row["Description"]||"",
-              cxRider     : cxRider,
-              lmRider     : lmRider,
-              cxName      : cxName,
-              st          : statusKeyFromLabel(row["Status"]||""),
+              cxRider     : row["Cx as Rider - Rider Id"]||"",
+              lmRider     : row["Last attempt LM rider id"]||"",
+              cxName      : row["Customer name"]||row["Customer Name"]||"",
+              st          : mergedSt,
               pri         : row["Priority"]||"",
               poc         : row["FPI POC"]||"",
               pn          : row["FPI POC"]||"",
@@ -11067,29 +11080,51 @@ async function loadMyCases(){
               recovery    : parseFloat(row["Recovery"]||0)||0,
               utr         : row["UTR"]||"",
               date        : row["Date Filed"]||"",
-              riders:[],ridersTerminated:0,rh:[],updates:[]
-            };
+              startDate   : mergedStartDate,
+              closedDate  : mergedClosedDate,
+              riders:[],ridersTerminated:0,rh:[],
+              updates     : mergedUpdates
+            });
           });
-          try{localStorage.setItem("fpi_cases",JSON.stringify(myCases));}catch(e){}
+
+          // Add locally-known cases not yet in the sheet
+          // (assigned by CM but sheet hasn't synced yet)
+          Object.keys(localMap).forEach(function(id){
+            if(seenIds[id]) return; // already included
+            var lc = localMap[id];
+            if(!lc.poc_email && !lc.poc) return;
+            var em = lc.poc_email && lc.poc_email.toLowerCase()===currentUser.email.toLowerCase();
+            var im = lc.poc && currentUser.initials && lc.poc.toUpperCase()===currentUser.initials.toUpperCase();
+            var nm = lc.pn  && currentUser.name     && lc.pn.toLowerCase().trim()===currentUser.name.toLowerCase().trim();
+            if(em||im||nm){ seenIds[id]=true; myCases.push(lc); }
+          });
+
+          // Persist merged result
+          try{ localStorage.setItem("fpi_cases", JSON.stringify(myCases)); }catch(e){}
         }
-      }catch(e){console.warn("Cases parse:",e.message);}
+      }catch(e){ console.warn("Cases parse:", e.message); }
       resolve();
     };
-    const s=document.createElement("script");s.id="fpi-cases-s";s.src=url;
-    s.onerror=()=>{cleanup();resolve();};
-    document.head.appendChild(s);
+    var _sc = document.createElement("script");
+    _sc.id  = "fpi-cases-s";
+    _sc.src = url;
+    _sc.onerror = function(){ cleanup(); resolve(); };
+    document.head.appendChild(_sc);
   });
+
+  // Fallback: sheet returned nothing — use localStorage only
   if(!myCases.length){
-    const all=getSharedCases();
-    myCases=all.filter(c=>{
-      if(!c.poc&&!c.poc_email)return false;
-      if(c.poc_email&&c.poc_email.toLowerCase()===currentUser.email)return true;
-      if(c.poc&&currentUser.initials&&c.poc.toUpperCase()===currentUser.initials.toUpperCase())return true;
-      return false;
+    myCases = Object.values(localMap).filter(function(c){
+      if(!c.poc && !c.poc_email) return false;
+      var em2 = c.poc_email && c.poc_email.toLowerCase()===currentUser.email.toLowerCase();
+      var im2 = c.poc && currentUser.initials && c.poc.toUpperCase()===currentUser.initials.toUpperCase();
+      return em2||im2;
     });
   }
+
   renderPortalCases();
 }
+
 function fpFromType(t){if(!t)return"fp-q";t=t.toLowerCase();if(t.includes("x-ray"))return"fp-x";if(t.includes("pv"))return"fp-p";if(t.includes("dbnu"))return"fp-d";if(t.includes("rtod"))return"fp-r";if(t.includes("lh"))return"fp-l";return"fp-q";}
 function statusKeyFromLabel(label){
   const map={
@@ -11236,8 +11271,43 @@ function submitRecovery(){
   renderPortalCases();
 }
 function submitEvidence(){
+  // Collect base64 images from the evidence sheet
+  var esInput = document.getElementById("es-ph");
+  var caption  = (document.getElementById("es-caption")||{}).value||"";
+  var caseId   = (document.getElementById("es-id")||{}).textContent||"";
+
+  if(esInput && esInput.files && esInput.files.length > 0){
+    var files = Array.from(esInput.files);
+    var loaded = 0;
+    var evidList = [];
+    files.forEach(function(f){
+      var reader3 = new FileReader();
+      reader3.onload = function(ev){
+        evidList.push({base64:ev.target.result, name:f.name, type:f.type});
+        loaded++;
+        if(loaded === files.length){
+          // Upload all to Drive and write URLs to sheet
+          _uploadEvidenceImages(caseId, evidList, function(urls){
+            if(urls.length && caseId){
+              var ecb2 = "fpiEvCb2_"+Date.now();
+              var note  = caption ? caption+" | " : "";
+              var ep2   = new URLSearchParams({action:"update_case_status",case_id:caseId,evidence_images:note+urls.join(", "),callback:ecb2});
+              window[ecb2]=function(){try{delete window[ecb2];}catch(e){}};
+              var es4=document.createElement("script");es4.src=APPS_SCRIPT_URL+"?"+ep2.toString();document.head.appendChild(es4);
+              setTimeout(function(){try{es4.remove();delete window[ecb2];}catch(e){}},8000);
+              showToast("✓ "+urls.length+" evidence image"+(urls.length>1?"s":"")+" uploaded to Drive");
+            } else {
+              showToast("✓ Evidence submitted");
+            }
+          });
+        }
+      };
+      reader3.readAsDataURL(f);
+    });
+  } else {
+    showToast("✓ Evidence submitted");
+  }
   closeSheet("sh-evidence");
-  showToast("✓ Evidence submitted");
 }
 
 // ── Case status categories ────────────────────────────────
@@ -11421,7 +11491,7 @@ function renderProfile(){
   const total=myCases.length;
   const totalVal=myCases.reduce((s,c)=>s+(c.val||0),0);
   const recoveredVal=myCases.reduce((s,c)=>s+(c.recovery||0),0);
-  const recRate=totalVal>0?Math.round((recoveredVal/totalVal)*100):0;
+  const recRate=totalVal>0?Math.min(100,Math.round((recoveredVal/totalVal)*100)):0;
   const catCounts={};
   myCases.forEach(c=>{catCounts[c.cat]=(catCounts[c.cat]||0)+1;});
   const maxCat=Math.max(...Object.values(catCounts),1);
@@ -11434,7 +11504,7 @@ function renderProfile(){
     <div class="psgrid">
       <div class="ps"><div class="psv" style="color:var(--red)">${active}</div><div class="psl">Active Cases</div></div>
       <div class="ps"><div class="psv" style="color:var(--grn)">${closed}</div><div class="psl">Closed</div></div>
-      <div class="ps"><div class="psv" style="color:var(--yel)">${recRate}%</div><div class="psl">Recovery Rate</div></div>
+      <div class="ps"><div class="psv" style="color:var(--yel);font-size:${recRate===100?'18px':'22px'}">${recRate}%</div><div class="psl">Recovery Rate</div></div>
       <div class="ps"><div class="psv" style="color:var(--acc)">${total}</div><div class="psl">Total Cases</div></div>
     </div>
     ${Object.keys(catCounts).length?`
