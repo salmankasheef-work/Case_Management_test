@@ -792,7 +792,7 @@ async function submitUpdate(){
   // immediately used evidenceBase64List which was always [] (race condition).
   var evidenceBase64List = await (function(){
     return new Promise(function(resolve){
-      var esInput = document.getElementById("es-ph");
+      var esInput = document.getElementById("ev-up"); // ev-up is the file input inside sh-update
       if(!esInput || !esInput.files || !esInput.files.length){ resolve([]); return; }
       var esFiles = Array.from(esInput.files);
       var results = new Array(esFiles.length);
@@ -869,28 +869,22 @@ async function submitUpdate(){
   window[syncCb] = function(sheetResult){
     try{ delete window[syncCb]; }catch(e){}
 
-    // Step 2: If closure — upload evidence images + slip, then trigger email
-    if(status==="closed"){
-      var slipB64   = window._slipBase64 || "";
-      var evidImgs  = evidenceBase64List.slice(); // snapshot
+    var evidImgs = evidenceBase64List.slice();
 
-      // Upload evidence images to Drive (fire-and-forget, store URLs in sheet)
-      if(evidImgs.length > 0){
-        _uploadEvidenceImages(caseId, evidImgs, function(evidUrls){
-          // Save evidence links to sheet
-          if(evidUrls.length){
-            var ecb = "fpiEvCb_"+Date.now();
-            var ep  = new URLSearchParams({action:"update_case_status",case_id:caseId,evidence_images:evidUrls.join(", "),callback:ecb});
-            window[ecb]=function(){try{delete window[ecb];}catch(e){}};
-            var es3=document.createElement("script");es3.src=APPS_SCRIPT_URL+"?"+ep.toString();document.head.appendChild(es3);
-            setTimeout(function(){try{es3.remove();delete window[ecb];}catch(e){}},8000);
-          }
-          // Now trigger email with first evidence image as attachment
+    // Upload evidence images for ALL updates (not just closure)
+    // uploadFileToDrive writes URLs directly to "Evidence Image Link" column server-side
+    if(evidImgs.length > 0){
+      _uploadEvidenceImages(caseId, evidImgs, function(evidUrls){
+        if(status==="closed"){
+          var slipB64 = window._slipBase64 || "";
           _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, evidUrls, closedDate);
-        });
-      } else {
-        _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, [], closedDate);
-      }
+        } else {
+          if(evidUrls.length) showToast("✅ "+evidUrls.length+" photo(s) saved to sheet");
+        }
+      });
+    } else if(status==="closed"){
+      var slipB64 = window._slipBase64 || "";
+      _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, [], closedDate);
     }
   };
 
