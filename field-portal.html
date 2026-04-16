@@ -11402,43 +11402,54 @@ function submitRecovery(){
   showToast("✓ Recovery submitted — UTR: "+utr);
   renderPortalCases();
 }
-function submitEvidence(){
-  // Collect base64 images from the evidence sheet
+async function submitEvidence(){
   var esInput = document.getElementById("es-ph");
   var caption  = (document.getElementById("es-caption")||{}).value||"";
   var caseId   = (document.getElementById("es-id")||{}).textContent||"";
 
-  if(esInput && esInput.files && esInput.files.length > 0){
-    var files = Array.from(esInput.files);
-    var loaded = 0;
-    var evidList = [];
-    files.forEach(function(f){
+  if(!esInput || !esInput.files || !esInput.files.length){
+    showToast("✓ Evidence submitted");
+    closeSheet("sh-evidence");
+    return;
+  }
+
+  // CRITICAL: await ALL FileReader reads before uploading.
+  // Without this, evidList is empty when _uploadEvidenceImages is called.
+  var files = Array.from(esInput.files);
+  var evidList = await new Promise(function(resolve){
+    var results = new Array(files.length);
+    var done = 0;
+    files.forEach(function(f, fi){
       var reader3 = new FileReader();
       reader3.onload = function(ev){
-        evidList.push({base64:ev.target.result, name:f.name, type:f.type});
-        loaded++;
-        if(loaded === files.length){
-          // Upload all to Drive and write URLs to sheet
-          _uploadEvidenceImages(caseId, evidList, function(urls){
-            if(urls.length && caseId){
-              var ecb2 = "fpiEvCb2_"+Date.now();
-              var note  = caption ? caption+" | " : "";
-              var ep2   = new URLSearchParams({action:"update_case_status",case_id:caseId,evidence_images:note+urls.join(", "),callback:ecb2});
-              window[ecb2]=function(){try{delete window[ecb2];}catch(e){}};
-              var es4=document.createElement("script");es4.src=APPS_SCRIPT_URL+"?"+ep2.toString();document.head.appendChild(es4);
-              setTimeout(function(){try{es4.remove();delete window[ecb2];}catch(e){}},8000);
-              showToast("✓ "+urls.length+" evidence image"+(urls.length>1?"s":"")+" uploaded to Drive");
-            } else {
-              showToast("✓ Evidence submitted");
-            }
-          });
-        }
+        results[fi] = {base64:ev.target.result, name:f.name, type:f.type};
+        done++;
+        if(done === files.length) resolve(results.filter(Boolean));
+      };
+      reader3.onerror = function(){
+        done++;
+        if(done === files.length) resolve(results.filter(Boolean));
       };
       reader3.readAsDataURL(f);
     });
-  } else {
-    showToast("✓ Evidence submitted");
-  }
+  });
+
+  showToast("Uploading " + evidList.length + " photo(s) to Drive…");
+
+  _uploadEvidenceImages(caseId, evidList, function(urls){
+    if(urls.length && caseId){
+      var ecb2 = "fpiEvCb2_"+Date.now();
+      var note  = caption ? caption+" | " : "";
+      var ep2   = new URLSearchParams({action:"update_case_status",case_id:caseId,evidence_images:note+urls.join(", "),callback:ecb2});
+      window[ecb2]=function(){try{delete window[ecb2];}catch(e){}};
+      var es4=document.createElement("script");es4.src=APPS_SCRIPT_URL+"?"+ep2.toString();document.head.appendChild(es4);
+      setTimeout(function(){try{es4.remove();delete window[ecb2];}catch(e){}},8000);
+      showToast("✅ "+urls.length+" photo(s) uploaded & saved to sheet");
+    } else {
+      showToast("⚠ Upload failed — check console for details");
+    }
+  });
+
   closeSheet("sh-evidence");
 }
 
