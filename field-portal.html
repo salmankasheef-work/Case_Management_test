@@ -11436,14 +11436,10 @@ async function submitEvidence(){
 
   showToast("Uploading " + evidList.length + " photo(s) to Drive…");
 
+  // uploadFileToDrive already writes URLs directly to "Evidence Image Link"
+  // column in the sheet server-side — no extra JSONP call needed.
   _uploadEvidenceImages(caseId, evidList, function(urls){
-    if(urls.length && caseId){
-      var ecb2 = "fpiEvCb2_"+Date.now();
-      var note  = caption ? caption+" | " : "";
-      var ep2   = new URLSearchParams({action:"update_case_status",case_id:caseId,evidence_images:note+urls.join(", "),callback:ecb2});
-      window[ecb2]=function(){try{delete window[ecb2];}catch(e){}};
-      var es4=document.createElement("script");es4.src=APPS_SCRIPT_URL+"?"+ep2.toString();document.head.appendChild(es4);
-      setTimeout(function(){try{es4.remove();delete window[ecb2];}catch(e){}},8000);
+    if(urls.length){
       showToast("✅ "+urls.length+" photo(s) uploaded & saved to sheet");
     } else {
       showToast("⚠ Upload failed — check console for details");
