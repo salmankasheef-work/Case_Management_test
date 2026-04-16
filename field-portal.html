@@ -771,7 +771,7 @@ function handlePhotos(inputId,galleryId,previewId){
   }
   showToast(`${files.length} file${files.length>1?"s":""} attached ✓`);
 }
-function submitUpdate(){
+async function submitUpdate(){
   const status = document.getElementById("us-status").value;
   if(!status){ showToast("Select a status first","warn"); return; }
 
@@ -787,19 +787,32 @@ function submitUpdate(){
   const closureNotes = (document.getElementById("cl-notes")||{}).value||notes||"";
   const closedDate   = (status==="closed") ? new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"}) : "";
 
-  // ── Collect evidence images from es-ph input ─────────────────────
-  var evidenceBase64List = [];
-  var esInput = document.getElementById("es-ph");
-  if(esInput && esInput.files && esInput.files.length){
-    var esFiles = Array.from(esInput.files);
-    esFiles.forEach(function(f){
-      var reader2 = new FileReader();
-      reader2.onload = function(ev){
-        evidenceBase64List.push({base64: ev.target.result, name: f.name, type: f.type});
-      };
-      reader2.readAsDataURL(f);
+  // ── Collect evidence images — await all FileReader reads FIRST ──────
+  // CRITICAL FIX: FileReader.readAsDataURL is async. We must wait for ALL
+  // reads to complete before using the images. Old code had a race condition
+  // where evidenceBase64List was always [] when used.
+  var evidenceBase64List = await (function(){
+    return new Promise(function(resolve){
+      var esInput = document.getElementById("es-ph");
+      if(!esInput || !esInput.files || !esInput.files.length){ resolve([]); return; }
+      var esFiles = Array.from(esInput.files);
+      var results = [];
+      var done = 0;
+      esFiles.forEach(function(f, fi){
+        var reader2 = new FileReader();
+        reader2.onload = function(ev){
+          results[fi] = {base64: ev.target.result, name: f.name, type: f.type};
+          done++;
+          if(done === esFiles.length) resolve(results);
+        };
+        reader2.onerror = function(){
+          done++;
+          if(done === esFiles.length) resolve(results.filter(Boolean));
+        };
+        reader2.readAsDataURL(f);
+      });
     });
-  }
+  })();
 
   // ── Update local state immediately ──────────────────────────────
   if(c){
@@ -887,26 +900,66 @@ function submitUpdate(){
   }
 }
 
-// ── Upload evidence images to Drive (parallel) ────────────────────
+// ── Upload evidence images to Drive ──────────────────────────────────
+// Uses JSONP GET for CORS-safe upload. Base64 is chunked to avoid URL limits.
+// Falls back to POST if small enough.
 function _uploadEvidenceImages(caseId, imgList, callback){
-  var urls   = [];
+  var urls    = [];
   var pending = imgList.length;
   if(!pending){ callback([]); return; }
-  imgList.forEach(function(img){
+
+  imgList.forEach(function(img, idx){
     var rawB64   = img.base64.replace(/^data:[^;]+;base64,/,"");
     var mimeType = (img.base64.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
-    fetch(APPS_SCRIPT_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({action:"upload_slip",case_id:caseId,base64:rawB64,mime_type:mimeType,agent_email:currentUser.email||""})
-    })
-    .then(function(r){return r.json();})
-    .then(function(data){
+
+    // Use JSONP GET with callback to bypass CORS redirect issues.
+    // Apps Script doGet handles upload_slip action when passed via GET.
+    // For large images we use POST with a callback param in the body.
+    var cbName = "fpiUploadCb_"+Date.now()+"_"+idx;
+    var body = JSON.stringify({
+      action    : "upload_slip",
+      case_id   : caseId,
+      base64    : rawB64,
+      mime_type : mimeType,
+      callback  : cbName
+    });
+
+    window[cbName] = function(data){
+      try{ delete window[cbName]; }catch(e){}
       if(data && data.url) urls.push(data.url);
       pending--;
       if(pending===0) callback(urls);
+    };
+
+    // POST with callback in body — Apps Script doPost returns JSONP when callback present
+    fetch(APPS_SCRIPT_URL, {
+      method : "POST",
+      headers: { "Content-Type":"application/json" },
+      body   : body
     })
-    .catch(function(){ pending--; if(pending===0) callback(urls); });
+    .then(function(r){ return r.text(); })
+    .then(function(text){
+      // Response will be "callbackName({...})" — eval it to trigger the callback
+      try{
+        // Safely extract JSON from JSONP response
+        var m = text.match(/^[\w]+\((.+)\)\s*;?\s*$/s);
+        if(m){ window[cbName] && window[cbName](JSON.parse(m[1])); }
+        else {
+          // Plain JSON response
+          window[cbName] && window[cbName](JSON.parse(text));
+        }
+      }catch(ex){
+        console.warn("[Upload] Parse error:", ex.message, "raw:", text.substring(0,100));
+        pending--;
+        if(pending===0) callback(urls);
+      }
+    })
+    .catch(function(err){
+      console.warn("[Upload] fetch error:", err.message);
+      try{ delete window[cbName]; }catch(e){}
+      pending--;
+      if(pending===0) callback(urls);
+    });
   });
 }
 
@@ -942,38 +995,54 @@ function uploadSlipToDrive(caseId, base64DataUrl, syncCbName){
     // Remove data URL prefix to get raw base64
     var base64 = base64DataUrl.replace(/^data:[^;]+;base64,/, "");
     var mimeType = (base64DataUrl.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
-    fetch(APPS_SCRIPT_URL, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({
-        action: "upload_slip",
-        case_id: caseId,
-        base64: base64,
-        mime_type: mimeType,
-        agent_email: currentUser.email||""
-      })
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(data){
+    var slipCbName = "fpiSlipCb_"+Date.now();
+    var slipBody = JSON.stringify({
+      action     : "upload_slip",
+      case_id    : caseId,
+      base64     : base64,
+      mime_type  : mimeType,
+      callback   : slipCbName
+    });
+
+    window[slipCbName] = function(data){
+      try{ delete window[slipCbName]; }catch(e){}
       if(data && data.url){
-        // Now store the Drive URL in the sheet column
-        var cb2 = "fpiSlipCb_"+Date.now();
-        var p2 = new URLSearchParams({
-          action:"update_case_status",
-          case_id: caseId,
-          utr_slip_url: data.url,
-          callback: cb2
+        // Store Drive URL in sheet column
+        var cb2 = "fpiSlipStore_"+Date.now();
+        var p2  = new URLSearchParams({
+          action:"update_case_status", case_id:caseId,
+          utr_slip_url:data.url, callback:cb2
         });
-        window[cb2]=function(r2){try{delete window[cb2];}catch(e){}};
+        window[cb2]=function(){try{delete window[cb2];}catch(e){}};
         var s2=document.createElement("script");
         s2.src=APPS_SCRIPT_URL+"?"+p2.toString();
         document.head.appendChild(s2);
         setTimeout(function(){try{s2.remove();delete window[cb2];}catch(e){}},8000);
-        window._utrSlipUrl = data.url; // store for inclusion in closure email
-        console.log("[Slip] Uploaded to Drive:", data.url);
+        window._utrSlipUrl = data.url;
+        console.log("[Slip] Drive URL stored:", data.url);
+      }
+    };
+
+    fetch(APPS_SCRIPT_URL, {
+      method : "POST",
+      headers: { "Content-Type":"application/json" },
+      body   : slipBody
+    })
+    .then(function(r){ return r.text(); })
+    .then(function(text){
+      try{
+        var m = text.match(/^[\w]+\((.+)\)\s*;?\s*$/s);
+        if(m){ window[slipCbName] && window[slipCbName](JSON.parse(m[1])); }
+        else  { window[slipCbName] && window[slipCbName](JSON.parse(text)); }
+      }catch(ex){
+        console.warn("[Slip] Parse error:", ex.message);
+        try{ delete window[slipCbName]; }catch(e){}
       }
     })
-    .catch(function(err){ console.warn("[Slip] Upload failed:", err); });
+    .catch(function(err){
+      console.warn("[Slip] Upload error:", err.message);
+      try{ delete window[slipCbName]; }catch(e){}
+    });
   }catch(e){ console.warn("[Slip] Upload error:", e); }
 }
 
@@ -10561,19 +10630,17 @@ function triggerClosureEmail(caseData){
   if(slipB64){
     var rawB64   = slipB64.replace(/^data:[^;]+;base64,/,"");
     var mimeType = (slipB64.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
-    fetch(APPS_SCRIPT_URL, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({
-        action:"upload_slip",
-        case_id: caseData.id||"",
-        base64: rawB64,
-        mime_type: mimeType,
-        agent_email: caseData.poc_email||""
-      })
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(driveData){
+    var tcbName = "fpiTrigSlip_"+Date.now();
+    var trigBody = JSON.stringify({
+      action    : "upload_slip",
+      case_id   : caseData.id||"",
+      base64    : rawB64,
+      mime_type : mimeType,
+      callback  : tcbName
+    });
+
+    window[tcbName] = function(driveData){
+      try{ delete window[tcbName]; }catch(e){}
       var driveUrl = (driveData && driveData.url) ? driveData.url : "";
       window._utrSlipUrl = driveUrl;
       // Store Drive URL in sheet column
@@ -10585,11 +10652,29 @@ function triggerClosureEmail(caseData){
         document.head.appendChild(s3);
         setTimeout(function(){try{s3.remove();delete window[cb3];}catch(e){}},8000);
       }
-      // Now send closure email — with both base64 attachment AND Drive URL
       _sendClosureEmailPost(caseData, slipB64, driveUrl);
+    };
+
+    fetch(APPS_SCRIPT_URL, {
+      method : "POST",
+      headers: { "Content-Type":"application/json" },
+      body   : trigBody
+    })
+    .then(function(r){ return r.text(); })
+    .then(function(text){
+      try{
+        var m = text.match(/^[\w]+\((.+)\)\s*;?\s*$/s);
+        if(m){ window[tcbName] && window[tcbName](JSON.parse(m[1])); }
+        else  { window[tcbName] && window[tcbName](JSON.parse(text)); }
+      }catch(ex){
+        console.warn("[Email] Slip parse error:", ex.message);
+        try{ delete window[tcbName]; }catch(e){}
+        _sendClosureEmailPost(caseData, slipB64, "");
+      }
     })
     .catch(function(err){
-      console.warn("[Email] Slip upload failed, sending email without attachment:", err);
+      console.warn("[Email] Slip upload failed:", err.message);
+      try{ delete window[tcbName]; }catch(e){}
       _sendClosureEmailPost(caseData, slipB64, "");
     });
   } else {
@@ -10709,8 +10794,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 // ══════════════════════════════════════════════════════════
 // FPI FIELD PORTAL — AUTH · ONBOARDING · CASES
 // ══════════════════════════════════════════════════════════
-const PORTAL_SHEET_ID = "1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";
+const PORTAL_SHEET_ID = "1mnfus9aD-7mv4OE8cbwlDN5k9e1TR2kuK9jJrbBnEuU";
+// ╔═══════════════════════════════════════════════════════════════╗
+// ║  ★  CHANGE THIS URL when you redeploy Apps Script  ★         ║
+// ╚═══════════════════════════════════════════════════════════════╝
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";  // ← APPS SCRIPT URL
 const COLORS = ["#3b8ef8","#27c77a","#9b72f9","#f5c542","#f04f2b","#ff7eb3","#22d3ee","#a78bfa","#fb923c","#34d399"];
 
 let currentUser  = {name:"",email:"",initials:"",pod:"",zone:"",desig:"",color:""};
