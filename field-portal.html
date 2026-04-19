@@ -557,10 +557,12 @@ textarea.fc{resize:none;min-height:76px;}
             </div>
             <img id="slip-preview" src="" alt="" style="display:none;width:100%;border-radius:8px;max-height:180px;object-fit:cover">
           </div>
-          <div id="slip-done" style="display:none;margin-top:7px;background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.25);border-radius:8px;padding:8px 12px;display:none;align-items:center;gap:8px">
+          <!-- Thumbnail gallery for multiple slips -->
+          <div id="slip-gallery" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:7px"></div>
+          <div id="slip-done" style="display:none;margin-top:7px;background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.25);border-radius:8px;padding:8px 12px;align-items:center;gap:8px">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--grn)" stroke-width="2" style="width:14px;height:14px;flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <span style="font-size:11.5px;color:var(--grn);font-weight:600">Slip uploaded ✓</span>
-            <span style="font-size:10.5px;color:var(--txt3);margin-left:auto">Tap image to change</span>
+            <span id="slip-done-txt" style="font-size:11.5px;color:var(--grn);font-weight:600">Slip uploaded ✓</span>
+            <span style="font-size:10.5px;color:var(--txt3);margin-left:auto">Tap zone to add more</span>
           </div>
         </div>
 
@@ -698,10 +700,13 @@ function openUpdate(caseId,sub){
   const slipImg = document.getElementById("slip-preview");
   const slipPh  = document.getElementById("slip-placeholder");
   const slipDone= document.getElementById("slip-done");
+  const slipGal = document.getElementById("slip-gallery");
   if(slipImg){slipImg.src="";slipImg.style.display="none";}
   if(slipPh) slipPh.style.display="block";
   if(slipDone) slipDone.style.display="none";
+  if(slipGal) slipGal.innerHTML="";
   window._slipBase64 = null;
+  window._slipFiles  = [];
   document.getElementById("cl-utr").value="";
 
   const c = myCases.find(x=>x.id===caseId);
@@ -1275,34 +1280,47 @@ function uploadSlipToDrive(caseId, base64DataUrl, syncCbName){
 }
 
 function handleSlipUpload(event){
-  const files = Array.from(event.target.files);
-  if(!files.length) return;
+  const newFiles = Array.from(event.target.files);
+  if(!newFiles.length) return;
+
+  // Accumulate — allow adding more slips without clearing previous ones
+  if(!window._slipFiles) window._slipFiles = [];
+  window._slipFiles = window._slipFiles.concat(newFiles);
+  const files = window._slipFiles;
+
   const ph      = document.getElementById("slip-placeholder");
   const doneBox = document.getElementById("slip-done");
-  // Show count in placeholder area
+  const doneText= document.getElementById("slip-done-txt");
+  const gallery = document.getElementById("slip-gallery");
+  const previewImg = document.getElementById("slip-preview");
+
   if(ph) ph.style.display = "none";
-  if(doneBox){
-    doneBox.style.display = "flex";
-    doneBox.innerHTML = '<span style="font-size:11.5px;color:var(--acc)">📷 '+files.length+' slip'+(files.length>1?"s":"")+" attached";
-    if(files.length === 1) doneBox.innerHTML += " — reading UTR…"; else doneBox.innerHTML += " ✓";
-    doneBox.innerHTML += "</span>";
+  if(previewImg) previewImg.style.display = "none"; // hide single preview, use gallery
+  if(doneBox) doneBox.style.display = "flex";
+  if(doneText) doneText.textContent = "📷 " + files.length + " slip" + (files.length>1?"s":"") + " attached ✓";
+
+  // Show thumbnail for each newly added file
+  newFiles.forEach(function(f){
+    const r = new FileReader();
+    r.onload = function(e){
+      const thumb = document.createElement("img");
+      thumb.src = e.target.result;
+      thumb.style.cssText = "width:56px;height:56px;object-fit:cover;border-radius:7px;border:1.5px solid var(--bd)";
+      if(gallery) gallery.appendChild(thumb);
+    };
+    r.readAsDataURL(f);
+  });
+
+  // UTR extraction from first file (only once)
+  if(!window._slipBase64){
+    const readerUTR = new FileReader();
+    readerUTR.onload = function(e){
+      window._slipBase64 = e.target.result;
+      extractUTRFromImage(e.target.result);
+    };
+    readerUTR.readAsDataURL(files[0]);
   }
-  // Show thumbnail of first image
-  const reader0 = new FileReader();
-  reader0.onload = function(e){
-    const img = document.getElementById("slip-preview");
-    if(img){ img.src = e.target.result; img.style.display = "block"; }
-  };
-  reader0.readAsDataURL(files[0]);
-  // Store all slip files for upload
-  window._slipFiles = files;
-  // Read first as base64 for UTR extraction
-  const readerUTR = new FileReader();
-  readerUTR.onload = function(e){
-    window._slipBase64 = e.target.result;
-    if(files.length === 1) extractUTRFromImage(e.target.result);
-  };
-  readerUTR.readAsDataURL(files[0]);
+
   showToast("✓ "+files.length+" slip"+(files.length>1?"s":"")+" attached");
 }
 // ── Hub image preview (for Start Working) ────────────────────────────
