@@ -445,42 +445,8 @@ textarea.fc{resize:none;min-height:76px;}
       <!-- START WORKING BANNER (shown if not yet started) -->
       <div id="start-working-banner" style="display:none;margin-bottom:13px">
         <div style="background:rgba(29,78,216,.06);border:1.5px solid rgba(29,78,216,.2);border-radius:10px;padding:13px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-            <div style="flex:1">
-              <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Not started yet</div>
-              <div style="font-size:11px;color:var(--txt3)">Upload hub photos then tap Start Working</div>
-            </div>
-          </div>
-          <!-- Hub Images (up to 3) -->
-          <div style="margin-bottom:10px">
-            <label class="fl" style="margin-bottom:6px">🏢 Hub Images <span style="font-weight:400;color:var(--txt3)">(up to 3)</span></label>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:6px">
-              <div>
-                <div class="uzone" style="padding:10px 6px;min-height:70px" onclick="triggerUp('hub-img-1')">
-                  <input type="file" id="hub-img-1" accept="image/*" style="display:none"
-                    onchange="handleHubImage(1)">
-                  <div id="hub-prev-1" style="display:none;width:100%;height:60px;border-radius:6px;overflow:hidden"><img id="hub-thumb-1" src="" style="width:100%;height:100%;object-fit:cover"></div>
-                  <div id="hub-ph-1"><div class="uicon" style="font-size:18px">📷</div><div style="font-size:9px;color:var(--txt3)">Photo 1</div></div>
-                </div>
-              </div>
-              <div>
-                <div class="uzone" style="padding:10px 6px;min-height:70px" onclick="triggerUp('hub-img-2')">
-                  <input type="file" id="hub-img-2" accept="image/*" style="display:none"
-                    onchange="handleHubImage(2)">
-                  <div id="hub-prev-2" style="display:none;width:100%;height:60px;border-radius:6px;overflow:hidden"><img id="hub-thumb-2" src="" style="width:100%;height:100%;object-fit:cover"></div>
-                  <div id="hub-ph-2"><div class="uicon" style="font-size:18px">📷</div><div style="font-size:9px;color:var(--txt3)">Photo 2</div></div>
-                </div>
-              </div>
-              <div>
-                <div class="uzone" style="padding:10px 6px;min-height:70px" onclick="triggerUp('hub-img-3')">
-                  <input type="file" id="hub-img-3" accept="image/*" style="display:none"
-                    onchange="handleHubImage(3)">
-                  <div id="hub-prev-3" style="display:none;width:100%;height:60px;border-radius:6px;overflow:hidden"><img id="hub-thumb-3" src="" style="width:100%;height:100%;object-fit:cover"></div>
-                  <div id="hub-ph-3"><div class="uicon" style="font-size:18px">📷</div><div style="font-size:9px;color:var(--txt3)">Photo 3</div></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px">Not started yet</div>
+          <div style="font-size:11px;color:var(--txt3);margin-bottom:10px">Tap below to mark this case as actively in progress</div>
           <button class="btn btn-p" style="width:100%" onclick="markStartWorking()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Start Working
@@ -512,6 +478,34 @@ textarea.fc{resize:none;min-height:76px;}
         </select>
       </div>
       <div class="fgrp"><label class="fl">Remarks</label><textarea class="fc" placeholder="Describe today's ground activity, findings, next steps..." id="us-notes"></textarea></div>
+
+      <!-- HUB IMAGES — always visible, works from all tabs -->
+      <div style="margin-bottom:13px">
+        <label class="fl">🏢 Hub Images <span style="font-weight:400;color:var(--txt3)">(up to 3, optional)</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
+          <div>
+            <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('hub-img-1')">
+              <input type="file" id="hub-img-1" accept="image/*" style="display:none" onchange="handleHubImage(1)">
+              <div id="hub-prev-1" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="hub-thumb-1" src="" style="width:100%;height:100%;object-fit:cover"></div>
+              <div id="hub-ph-1"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 1</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('hub-img-2')">
+              <input type="file" id="hub-img-2" accept="image/*" style="display:none" onchange="handleHubImage(2)">
+              <div id="hub-prev-2" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="hub-thumb-2" src="" style="width:100%;height:100%;object-fit:cover"></div>
+              <div id="hub-ph-2"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 2</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('hub-img-3')">
+              <input type="file" id="hub-img-3" accept="image/*" style="display:none" onchange="handleHubImage(3)">
+              <div id="hub-prev-3" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="hub-thumb-3" src="" style="width:100%;height:100%;object-fit:cover"></div>
+              <div id="hub-ph-3"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 3</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- EVIDENCE UPLOAD -->
       <div style="margin-bottom:13px">
@@ -1025,7 +1019,7 @@ async function submitUpdate(){
     var evidImgs = evidenceBase64List.slice();
 
     function afterEvidUploaded(evidUrls){
-      // ── Write evidence URLs to sheet (comma-separated, appended) ──
+      // ── Write evidence URLs to sheet ──────────────────────────────
       if(evidUrls.length && caseId){
         var ecb = "fpiEvSheet_"+Date.now();
         var ep  = new URLSearchParams({
@@ -1040,6 +1034,31 @@ async function submitUpdate(){
         if(status!=="closed") showToast("✅ "+evidUrls.length+" photo(s) saved to sheet");
       }
 
+      // ── Upload hub images if agent selected any (works from all tabs) ──
+      var hubEnt = [];
+      for(var hn=1; hn<=3; hn++){
+        if(window._hubBase64 && window._hubBase64[hn])
+          hubEnt.push({num:hn, b64:window._hubBase64[hn]});
+      }
+      if(hubEnt.length){
+        _uploadHubImages(caseId, hubEnt, function(h1,h2,h3){
+          window._hubBase64 = {};
+          if(h1||h2||h3){
+            var hcb="fpiHubSheet_"+Date.now();
+            var hp=new URLSearchParams({action:"update_case_status",case_id:caseId,callback:hcb});
+            if(h1) hp.append("hub_image_1",h1);
+            if(h2) hp.append("hub_image_2",h2);
+            if(h3) hp.append("hub_image_3",h3);
+            window[hcb]=function(){try{delete window[hcb];}catch(e){}};
+            var hs=document.createElement("script");hs.src=APPS_SCRIPT_URL+"?"+hp.toString();
+            document.head.appendChild(hs);
+            setTimeout(function(){try{hs.remove();delete window[hcb];}catch(e){}},10000);
+          }
+        });
+      } else {
+        window._hubBase64 = {};
+      }
+
       // ── Closure: upload slips then send email ──────────────────────
       if(status==="closed"){
         _uploadAllSlips(caseId, function(slipUrls){
@@ -1050,7 +1069,7 @@ async function submitUpdate(){
 
     if(evidImgs.length > 0){
       _uploadEvidenceImages(caseId, evidImgs, afterEvidUploaded);
-    } else if(status==="closed"){
+    } else {
       afterEvidUploaded([]);
     }
   };
@@ -1100,79 +1119,80 @@ function _debugLog(tag, msg, data){
 // FIX: Apps Script POST returns a 302 redirect whose body is JSONP text
 // (callbackName({...})), NOT plain JSON. Using .json() throws a parse error.
 // Fix: use .text() and manually unwrap the JSONP envelope.
-function _uploadEvidenceImages(caseId, imgList, callback){
-  // Uses JSONP: POST body contains a callback name.
-  // Apps Script doPost wraps the JSON response as callbackName({...})
-  // which we inject as a <script> tag — bypasses CORS completely.
-  var urls    = [];
-  var pending = imgList.length;
-  if(!pending){ callback([]); return; }
+// ── Upload one file to Drive via XHR POST ───────────────────────────
+function _uploadOneFile(caseId, rawB64, mimeType, onDone){
+  window._fpiUploadSeq = (window._fpiUploadSeq||0) + 1;
+  var cbName = "fpiUpCb_" + window._fpiUploadSeq;
+  window[cbName] = function(data){
+    try{ delete window[cbName]; }catch(e){}
+    onDone(data && data.url ? data.url : "");
+  };
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", APPS_SCRIPT_URL, true);
+  xhr.setRequestHeader("Content-Type", "text/plain");
+  xhr.onload = function(){
+    try{
+      var text = xhr.responseText;
+      var m = text.match(/\w+\((\{[\s\S]*\})\)/);
+      var data = JSON.parse(m ? m[1] : text);
+      window[cbName] && window[cbName](data);
+    }catch(ex){
+      _debugLog("IMG","parse err: "+ex.message);
+      try{ delete window[cbName]; }catch(e){} onDone("");
+    }
+  };
+  xhr.onerror = xhr.ontimeout = function(){
+    try{ delete window[cbName]; }catch(e){} onDone("");
+  };
+  xhr.timeout = 35000;
+  xhr.send(JSON.stringify({
+    action:"upload_slip", case_id:caseId,
+    base64:rawB64, mime_type:mimeType, callback:cbName
+  }));
+}
 
-  imgList.forEach(function(img, idx){
+// ── Upload evidence images SEQUENTIALLY ─────────────────────────────
+// Sequential = one at a time → all succeed even if Apps Script queues requests.
+// Parallel uploads caused only the last image to save (race condition).
+function _uploadEvidenceImages(caseId, imgList, callback){
+  if(!imgList || !imgList.length){ callback([]); return; }
+  var urls   = [];
+  var i      = 0;
+  function next(){
+    if(i >= imgList.length){ callback(urls); return; }
+    var img = imgList[i]; i++;
     var rawB64   = img.base64.replace(/^data:[^;]+;base64,/,"");
     var mimeType = (img.base64.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
-    // Use a global counter so cbName is always unique even within same ms
-    window._fpiUploadSeq = (window._fpiUploadSeq||0) + 1;
-    var cbName = "fpiUploadCb_" + window._fpiUploadSeq + "_" + idx;
+    _debugLog("IMG","uploading "+(i)+"/"+imgList.length+" seq");
+    _uploadOneFile(caseId, rawB64, mimeType, function(url){
+      if(url){ urls.push(url); _debugLog("IMG","✅ got URL: "+url); }
+      else { _debugLog("IMG","⚠ no URL for image "+(i)); }
+      next();
+    });
+  }
+  next();
+}
 
-    _debugLog("IMG", "Uploading "+(idx+1)+"/"+imgList.length+" case:"+caseId+" cbName:"+cbName);
-
-    // Register the JSONP callback
-    window[cbName] = function(data){
-      try{ delete window[cbName]; }catch(e){}
-      if(data && data.ok && data.url){
-        _debugLog("IMG", "✅ Got Drive URL: " + data.url);
-        urls.push(data.url);
-      } else {
-        _debugLog("IMG", "⚠ No URL in response", data);
-      }
-      pending--;
-      if(pending === 0) callback(urls);
-    };
-
-    // Build a form and POST it — Apps Script receives JSON body + callback param
-    // We use XMLHttpRequest instead of fetch so we can read the response
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", APPS_SCRIPT_URL, true);
-    xhr.setRequestHeader("Content-Type", "text/plain"); // avoids CORS preflight
-    xhr.onload = function(){
-      _debugLog("IMG", "XHR status: " + xhr.status + " response: " + xhr.responseText.substring(0,120));
-      try{
-        var text = xhr.responseText;
-        // Try JSONP unwrap first: cbName({...})
-        var m = text.match(/\w+\((\{[\s\S]*\})\)/);
-        var data = JSON.parse(m ? m[1] : text);
-        window[cbName] && window[cbName](data);
-      }catch(ex){
-        _debugLog("IMG", "⚠ Parse error: "+ex.message+" raw:"+xhr.responseText.substring(0,80));
-        if(window[cbName]){
-          try{ delete window[cbName]; }catch(e){}
-          pending--;
-          if(pending===0) callback(urls);
-        }
-      }
-    };
-    xhr.onerror = function(){
-      _debugLog("IMG", "❌ XHR network error");
-      try{ delete window[cbName]; }catch(e){}
-      pending--;
-      if(pending===0) callback(urls);
-    };
-    xhr.ontimeout = function(){
-      _debugLog("IMG", "❌ XHR timeout");
-      try{ delete window[cbName]; }catch(e){}
-      pending--;
-      if(pending===0) callback(urls);
-    };
-    xhr.timeout = 30000;
-    xhr.send(JSON.stringify({
-      action   : "upload_slip",
-      case_id  : caseId,
-      base64   : rawB64,
-      mime_type: mimeType,
-      callback : cbName
-    }));
-  });
+// ── Upload hub images (sequential, returns individual URLs) ──────────
+function _uploadHubImages(caseId, hubEntries, callback){
+  // hubEntries = [{num:1,b64:"..."}, ...]
+  if(!hubEntries.length){ callback("","",""); return; }
+  var results = {};
+  var i = 0;
+  function next(){
+    if(i >= hubEntries.length){
+      callback(results[1]||"", results[2]||"", results[3]||"");
+      return;
+    }
+    var entry = hubEntries[i]; i++;
+    var rawB64   = entry.b64.replace(/^data:[^;]+;base64,/,"");
+    var mimeType = (entry.b64.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
+    _uploadOneFile(caseId, rawB64, mimeType, function(url){
+      if(url) results[entry.num] = url;
+      next();
+    });
+  }
+  next();
 }
 
 // ── Upload all slip images (multiple) ────────────────────────────────
