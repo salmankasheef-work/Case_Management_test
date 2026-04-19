@@ -986,30 +986,43 @@ async function submitUpdate(){
 
     var evidImgs = evidenceBase64List.slice();
 
-    // Upload evidence images for ALL updates (not just closure)
-    // uploadFileToDrive writes URLs directly to "Evidence Image Link" column server-side
+    function afterEvidUploaded(evidUrls){
+      // ── Write evidence URLs to sheet (comma-separated, appended) ──
+      if(evidUrls.length && caseId){
+        var ecb = "fpiEvSheet_"+Date.now();
+        var ep  = new URLSearchParams({
+          action:"update_case_status", case_id:caseId,
+          evidence_images:evidUrls.join(", "), callback:ecb
+        });
+        window[ecb]=function(){try{delete window[ecb];}catch(e){}};
+        var es=document.createElement("script");
+        es.src=APPS_SCRIPT_URL+"?"+ep.toString();
+        document.head.appendChild(es);
+        setTimeout(function(){try{es.remove();delete window[ecb];}catch(e){}},8000);
+        if(status!=="closed") showToast("✅ "+evidUrls.length+" photo(s) saved to sheet");
+      }
+
+      // ── Closure: upload slips then send email ──────────────────────
+      if(status==="closed"){
+        _uploadAllSlips(caseId, function(slipUrls){
+          _doClosureEmail(caseId, c, amt, utr, police, closureNotes, evidUrls, closedDate, slipUrls);
+        });
+      }
+    }
+
     if(evidImgs.length > 0){
-      _uploadEvidenceImages(caseId, evidImgs, function(evidUrls){
-        if(status==="closed"){
-          _uploadAllSlips(caseId, function(slipUrls){
-            var slipB64 = window._slipBase64 || "";
-            _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, evidUrls, closedDate, slipUrls);
-          });
-        } else {
-          if(evidUrls.length) showToast("✅ "+evidUrls.length+" photo(s) saved to sheet");
-        }
-      });
+      _uploadEvidenceImages(caseId, evidImgs, afterEvidUploaded);
     } else if(status==="closed"){
-      _uploadAllSlips(caseId, function(slipUrls){
-        var slipB64 = window._slipBase64 || "";
-        _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, [], closedDate, slipUrls);
-      });
+      afterEvidUploaded([]);
     }
   };
 
   const syncS = document.createElement("script");
   syncS.src   = APPS_SCRIPT_URL+"?"+syncParams.toString();
-  syncS.onerror = function(){ try{delete window[syncCb];}catch(e){} if(status==="closed") _doClosureEmail(caseId,c,amt,utr,police,closureNotes,window._slipBase64||"",[],closedDate); };
+  syncS.onerror = function(){
+    try{delete window[syncCb];}catch(e){}
+    if(status==="closed") _doClosureEmail(caseId,c,amt,utr,police,closureNotes,[],closedDate,[]);
+  };
   document.head.appendChild(syncS);
   setTimeout(function(){ try{syncS.remove();delete window[syncCb];}catch(e){}},10000);
 
@@ -1193,41 +1206,69 @@ function _uploadSingleSlipB64(caseId, b64, callback){
 }
 
 // ── Fire closure email after sheet is updated ─────────────────────
-function _doClosureEmail(caseId, c, amt, utr, police, closureNotes, slipB64, evidUrls, closedDate, slipUrls){
+function _doClosureEmail(caseId, c, amt, utr, police, closureNotes, evidUrls, closedDate, slipUrls){
   slipUrls = slipUrls || [];
+  evidUrls = evidUrls || [];
   var slipUrlStr = slipUrls.join(", ");
+  var evidUrlStr = evidUrls.join(", ");
 
   // Write slip URLs to sheet (comma-separated in UTR Slip Image column)
   if(slipUrlStr && caseId){
     var scb = "fpiSlipSheet_"+Date.now();
-    var sp  = new URLSearchParams({action:"update_case_status",case_id:caseId,
+    var sp  = new URLSearchParams({action:"update_case_status", case_id:caseId,
       utr_slip_url:slipUrlStr, callback:scb});
     window[scb]=function(){try{delete window[scb];}catch(e){}};
-    var ss2=document.createElement("script");ss2.src=APPS_SCRIPT_URL+"?"+sp.toString();document.head.appendChild(ss2);
+    var ss2=document.createElement("script");
+    ss2.src=APPS_SCRIPT_URL+"?"+sp.toString();
+    document.head.appendChild(ss2);
     setTimeout(function(){try{ss2.remove();delete window[scb];}catch(e){}},8000);
   }
 
-  var emailPayload = {
-    id          : caseId,
-    cat         : c ? (c.cat ||"") : "",
-    type        : c ? (c.type||"") : "",
-    hub         : c ? (c.hub ||"") : "",
-    city        : c ? (c.city||"") : "",
-    state       : c ? (c.state||"") : "",
-    val         : c ? (c.val ||0)  : 0,
-    recovery    : amt,
-    utr         : utr,
-    policeAction: police,
-    closureNotes: closureNotes,
-    pn          : currentUser.name  || (c ? c.pn        : "") || "",
-    poc_email   : currentUser.email || (c ? c.poc_email : "") || "",
-    slipBase64  : slipB64,
-    utrSlipUrl  : slipUrlStr || window._utrSlipUrl || "",
-    evidenceUrls: evidUrls.join(", "),
-    closedDate  : closedDate
+  // Send closure email via JSONP GET — pass Drive URLs (already uploaded)
+  // No re-upload needed; Apps Script will fetch images from Drive for attachment
+  var cb = "fpEmailCb_"+Date.now();
+  var params = new URLSearchParams({
+    action        : "close_case_email",
+    case_id       : caseId,
+    category      : c ? (c.cat ||"") : "",
+    fraud_type    : c ? (c.type||"") : "",
+    hub           : c ? (c.hub ||"") : "",
+    city          : c ? (c.city||"") : "",
+    state         : c ? (c.state||"") : "",
+    value         : c ? (c.val ||0)  : 0,
+    recovery      : amt,
+    utr           : utr,
+    poc_name      : currentUser.name  || (c ? c.pn       : "") || "",
+    poc_email     : currentUser.email || (c ? c.poc_email: "") || "",
+    police_action : police,
+    closure_notes : closureNotes,
+    utr_slip_url  : slipUrlStr,
+    evidence_urls : evidUrlStr,
+    closed_date   : closedDate,
+    callback      : cb
+  });
+
+  window[cb] = function(data){
+    try{ delete window[cb]; }catch(e){}
+    if(data && data.ok){
+      showToast("📧 Closure email sent to manager");
+      console.log("[Email] Sent OK for", caseId);
+    } else {
+      var msg = data ? (data.error||data.msg||"Unknown error") : "No response";
+      showToast("⚠ Email: "+String(msg).substring(0,60));
+      console.error("[Email] Failed:", data);
+    }
   };
-  console.log("[Close] Triggering closure email for", caseId);
-  triggerClosureEmail(emailPayload);
+
+  var emailS = document.createElement("script");
+  emailS.src = APPS_SCRIPT_URL+"?"+params.toString();
+  emailS.onerror = function(){
+    try{delete window[cb];}catch(e){}
+    showToast("Case closed ✓ (email delivery unknown)");
+  };
+  document.head.appendChild(emailS);
+  setTimeout(function(){try{emailS.remove();delete window[cb];}catch(e){}}, 20000);
+  console.log("[Close] Closure email triggered for", caseId);
 }
 
 // ── OCR: extract UTR from payment slip image ──────────────
@@ -11076,7 +11117,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 // ══════════════════════════════════════════════════════════
 const PORTAL_SHEET_ID = "1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";
 // ★ CHANGE THIS URL if you redeploy Apps Script
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtG-mkDh2bwlFRJaX3UxBI39tszTBNvq9tyKEwWRDJ6IwY_YXrQFWv6TjxKhdagG2vMQ/exec";
 const COLORS = ["#3b8ef8","#27c77a","#9b72f9","#f5c542","#f04f2b","#ff7eb3","#22d3ee","#a78bfa","#fb923c","#34d399"];
 
 let currentUser  = {name:"",email:"",initials:"",pod:"",zone:"",desig:"",color:""};
