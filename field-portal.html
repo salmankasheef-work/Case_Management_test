@@ -11446,14 +11446,17 @@ async function completeOnboarding(){
 }
 
 // ── Cases ─────────────────────────────────────────────────
-function getSharedCases(){try{const r=localStorage.getItem("fpi_cases");return r?JSON.parse(r):[];}catch(e){return[];}}
+function getSharedCases(){
+  var _k="fp_cases_"+(currentUser.email||"").toLowerCase().replace(/[^a-z0-9]/g,"_");
+  try{var r=localStorage.getItem(_k);return r?JSON.parse(r):[];}catch(e){return[];}
+}
 
 async function loadMyCases(){
-  // Snapshot locally-stored cases keyed by id BEFORE fetching from sheet.
-  // This preserves agent-made changes (status, startDate, updates) across refreshes.
+  // Read from the agent-specific cache key (same key all writes use)
+  var _fpKey = "fp_cases_"+(currentUser.email||"").toLowerCase().replace(/[^a-z0-9]/g,"_");
   var localMap = {};
   try{
-    var _local = JSON.parse(localStorage.getItem("fpi_cases")||"[]");
+    var _local = JSON.parse(localStorage.getItem(_fpKey)||"[]");
     _local.forEach(function(c){ if(c.id) localMap[c.id]=c; });
   }catch(_e){}
 
@@ -11493,17 +11496,16 @@ async function loadMyCases(){
             var mergedClosedDate = String(row["Case Closed Date"]||"");
 
             if(local){
-              if(sheetSt === "closed" && local.st === "closed"){
-                // Both sheet and local agree: case is closed → stay closed
+              if(sheetSt === "closed"){
+                // Sheet closed is always final — never override with local
                 mergedSt = "closed";
-              } else if(sheetSt === "closed" && local.st && local.st !== "closed"){
-                // Sheet says closed but local has a newer re-open → local wins
-                mergedSt = local.st;
-              } else if(local.st && local.st !== "pending_date" && local.st !== sheetSt){
-                // Agent has updated locally to a non-default status → keep it
+              } else if(local.st && local.st !== "pending_date"){
+                // Agent has set a real status locally → always keep it until sheet catches up
+                // This prevents the case jumping back to "pending_date" / Cases tab
+                // on the next loadMyCases before the sheet write completes
                 mergedSt = local.st;
               }
-              // else: keep sheetSt (default)
+              // else: sheetSt wins (sheet has a real status, local is still pending_date)
               // Restore updates: prefer dedicated key (survives sheet sync), fall back to case object
               try{
                 const _updKey2 = "fpi_updates_"+(currentUser.email||"guest");
@@ -11548,20 +11550,11 @@ async function loadMyCases(){
             });
           });
 
-          // Add locally-known cases not yet in the sheet
-          // (assigned by CM but sheet hasn't synced yet)
-          Object.keys(localMap).forEach(function(id){
-            if(seenIds[id]) return; // already included
-            var lc = localMap[id];
-            if(!lc.poc_email && !lc.poc) return;
-            var em = lc.poc_email && lc.poc_email.toLowerCase()===currentUser.email.toLowerCase();
-            var im = lc.poc && currentUser.initials && lc.poc.toUpperCase()===currentUser.initials.toUpperCase();
-            var nm = lc.pn  && currentUser.name     && lc.pn.toLowerCase().trim()===currentUser.name.toLowerCase().trim();
-            if(em||im||nm){ seenIds[id]=true; myCases.push(lc); }
-          });
+          // Sheet is the sole authority for which cases this agent has.
+          // No local injection — prevents phantom/duplicate cases.
 
-          // Persist merged result
-          try{ localStorage.setItem("fpi_cases", JSON.stringify(myCases)); }catch(e){}
+          // Persist to agent-specific key — matches what submitUpdate/markStartWorking write
+          try{ localStorage.setItem(_fpKey, JSON.stringify(myCases)); }catch(e){}
         }
       }catch(e){ console.warn("Cases parse:", e.message); }
       resolve();
@@ -11573,17 +11566,13 @@ async function loadMyCases(){
     document.head.appendChild(_sc);
   });
 
-  // Fallback: sheet returned nothing — use localStorage only
+  // Fallback: sheet timed out — use agent-specific cache (strict email match only)
   if(!myCases.length){
-    // Object.values not reliable — use safe for..in
-    var _localArr = [];
-    for(var _lk in localMap){ if(localMap.hasOwnProperty(_lk)) _localArr.push(localMap[_lk]); }
-    myCases = _localArr.filter(function(c){
-      if(!c.poc && !c.poc_email) return false;
-      var em2 = c.poc_email && c.poc_email.toLowerCase()===currentUser.email.toLowerCase();
-      var im2 = c.poc && currentUser.initials && c.poc.toUpperCase()===currentUser.initials.toUpperCase();
-      return em2||im2;
-    });
+    try{
+      myCases = JSON.parse(localStorage.getItem(_fpKey)||"[]").filter(function(c){
+        return c.poc_email && c.poc_email.toLowerCase()===currentUser.email.toLowerCase();
+      });
+    }catch(_e){}
   }
 
   renderPortalCases();
