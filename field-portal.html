@@ -709,6 +709,7 @@ function openUpdate(caseId,sub){
   // Reset ev-up file input so previous case's files don't carry over
   var evInput = document.getElementById("ev-up");
   if(evInput) evInput.value = "";
+  window._evUpHasFiles = false; // reset flag so ghost uploads don't happen
   // Reset slip fields
   const slipImg = document.getElementById("slip-preview");
   const slipPh  = document.getElementById("slip-placeholder");
@@ -896,6 +897,8 @@ function handlePhotos(inputId,galleryId,previewId){
   const input=document.getElementById(inputId);
   const files=Array.from(input.files);
   if(!files.length)return;
+  // Mark that user has actually attached evidence in this update session
+  if(inputId==="ev-up") window._evUpHasFiles = true;
   if(galleryId){
     const gallery=document.getElementById(galleryId);
     files.filter(f=>f.type.startsWith("image/")).forEach(f=>{
@@ -939,7 +942,9 @@ async function submitUpdate(){
   // immediately used evidenceBase64List which was always [] (race condition).
   var evidenceBase64List = await (function(){
     return new Promise(function(resolve){
-      var esInput = document.getElementById("ev-up"); // ev-up is the file input inside sh-update
+      // Only read files if user actually attached evidence THIS session (prevents ghost uploads)
+      if(!window._evUpHasFiles){ resolve([]); return; }
+      var esInput = document.getElementById("ev-up");
       if(!esInput || !esInput.files || !esInput.files.length){ resolve([]); return; }
       var esFiles = Array.from(esInput.files);
       var results = new Array(esFiles.length);
@@ -11862,6 +11867,19 @@ function renderPortalCases(){
   renderClosedCases();
   renderHistory();
   renderProfile();
+  // Restore the active page — background refreshes must not reset the tab
+  if(_activePage && _activePage !== "alerts"){
+    var pageEl = document.getElementById("page-"+_activePage);
+    if(pageEl && !pageEl.classList.contains("active")){
+      document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
+      pageEl.classList.add("active");
+      document.querySelectorAll(".nb").forEach(function(b){
+        var m = b.getAttribute("onclick")||"";
+        if(m.indexOf("'"+_activePage+"'")>=0) b.classList.add("active");
+        else b.classList.remove("active");
+      });
+    }
+  }
 }
 
 function renderAlertsList(alerts,activePg,recentClosed){
