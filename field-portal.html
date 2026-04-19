@@ -517,7 +517,7 @@ textarea.fc{resize:none;min-height:76px;}
       <div style="margin-bottom:13px">
         <label class="fl">📸 Evidence / Proof Photos</label>
         <div class="uzone" onclick="triggerUp('ev-up')">
-          <input type="file" id="ev-up" accept="image/*" multiple capture="environment" onchange="handlePhotos('ev-up','ev-gal','ev-prev')">
+          <input type="file" id="ev-up" accept="image/*" multiple onchange="handlePhotos('ev-up','ev-gal','ev-prev')">
           <div class="uicon">📷</div>
           <div class="utitle">Take Photo / Upload Evidence</div>
           <div class="usub">CCTV screenshots, site photos, documents</div>
@@ -545,25 +545,32 @@ textarea.fc{resize:none;min-height:76px;}
 
         <!-- TRANSACTION SLIP UPLOAD -->
         <div class="fgrp">
-          <label class="fl">📷 Upload Transaction Slip</label>
-          <div id="slip-zone" onclick="triggerUp('slip-input')"
-            style="border:2px dashed var(--bd2);border-radius:10px;padding:14px;text-align:center;cursor:pointer;background:var(--sf2);transition:all .15s;position:relative;overflow:hidden">
-            <input type="file" id="slip-input" accept="image/*" multiple
-              style="display:none" onchange="handleSlipUpload(event)">
-            <div id="slip-placeholder">
-              <div style="font-size:22px;margin-bottom:4px">🧾</div>
-              <div style="font-size:12px;font-weight:600;color:var(--navy)">Take Photo / Upload Slip</div>
-              <div style="font-size:10.5px;color:var(--txt3)">Bank screenshot, NEFT/IMPS receipt</div>
+          <label class="fl">🧾 Transaction Slip(s)</label>
+          <!-- Hidden input — triggered by both buttons below -->
+          <input type="file" id="slip-input" accept="image/*" multiple
+            style="display:none" onchange="handleSlipUpload(event)">
+          <!-- Thumbnail grid — shows all attached slips -->
+          <div id="slip-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:7px;margin-bottom:7px"></div>
+          <!-- Action row -->
+          <div id="slip-action-row" style="display:flex;gap:8px;align-items:center">
+            <div id="slip-placeholder-btn" onclick="triggerUp('slip-input')"
+              style="flex:1;border:2px dashed var(--bd2);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;background:var(--sf2);transition:all .15s">
+              <div style="font-size:20px;margin-bottom:3px">🧾</div>
+              <div style="font-size:11px;font-weight:600;color:var(--navy)">Take Photo / Upload</div>
+              <div style="font-size:9.5px;color:var(--txt3)">Bank screenshot, NEFT/IMPS</div>
             </div>
-            <img id="slip-preview" src="" alt="" style="display:none;width:100%;border-radius:8px;max-height:180px;object-fit:cover">
+            <div id="slip-add-btn" onclick="triggerUp('slip-input')"
+              style="display:none;flex-shrink:0;border:1.5px solid var(--acc);border-radius:9px;padding:9px 13px;cursor:pointer;background:rgba(29,78,216,.04);text-align:center">
+              <div style="font-size:16px">➕</div>
+              <div style="font-size:9px;font-weight:700;color:var(--acc);white-space:nowrap">Add Slip</div>
+            </div>
           </div>
-          <!-- Thumbnail gallery for multiple slips -->
-          <div id="slip-gallery" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:7px"></div>
-          <div id="slip-done" style="display:none;margin-top:7px;background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.25);border-radius:8px;padding:8px 12px;align-items:center;gap:8px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--grn)" stroke-width="2" style="width:14px;height:14px;flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            <span id="slip-done-txt" style="font-size:11.5px;color:var(--grn);font-weight:600">Slip uploaded ✓</span>
-            <span style="font-size:10.5px;color:var(--txt3);margin-left:auto">Tap zone to add more</span>
+          <!-- Status bar -->
+          <div id="slip-done" style="display:none;margin-top:7px;background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.25);border-radius:8px;padding:7px 12px;align-items:center;gap:8px">
+            <span id="slip-done-txt" style="font-size:11.5px;color:var(--grn);font-weight:600">Slips attached ✓</span>
           </div>
+          <!-- Hidden (kept for legacy code compatibility) -->
+          <img id="slip-preview" src="" alt="" style="display:none">
         </div>
 
         <div class="fgrp">
@@ -674,7 +681,9 @@ textarea.fc{resize:none;min-height:76px;}
 <div class="toast" id="toast">Done</div>
 
 <script>
+var _activePage = "alerts"; // track active page — never reset tab on silent renders
 function showPage(id,btn){
+  _activePage = id;
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.querySelectorAll(".nb").forEach(b=>b.classList.remove("active"));
   const pageEl = document.getElementById("page-"+id);
@@ -697,16 +706,39 @@ function openUpdate(caseId,sub){
   document.getElementById("cl-box").style.display="none";
   document.getElementById("ev-gal").innerHTML="";
   document.getElementById("ev-prev").innerHTML="";
+  // Reset ev-up file input so previous case's files don't carry over
+  var evInput = document.getElementById("ev-up");
+  if(evInput) evInput.value = "";
+  // Reset slip fields
   const slipImg = document.getElementById("slip-preview");
   const slipPh  = document.getElementById("slip-placeholder");
   const slipDone= document.getElementById("slip-done");
   const slipGal = document.getElementById("slip-gallery");
+  const slipInput = document.getElementById("slip-input");
   if(slipImg){slipImg.src="";slipImg.style.display="none";}
   if(slipPh) slipPh.style.display="block";
   if(slipDone) slipDone.style.display="none";
   if(slipGal) slipGal.innerHTML="";
+  if(slipInput) slipInput.value="";
   window._slipBase64 = null;
   window._slipFiles  = [];
+  // Reset new slip UI elements
+  var slipPh2 = document.getElementById("slip-placeholder-btn");
+  var slipAdd = document.getElementById("slip-add-btn");
+  if(slipPh2) slipPh2.style.display = "block";
+  if(slipAdd) slipAdd.style.display  = "none";
+  // Reset hub images so they don't carry over from previous case
+  window._hubBase64 = {};
+  [1,2,3].forEach(function(n){
+    var prev  = document.getElementById("hub-prev-"+n);
+    var ph    = document.getElementById("hub-ph-"+n);
+    var thumb = document.getElementById("hub-thumb-"+n);
+    var inp   = document.getElementById("hub-img-"+n);
+    if(prev)  prev.style.display  = "none";
+    if(ph)    ph.style.display    = "block";
+    if(thumb) thumb.src           = "";
+    if(inp)   inp.value           = "";
+  });
   document.getElementById("cl-utr").value="";
 
   const c = myCases.find(x=>x.id===caseId);
@@ -1074,9 +1106,11 @@ function _uploadEvidenceImages(caseId, imgList, callback){
   imgList.forEach(function(img, idx){
     var rawB64   = img.base64.replace(/^data:[^;]+;base64,/,"");
     var mimeType = (img.base64.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
-    var cbName   = "fpiUploadCb_" + Date.now() + "_" + idx;
+    // Use a global counter so cbName is always unique even within same ms
+    window._fpiUploadSeq = (window._fpiUploadSeq||0) + 1;
+    var cbName = "fpiUploadCb_" + window._fpiUploadSeq + "_" + idx;
 
-    _debugLog("IMG", "Uploading "+(idx+1)+"/"+imgList.length+" case:"+caseId+" size:"+rawB64.length);
+    _debugLog("IMG", "Uploading "+(idx+1)+"/"+imgList.length+" case:"+caseId+" cbName:"+cbName);
 
     // Register the JSONP callback
     window[cbName] = function(data){
@@ -1176,7 +1210,8 @@ function _uploadSingleSlipB64(caseId, b64, callback){
   if(!b64){ callback(""); return; }
   var rawB64   = b64.replace(/^data:[^;]+;base64,/,"");
   var mimeType = (b64.match(/^data:([^;]+);/) || ["","image/jpeg"])[1];
-  var cbName   = "fpiSlipSingle_"+Date.now();
+  window._fpiUploadSeq = (window._fpiUploadSeq||0) + 1;
+  var cbName = "fpiSlipSingle_"+window._fpiUploadSeq;
 
   window[cbName] = function(data){
     try{delete window[cbName];}catch(e){}
@@ -1327,30 +1362,34 @@ function handleSlipUpload(event){
   const newFiles = Array.from(event.target.files);
   if(!newFiles.length) return;
 
-  // Accumulate — allow adding more slips without clearing previous ones
+  // Accumulate across multiple selections
   if(!window._slipFiles) window._slipFiles = [];
   window._slipFiles = window._slipFiles.concat(newFiles);
   const files = window._slipFiles;
 
-  const ph      = document.getElementById("slip-placeholder");
+  const ph      = document.getElementById("slip-placeholder-btn");
+  const addBtn  = document.getElementById("slip-add-btn");
   const doneBox = document.getElementById("slip-done");
   const doneText= document.getElementById("slip-done-txt");
   const gallery = document.getElementById("slip-gallery");
-  const previewImg = document.getElementById("slip-preview");
 
-  if(ph) ph.style.display = "none";
-  if(previewImg) previewImg.style.display = "none"; // hide single preview, use gallery
+  // After first upload: hide big placeholder, show "+ Add Slip" button
+  if(ph) ph.style.display = files.length > 0 ? "none" : "block";
+  if(addBtn) addBtn.style.display = files.length > 0 ? "block" : "none";
   if(doneBox) doneBox.style.display = "flex";
-  if(doneText) doneText.textContent = "📷 " + files.length + " slip" + (files.length>1?"s":"") + " attached ✓";
+  if(doneText) doneText.textContent = "🧾 " + files.length + " slip" + (files.length>1?"s":"") + " attached ✓";
 
-  // Show thumbnail for each newly added file
+  // Add thumbnails for newly added files
   newFiles.forEach(function(f){
     const r = new FileReader();
     r.onload = function(e){
-      const thumb = document.createElement("img");
-      thumb.src = e.target.result;
-      thumb.style.cssText = "width:56px;height:56px;object-fit:cover;border-radius:7px;border:1.5px solid var(--bd)";
-      if(gallery) gallery.appendChild(thumb);
+      const wrap = document.createElement("div");
+      wrap.style.cssText = "position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:#f0f0f0";
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.style.cssText = "width:100%;height:100%;object-fit:cover;display:block";
+      wrap.appendChild(img);
+      if(gallery) gallery.appendChild(wrap);
     };
     r.readAsDataURL(f);
   });
@@ -1365,7 +1404,7 @@ function handleSlipUpload(event){
     readerUTR.readAsDataURL(files[0]);
   }
 
-  showToast("✓ "+files.length+" slip"+(files.length>1?"s":"")+" attached");
+  showToast("✓ " + files.length + " slip" + (files.length>1?"s":"") + " attached");
 }
 // ── Hub image preview (for Start Working) ────────────────────────────
 window._hubBase64 = {};  // {1: base64, 2: base64, 3: base64}
@@ -11688,7 +11727,7 @@ function submitRecovery(){
   if(c){c.utr=utr;c.recovery=parseInt(document.getElementById("rs-amount").value)||0;}
   closeSheet("sh-recovery");
   showToast("✓ Recovery submitted — UTR: "+utr);
-  renderPortalCases();
+  renderOpenCases(); renderFeaturedCases();
 }
 async function submitEvidence(){
   var esInput = document.getElementById("es-ph");
@@ -11728,6 +11767,15 @@ async function submitEvidence(){
   // column in the sheet server-side — no extra JSONP call needed.
   _uploadEvidenceImages(caseId, evidList, function(urls){
     if(urls.length){
+      // Write evidence URLs to sheet
+      var ecb = "fpiEvSheet2_"+Date.now();
+      var ep  = new URLSearchParams({action:"update_case_status", case_id:caseId,
+        evidence_images:urls.join(", "), callback:ecb});
+      window[ecb]=function(){try{delete window[ecb];}catch(e){}};
+      var es=document.createElement("script");
+      es.src=APPS_SCRIPT_URL+"?"+ep.toString();
+      document.head.appendChild(es);
+      setTimeout(function(){try{es.remove();delete window[ecb];}catch(e){}},8000);
       showToast("✅ "+urls.length+" photo(s) uploaded & saved to sheet");
     } else {
       showToast("⚠ Upload failed — check console for details");
@@ -11741,7 +11789,7 @@ async function submitEvidence(){
 function caseStatusCategory(st){
   if(st==="closed") return "closed";
   if(["rider_inv","hi_tl_inv","rider_abs_action","rider_abs_pending",
-      "hi_tl_abs","cx_fraud","other_pending"].includes(st)) return "open";
+      "hi_tl_abs","cx_fraud","other_pending","wip"].includes(st)) return "open";
   return "featured";
 }
 
@@ -11806,7 +11854,7 @@ function caseCardFull(c){
 // ── Render cases pages ────────────────────────────────────
 function renderPortalCases(){
   const highAlert=myCases.filter(c=>c.pri==="High"&&c.st!=="closed");
-  const activePg =myCases.filter(c=>["rider_inv","hi_tl_inv","other_pending","cx_fraud","rider_abs_action","rider_abs_pending"].includes(c.st));
+  const activePg =myCases.filter(c=>["rider_inv","hi_tl_inv","other_pending","cx_fraud","rider_abs_action","rider_abs_pending","wip"].includes(c.st));
   const closed   =myCases.filter(c=>c.st==="closed").slice(0,3);
   renderAlertsList(highAlert,activePg,closed);
   renderFeaturedCases();
