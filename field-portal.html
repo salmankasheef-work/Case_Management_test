@@ -381,19 +381,19 @@ textarea.fc{resize:none;min-height:76px;}
 
   <div class="content">
 
-    <!-- ALERTS PAGE -->
-    <div class="page active" id="page-alerts">
-      <div id="alerts-content"></div>
+    <!-- CASES PAGE — unstarted cases (not yet worked on) -->
+    <div class="page active" id="page-cases">
+      <div id="cases-content"></div>
     </div>
 
-    <!-- FEATURED CASES PAGE (not started, not closed) -->
-    <div class="page" id="page-cases">
-      <div id="featured-cases-content"></div>
-    </div>
-
-    <!-- OPEN CASES PAGE (actively working) -->
+    <!-- OPEN CASES PAGE — Daily Status = OPEN only -->
     <div class="page" id="page-open-cases">
       <div id="open-cases-content"></div>
+    </div>
+
+    <!-- WIP PAGE — Daily Status = WIP or Partially Closed -->
+    <div class="page" id="page-wip">
+      <div id="wip-content"></div>
     </div>
 
     <!-- CLOSED CASES PAGE -->
@@ -420,17 +420,17 @@ textarea.fc{resize:none;min-height:76px;}
   </div><!-- /content -->
 
   <div class="bnav">
-    <button class="nb active" onclick="showPage('alerts',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      <span>Alerts</span><div class="dot"></div>
-    </button>
-    <button class="nb" onclick="showPage('cases',this)">
+    <button class="nb active" onclick="showPage('cases',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      <span>Cases</span>
+      <span>Cases</span><div class="dot"></div>
     </button>
     <button class="nb" onclick="showPage('open-cases',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
       <span>Open</span>
+    </button>
+    <button class="nb" onclick="showPage('wip',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      <span>WIP</span>
     </button>
     <button class="nb" onclick="showPage('closed-cases',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -442,7 +442,7 @@ textarea.fc{resize:none;min-height:76px;}
     </button>
     <button class="nb" onclick="showPage('profile',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span>My Stats</span>
+      <span>Stats</span>
     </button>
   </div>
 </div>
@@ -740,7 +740,7 @@ textarea.fc{resize:none;min-height:76px;}
 <div class="toast" id="toast">Done</div>
 
 <script>
-var _activePage = "alerts"; // track active page — never reset tab on silent renders
+var _activePage = "cases"; // track active page — never reset tab on silent renders
 function showPage(id,btn){
   _activePage = id;
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -748,11 +748,12 @@ function showPage(id,btn){
   const pageEl = document.getElementById("page-"+id);
   if(pageEl) pageEl.classList.add("active");
   if(btn) btn.classList.add("active");
+  if(id==="cases")        renderCasesTab();
+  if(id==="open-cases")   renderOpenCases();
+  if(id==="wip")          renderWipCases();
+  if(id==="closed-cases") renderClosedCases();
   if(id==="history")      renderHistory();
   if(id==="profile")      renderProfile();
-  if(id==="cases")        renderFeaturedCases();
-  if(id==="open-cases")   renderOpenCases();
-  if(id==="closed-cases") renderClosedCases();
 }
 function openUpdate(caseId,sub){
   document.getElementById("us-id").textContent=caseId;
@@ -890,7 +891,7 @@ async function markStartWorking(){
       setTimeout(function(){try{swS.remove();delete window[swCb];}catch(e){}},10000);
     }catch(e){}
     showToast("✅ Case started — "+startDate);
-    renderOpenCases(); renderFeaturedCases();
+    renderCasesTab(); renderOpenCases(); renderWipCases();
   }
 
   // Collect hub images that were selected
@@ -1194,9 +1195,8 @@ async function submitUpdate(){
     }, 800);
   } else {
     showToast("✓ Update submitted"+(utr?" · UTR: "+utr:""));
-    // Only re-render open cases — do NOT call renderPortalCases() which resets tab
-    renderOpenCases();
-    renderFeaturedCases();
+    // Re-render affected tabs without resetting active page
+    renderCasesTab(); renderOpenCases(); renderWipCases();
   }
 }
 
@@ -11970,7 +11970,7 @@ function submitRecovery(){
   if(c){c.utr=utr;c.recovery=parseInt(document.getElementById("rs-amount").value)||0;}
   closeSheet("sh-recovery");
   showToast("✓ Recovery submitted — UTR: "+utr);
-  renderOpenCases(); renderFeaturedCases();
+  renderCasesTab(); renderOpenCases(); renderWipCases();
 }
 async function submitEvidence(){
   var esInput = document.getElementById("es-ph");
@@ -12030,10 +12030,13 @@ async function submitEvidence(){
 
 // ── Case status categories ────────────────────────────────
 function caseStatusCategory(st){
-  if(st==="closed") return "closed";
-  if(["open","wip","partial_closed",
-      "rider_inv","hi_tl_inv","rider_abs_action","rider_abs_pending",
-      "hi_tl_abs","cx_fraud","other_pending"].includes(st)) return "open";
+  if(st==="closed")                            return "closed";
+  if(st==="open")                              return "open";
+  if(st==="wip" || st==="partial_closed")      return "wip";
+  // Legacy statuses from old dropdown → treat as open
+  if(["rider_inv","hi_tl_inv","rider_abs_action","rider_abs_pending",
+      "hi_tl_abs","cx_fraud","other_pending"].includes(st))  return "open";
+  // Not yet started: pending_date, unassigned, or anything else
   return "featured";
 }
 
@@ -12073,15 +12076,16 @@ function caseCard(c,showActions=true){
 function caseCardFull(c){
   const cat=caseStatusCategory(c.st);
   const isOpen=cat==="open";
-  const barCol=c.st==="closed"?"var(--grn)":isOpen?"var(--acc)":"var(--yel)";
+  const isWip=cat==="wip";
+  const isActive=isOpen||isWip;
+  const barCol=c.st==="closed"?"var(--grn)":isOpen?"var(--acc)":isWip?"var(--org)":"var(--yel)";
   const priCls=c.pri==="High"?"br":c.pri==="Medium"?"by":"bgr";
   const cid=(c.id||"").replace(/'/g,"");
   const ctype=(c.type||"").replace(/'/g,"");
   const chub=(c.hub||"").replace(/'/g,"");
   return`<div class="cc"><div class="cbar" style="background:${barCol}"></div><div class="ci">
     <div class="cmr"><span class="cid">${c.id}</span><span class="fp ${c.fp||"fp-q"}">${c.type||""}</span>
-    ${isOpen?`<span class="working-badge" style="margin-left:auto">Working</span>`:
-      c.pri?`<span class="bdg ${priCls}" style="margin-left:auto">${c.pri}</span>`:""}</div>
+    ${isActive?`<span class="working-badge" style="margin-left:auto;background:${isWip?'rgba(234,88,12,.12)':'rgba(22,163,74,.12)'};border-color:${isWip?'rgba(234,88,12,.3)':'rgba(22,163,74,.3)'};">${isWip?c.st==='partial_closed'?'Partial':'WIP':'Open'}</span>`:c.pri?`<span class="bdg ${priCls}" style="margin-left:auto">${c.pri}</span>`:""}</div>
     <div class="ctitle">${c.trend||c.type||"Case"}</div>
     <div class="cinfo"><span class="ic">🏢 ${c.hub||"—"}, ${c.city||"—"}</span>
     ${c.val?`<span class="ic">₹${(c.val||0).toLocaleString()}</span>`:""}</div>
@@ -12097,17 +12101,14 @@ function caseCardFull(c){
 
 // ── Render cases pages ────────────────────────────────────
 function renderPortalCases(){
-  const highAlert=myCases.filter(c=>c.pri==="High"&&c.st!=="closed");
-  const activePg =myCases.filter(c=>["open","wip","partial_closed","rider_inv","hi_tl_inv","other_pending","cx_fraud","rider_abs_action","rider_abs_pending"].includes(c.st));
-  const closed   =myCases.filter(c=>c.st==="closed").slice(0,3);
-  renderAlertsList(highAlert,activePg,closed);
-  renderFeaturedCases();
+  renderCasesTab();
   renderOpenCases();
+  renderWipCases();
   renderClosedCases();
   renderHistory();
   renderProfile();
   // Restore the active page — background refreshes must not reset the tab
-  if(_activePage && _activePage !== "alerts"){
+  if(_activePage && _activePage !== "cases"){
     var pageEl = document.getElementById("page-"+_activePage);
     if(pageEl && !pageEl.classList.contains("active")){
       document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
@@ -12121,51 +12122,51 @@ function renderPortalCases(){
   }
 }
 
-function renderAlertsList(alerts,activePg,recentClosed){
-  const page=document.getElementById("alerts-content");if(!page)return;
-  const ac=myCases.filter(c=>!["closed","unassigned"].includes(c.st)).length;
-  const pc=myCases.filter(c=>c.st==="pending_date").length;
-  const cc=myCases.filter(c=>c.st==="closed").length;
-  let html=`<div class="stat-row">
-    <div class="sc"><div class="sv" style="color:var(--red)">${ac}</div><div class="sl">Active</div></div>
-    <div class="sc"><div class="sv" style="color:var(--yel)">${pc}</div><div class="sl">Pending</div></div>
-    <div class="sc"><div class="sv" style="color:var(--grn)">${cc}</div><div class="sl">Closed</div></div>
-  </div>`;
-  if(!myCases.length){
-    html+=emptyState("✅","No cases assigned yet","Cases assigned to<br><strong>"+currentUser.email+"</strong><br>will appear here.");
-  } else if(!alerts.length){
-    html+=`<div class="slbl">NEW ALERTS</div>`+
-      `<div style="text-align:center;padding:24px;color:var(--txt3)">
-        <div style="font-size:24px;margin-bottom:6px">🔔</div>
-        <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px">No new alerts</div>
-        <div style="font-size:11.5px">You have ${ac} active case${ac!==1?"s":""}. Check the Open tab.</div>
-      </div>`;
+// renderAlertsList removed — superseded by renderCasesTab
+
+function renderMyCasesList(){ renderCasesTab(); }
+
+// Cases tab — all unstarted cases (no Start Working taken yet)
+function renderCasesTab(){
+  var el = document.getElementById("cases-content"); if(!el) return;
+  var unstarted = myCases.filter(function(c){ return caseStatusCategory(c.st)==="featured"; });
+  var openCount = myCases.filter(function(c){ return caseStatusCategory(c.st)==="open"; }).length;
+  var wipCount  = myCases.filter(function(c){ return caseStatusCategory(c.st)==="wip"; }).length;
+  var cc        = myCases.filter(function(c){ return c.st==="closed"; }).length;
+  var html = '<div class="stat-row">'
+    + '<div class="sc"><div class="sv" style="color:var(--yel)">'+unstarted.length+'</div><div class="sl">New</div></div>'
+    + '<div class="sc"><div class="sv" style="color:var(--acc)">'+openCount+'</div><div class="sl">Open</div></div>'
+    + '<div class="sc"><div class="sv" style="color:var(--org)">'+wipCount+'</div><div class="sl">WIP</div></div>'
+    + '<div class="sc"><div class="sv" style="color:var(--grn)">'+cc+'</div><div class="sl">Closed</div></div>'
+    + '</div>';
+  if(!unstarted.length){
+    html += emptyState("📋","No new cases","All assigned cases have been started.");
   } else {
-    html+=`<div class="slbl">NEW ALERTS <span style="background:var(--red);color:#fff;padding:1px 7px;border-radius:10px;font-size:9px">${alerts.length}</span></div>`;
-    html+=alerts.map(c=>caseCard(c)).join("");
+    html += '<div class="slbl">NEW CASES — NOT YET STARTED <span style="background:var(--yel);color:#fff;padding:1px 7px;border-radius:10px;font-size:9px">'+unstarted.length+'</span></div>'
+      + '<div style="background:rgba(217,119,6,.07);border:1.5px solid rgba(217,119,6,.2);border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:11.5px;color:var(--txt2)">Open a case and tap <strong>Start Working</strong> to begin investigation.</div>'
+      + unstarted.map(function(c){ return caseCardFull(c); }).join("");
   }
-  page.innerHTML=html;
+  el.innerHTML = html;
 }
 
-function renderMyCasesList(){ renderFeaturedCases(); }
-
-function renderFeaturedCases(){
-  const el=document.getElementById("featured-cases-content");if(!el)return;
-  const list=myCases.filter(c=>caseStatusCategory(c.st)==="featured");
-  el.innerHTML=list.length
-    ?`<div class="slbl">FEATURED CASES <span style="background:var(--yel);color:#fff;padding:1px 7px;border-radius:10px;font-size:9px">${list.length}</span></div>
-      <div style="background:rgba(217,119,6,.07);border:1.5px solid rgba(217,119,6,.2);border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:11.5px;color:var(--txt2)">
-        Assigned but not started. Open a case and tap <strong>Start Working</strong>.
-      </div>`+list.map(c=>caseCardFull(c)).join("")
-    :emptyState("📋","No featured cases","All your cases are open or closed.");
-}
-
+// Open tab — only cases with Daily Status = OPEN
 function renderOpenCases(){
   const el=document.getElementById("open-cases-content");if(!el)return;
   const list=myCases.filter(c=>caseStatusCategory(c.st)==="open");
   el.innerHTML=list.length
     ?`<div class="slbl">OPEN CASES <span style="background:var(--acc);color:#fff;padding:1px 7px;border-radius:10px;font-size:9px">${list.length}</span></div>`+list.map(c=>caseCardFull(c)).join("")
-    :emptyState("🔍","No open cases","Cases you start working on appear here.");
+    :emptyState("🔍","No open cases","Cases with status OPEN appear here.");
+}
+
+// WIP tab — cases with Daily Status = WIP or Partially Closed
+function renderWipCases(){
+  var el = document.getElementById("wip-content"); if(!el) return;
+  var list = myCases.filter(function(c){ return caseStatusCategory(c.st)==="wip"; });
+  var html = list.length
+    ? '<div class="slbl">WIP / PARTIALLY CLOSED <span style="background:var(--org);color:#fff;padding:1px 7px;border-radius:10px;font-size:9px">'+list.length+'</span></div>'
+      + list.map(function(c){ return caseCardFull(c); }).join("")
+    : emptyState("⏳","No WIP cases","Cases marked WIP or Partially Closed appear here.");
+  el.innerHTML = html;
 }
 
 function renderClosedCases(){
