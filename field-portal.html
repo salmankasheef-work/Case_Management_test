@@ -467,21 +467,21 @@ textarea.fc{resize:none;min-height:76px;}
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px">
             <div>
               <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('sw-hub-img-1')">
-                <input type="file" id="sw-hub-img-1" accept="image/*" style="display:none" onchange="handleHubImage(1,'sw-hub-img-1','sw-hub-prev-1','sw-hub-ph-1','sw-hub-thumb-1')">
+                <input type="file" id="sw-hub-img-1" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(1,'sw-hub-img-1','sw-hub-prev-1','sw-hub-ph-1','sw-hub-thumb-1')">
                 <div id="sw-hub-prev-1" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="sw-hub-thumb-1" src="" style="width:100%;height:100%;object-fit:cover"></div>
                 <div id="sw-hub-ph-1"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 1 <span style="color:var(--red)">*</span></div></div>
               </div>
             </div>
             <div>
               <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('sw-hub-img-2')">
-                <input type="file" id="sw-hub-img-2" accept="image/*" style="display:none" onchange="handleHubImage(2,'sw-hub-img-2','sw-hub-prev-2','sw-hub-ph-2','sw-hub-thumb-2')">
+                <input type="file" id="sw-hub-img-2" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(2,'sw-hub-img-2','sw-hub-prev-2','sw-hub-ph-2','sw-hub-thumb-2')">
                 <div id="sw-hub-prev-2" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="sw-hub-thumb-2" src="" style="width:100%;height:100%;object-fit:cover"></div>
                 <div id="sw-hub-ph-2"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 2</div></div>
               </div>
             </div>
             <div>
               <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('sw-hub-img-3')">
-                <input type="file" id="sw-hub-img-3" accept="image/*" style="display:none" onchange="handleHubImage(3,'sw-hub-img-3','sw-hub-prev-3','sw-hub-ph-3','sw-hub-thumb-3')">
+                <input type="file" id="sw-hub-img-3" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(3,'sw-hub-img-3','sw-hub-prev-3','sw-hub-ph-3','sw-hub-thumb-3')">
                 <div id="sw-hub-prev-3" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="sw-hub-thumb-3" src="" style="width:100%;height:100%;object-fit:cover"></div>
                 <div id="sw-hub-ph-3"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 3</div></div>
               </div>
@@ -550,21 +550,21 @@ textarea.fc{resize:none;min-height:76px;}
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
           <div>
             <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('hub-img-1')">
-              <input type="file" id="hub-img-1" accept="image/*" style="display:none" onchange="handleHubImage(1)">
+              <input type="file" id="hub-img-1" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(1)">
               <div id="hub-prev-1" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="hub-thumb-1" src="" style="width:100%;height:100%;object-fit:cover"></div>
               <div id="hub-ph-1"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 1</div></div>
             </div>
           </div>
           <div>
             <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('hub-img-2')">
-              <input type="file" id="hub-img-2" accept="image/*" style="display:none" onchange="handleHubImage(2)">
+              <input type="file" id="hub-img-2" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(2)">
               <div id="hub-prev-2" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="hub-thumb-2" src="" style="width:100%;height:100%;object-fit:cover"></div>
               <div id="hub-ph-2"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 2</div></div>
             </div>
           </div>
           <div>
             <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('hub-img-3')">
-              <input type="file" id="hub-img-3" accept="image/*" style="display:none" onchange="handleHubImage(3)">
+              <input type="file" id="hub-img-3" accept="image/*" capture="environment" style="display:none" onchange="handleHubImage(3)">
               <div id="hub-prev-3" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="hub-thumb-3" src="" style="width:100%;height:100%;object-fit:cover"></div>
               <div id="hub-ph-3"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 3</div></div>
             </div>
@@ -575,11 +575,25 @@ textarea.fc{resize:none;min-height:76px;}
       <!-- EVIDENCE UPLOAD -->
       <div style="margin-bottom:13px">
         <label class="fl">📸 Evidence / Proof Photos</label>
-        <div class="uzone" onclick="triggerUp('ev-up')">
-          <input type="file" id="ev-up" accept="image/*" multiple onchange="handlePhotos('ev-up','ev-gal','ev-prev')">
-          <div class="uicon">📷</div>
-          <div class="utitle">Take Photo / Upload Evidence</div>
-          <div class="usub">CCTV screenshots, site photos, documents</div>
+        <!-- Hidden inputs: one for camera, one for gallery -->
+        <input type="file" id="ev-camera" accept="image/*" capture="environment" multiple style="display:none"
+          onchange="handlePhotosFromInput('ev-camera','ev-gal','ev-prev')">
+        <input type="file" id="ev-gallery" accept="image/*" multiple style="display:none"
+          onchange="handlePhotosFromInput('ev-gallery','ev-gal','ev-prev')">
+        <!-- Also keep ev-up as alias (used internally by _evUpHasFiles guard) -->
+        <input type="file" id="ev-up" accept="image/*" multiple style="display:none"
+          onchange="handlePhotos('ev-up','ev-gal','ev-prev')">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <button type="button" class="btn btn-g" style="padding:10px;font-size:12px"
+            onclick="triggerEvidCamera()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Open Camera
+          </button>
+          <button type="button" class="btn" style="padding:10px;font-size:12px;background:var(--sf);border:1.5px solid var(--bd);color:var(--txt)"
+            onclick="triggerEvidGallery()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Upload from Gallery
+          </button>
         </div>
         <div class="pgrid" id="ev-gal"></div>
         <div class="fprevs" id="ev-prev"></div>
@@ -605,30 +619,35 @@ textarea.fc{resize:none;min-height:76px;}
         <!-- TRANSACTION SLIP UPLOAD -->
         <div class="fgrp">
           <label class="fl">🧾 Transaction Slip(s)</label>
-          <!-- Hidden input — triggered by both buttons below -->
+          <!-- Slip inputs: camera + gallery -->
+          <input type="file" id="slip-camera" accept="image/*" capture="environment" multiple
+            style="display:none" onchange="handleSlipUploadFromInput(event)">
           <input type="file" id="slip-input" accept="image/*" multiple
             style="display:none" onchange="handleSlipUpload(event)">
-          <!-- Thumbnail grid — shows all attached slips -->
+          <!-- Thumbnail grid -->
           <div id="slip-gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:7px;margin-bottom:7px"></div>
-          <!-- Action row -->
-          <div id="slip-action-row" style="display:flex;gap:8px;align-items:center">
-            <div id="slip-placeholder-btn" onclick="triggerUp('slip-input')"
-              style="flex:1;border:2px dashed var(--bd2);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;background:var(--sf2);transition:all .15s">
-              <div style="font-size:20px;margin-bottom:3px">🧾</div>
-              <div style="font-size:11px;font-weight:600;color:var(--navy)">Take Photo / Upload</div>
-              <div style="font-size:9.5px;color:var(--txt3)">Bank screenshot, NEFT/IMPS</div>
-            </div>
-            <div id="slip-add-btn" onclick="triggerUp('slip-input')"
-              style="display:none;flex-shrink:0;border:1.5px solid var(--acc);border-radius:9px;padding:9px 13px;cursor:pointer;background:rgba(29,78,216,.04);text-align:center">
-              <div style="font-size:16px">➕</div>
-              <div style="font-size:9px;font-weight:700;color:var(--acc);white-space:nowrap">Add Slip</div>
-            </div>
+          <!-- Camera + Gallery buttons -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:7px" id="slip-action-row">
+            <button type="button" class="btn btn-g" style="padding:10px;font-size:12px"
+              onclick="document.getElementById('slip-camera').click()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Open Camera
+            </button>
+            <button type="button" class="btn" style="padding:10px;font-size:12px;background:var(--sf);border:1.5px solid var(--bd);color:var(--txt)"
+              onclick="document.getElementById('slip-input').click()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Upload from Gallery
+            </button>
           </div>
-          <!-- Status bar -->
+          <!-- Add more row (shown after first upload) -->
+          <div id="slip-add-row" style="display:none;text-align:right;margin-bottom:4px">
+            <button type="button" class="btn" style="font-size:11px;padding:5px 12px;background:var(--sf);border:1.5px solid var(--acc);color:var(--acc)"
+              onclick="document.getElementById('slip-input').click()">➕ Add more slips</button>
+          </div>
+          <!-- Status -->
           <div id="slip-done" style="display:none;margin-top:7px;background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.25);border-radius:8px;padding:7px 12px;align-items:center;gap:8px">
             <span id="slip-done-txt" style="font-size:11.5px;color:var(--grn);font-weight:600">Slips attached ✓</span>
           </div>
-          <!-- Hidden (kept for legacy code compatibility) -->
           <img id="slip-preview" src="" alt="" style="display:none">
         </div>
 
@@ -788,10 +807,13 @@ function openUpdate(caseId,sub){
   window._slipBase64 = null;
   window._slipFiles  = [];
   // Reset new slip UI elements
-  var slipPh2 = document.getElementById("slip-placeholder-btn");
-  var slipAdd = document.getElementById("slip-add-btn");
-  if(slipPh2) slipPh2.style.display = "block";
-  if(slipAdd) slipAdd.style.display  = "none";
+  var slipAddRow = document.getElementById("slip-add-row");
+  if(slipAddRow) slipAddRow.style.display = "none";
+  // Reset camera/gallery inputs
+  ["ev-camera","ev-gallery","slip-camera"].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value="";
+  });
+  window._extraEvidFiles = [];
   // Reset hub images so they don't carry over from previous case
   window._hubBase64 = {};
   // Reset both the start-working banner hub inputs AND the in-form hub inputs
@@ -1006,6 +1028,50 @@ function handlePhotos(inputId,galleryId,previewId){
   }
   showToast(`${files.length} file${files.length>1?"s":""} attached ✓`);
 }
+
+// ── Evidence: handle files from camera or gallery input ───────────────
+function handlePhotosFromInput(inputId, galleryId, previewId){
+  // Merge files into ev-up (the input guarded by _evUpHasFiles)
+  var src = document.getElementById(inputId);
+  if(!src || !src.files || !src.files.length) return;
+  window._evUpHasFiles = true;
+  // Show thumbnails
+  var gallery = document.getElementById(galleryId);
+  if(gallery){
+    Array.from(src.files).filter(f=>f.type.startsWith("image/")).forEach(f=>{
+      var r = new FileReader();
+      r.onload = function(e){
+        var img = document.createElement("img");
+        img.src = e.target.result; img.className = "pthumb";
+        gallery.appendChild(img);
+      };
+      r.readAsDataURL(f);
+    });
+  }
+  // Accumulate into ev-up's FileList via DataTransfer
+  try{
+    var dt = new DataTransfer();
+    var ev = document.getElementById("ev-up");
+    if(ev && ev.files) Array.from(ev.files).forEach(f=>dt.items.add(f));
+    Array.from(src.files).forEach(f=>dt.items.add(f));
+    ev.files = dt.files;
+  }catch(e){
+    // DataTransfer not supported — fall back: store separately
+    if(!window._extraEvidFiles) window._extraEvidFiles = [];
+    Array.from(src.files).forEach(f=>window._extraEvidFiles.push(f));
+  }
+  showToast(src.files.length+" photo(s) attached ✓");
+}
+function triggerEvidCamera(){ window._evUpHasFiles=true; document.getElementById("ev-camera").click(); }
+function triggerEvidGallery(){ window._evUpHasFiles=true; document.getElementById("ev-gallery").click(); }
+
+// ── Slip: camera path routes through handleSlipUpload ────────────────
+function handleSlipUploadFromInput(event){
+  handleSlipUpload(event);
+  // Show "Add more" row after first upload
+  var addRow = document.getElementById("slip-add-row");
+  if(addRow) addRow.style.display = "block";
+}
 async function submitUpdate(){
   const status = document.getElementById("us-status").value;
   if(!status){ showToast("Select a status first","warn"); return; }
@@ -1034,8 +1100,21 @@ async function submitUpdate(){
       // Only read files if user actually attached evidence THIS session (prevents ghost uploads)
       if(!window._evUpHasFiles){ resolve([]); return; }
       var esInput = document.getElementById("ev-up");
-      if(!esInput || !esInput.files || !esInput.files.length){ resolve([]); return; }
-      var esFiles = Array.from(esInput.files);
+      // Merge ev-camera, ev-gallery and fallback _extraEvidFiles
+      var extraIds = ["ev-camera","ev-gallery"];
+      var extraFiles = (window._extraEvidFiles||[]).slice();
+      extraIds.forEach(function(id){
+        var el=document.getElementById(id);
+        if(el && el.files) Array.from(el.files).forEach(function(f){ extraFiles.push(f); });
+      });
+      var baseFiles = esInput && esInput.files ? Array.from(esInput.files) : [];
+      // Deduplicate by name+size
+      var seen = {};
+      var esFiles = baseFiles.concat(extraFiles).filter(function(f){
+        var k = f.name+f.size;
+        if(seen[k]) return false; seen[k]=true; return true;
+      });
+      if(!esFiles.length){ resolve([]); return; }
       var results = new Array(esFiles.length);
       var done = 0;
       esFiles.forEach(function(f, fi){
@@ -1113,6 +1192,31 @@ async function submitUpdate(){
 
   window[syncCb] = function(sheetResult){
     try{ delete window[syncCb]; }catch(e){}
+
+    // ── Log update to Case_History sheet (permanent, cross-device) ──
+    try{
+      window._fpiUploadSeq = (window._fpiUploadSeq||0)+1;
+      var _lcb = "fpiLogCb_"+window._fpiUploadSeq;
+      var _lp  = new URLSearchParams({
+        action       : "log_update",
+        case_id      : caseId,
+        agent_email  : currentUser.email||"",
+        agent_name   : currentUser.name||"",
+        status       : status,
+        remarks      : notes,
+        recovery     : amt,
+        utr          : utr,
+        police       : police,
+        bifurcation  : bifurcation||"",
+        photo_count  : evidenceBase64List.length,
+        callback     : _lcb
+      });
+      window[_lcb] = function(){ try{delete window[_lcb];}catch(e){} };
+      var _ls = document.createElement("script");
+      _ls.src = APPS_SCRIPT_URL+"?"+_lp.toString();
+      document.head.appendChild(_ls);
+      setTimeout(function(){try{_ls.remove();delete window[_lcb];}catch(e){}}, 8000);
+    }catch(_le){}
 
     var evidImgs = evidenceBase64List.slice();
 
@@ -1527,6 +1631,8 @@ function handleSlipUpload(event){
   }
 
   showToast("✓ " + files.length + " slip" + (files.length>1?"s":"") + " attached");
+  var addRow = document.getElementById("slip-add-row");
+  if(addRow) addRow.style.display = "block";
 }
 // ── Hub image preview (for Start Working) ────────────────────────────
 window._hubBase64 = {};  // {1: base64, 2: base64, 3: base64}
@@ -11691,6 +11797,15 @@ function getSharedCases(){
 }
 
 async function loadMyCases(){
+  // ── Concurrency lock: prevent duplicate fetches on mobile ─────────
+  // On mobile, login + 60s timer can fire simultaneously — lock prevents
+  // two concurrent fetches from returning duplicate data.
+  if(window._casesLoading){
+    console.log("[FPI] loadMyCases already in progress — skipped");
+    return;
+  }
+  window._casesLoading = true;
+
   // Read from the agent-specific cache key (same key all writes use)
   var _fpKey = "fp_cases_"+(currentUser.email||"").toLowerCase().replace(/[^a-z0-9]/g,"_");
   var localMap = {};
@@ -11700,9 +11815,11 @@ async function loadMyCases(){
   }catch(_e){}
 
   await new Promise(function(resolve){
-    var cb    = "fpicb_"+Date.now();
+    // Use a monotonic counter (not Date.now) to avoid collision on same ms
+    window._fpiCbSeq = (window._fpiCbSeq||0) + 1;
+    var cb    = "fpicb_"+window._fpiCbSeq;
     var url   = APPS_SCRIPT_URL+"?action=get_cases&email="+encodeURIComponent(currentUser.email)+"&callback="+cb;
-    var timer = setTimeout(function(){ cleanup(); resolve(); }, 8000);
+    var timer = setTimeout(function(){ cleanup(); resolve(); }, 10000);
     function cleanup(){
       try{delete window[cb];}catch(e){}
       var _s=document.getElementById("fpi-cases-s"); if(_s)_s.remove();
@@ -11713,7 +11830,7 @@ async function loadMyCases(){
       try{
         if(data && data.cases && data.cases.length){
           var seenIds = {};
-          myCases = [];
+          var newCases = [];
           data.cases.forEach(function(row){
             var id = String(row["Case ID"]||"").trim();
             if(!id || seenIds[id]) return; // skip blank or duplicate Case IDs
@@ -11757,7 +11874,7 @@ async function loadMyCases(){
               if(local.closedDate && !mergedClosedDate)    mergedClosedDate = local.closedDate;
             }
 
-            myCases.push({
+            newCases.push({
               id          : id,
               cat         : row["Category"]||"Shipment Fraud",
               type        : lossType,
@@ -11789,8 +11906,10 @@ async function loadMyCases(){
             });
           });
 
-          // Sheet is the sole authority for which cases this agent has.
-          // No local injection — prevents phantom/duplicate cases.
+          // Final dedup pass on the assembled list (double-safety)
+          var finalMap = {};
+          newCases.forEach(function(c){ if(c.id && !finalMap[c.id]) finalMap[c.id]=c; });
+          myCases = Object.keys(finalMap).map(function(k){ return finalMap[k]; });
 
           // Persist to agent-specific key — matches what submitUpdate/markStartWorking write
           try{ localStorage.setItem(_fpKey, JSON.stringify(myCases)); }catch(e){}
@@ -11814,6 +11933,7 @@ async function loadMyCases(){
     }catch(_e){}
   }
 
+  window._casesLoading = false;
   renderPortalCases();
 }
 
@@ -12181,46 +12301,94 @@ function renderClosedCases(){
 function renderHistory(){
   const el=document.getElementById("history-content");if(!el)return;
 
-  // Load from dedicated update store first (most reliable — survives logout/sheet sync)
-  let updates=[];
-  try{
-    const _updKey3 = "fpi_updates_"+(currentUser.email||"guest");
-    const _storedUpd = JSON.parse(localStorage.getItem(_updKey3)||"[]");
-    if(_storedUpd.length){
-      // Stored updates already have caseId, caseType etc.
-      updates = _storedUpd.map(function(u){
+  // Show loading state immediately
+  el.innerHTML='<div class="slbl">MY UPDATE HISTORY</div>'
+    +'<div style="text-align:center;padding:30px;color:var(--txt3);font-size:12px">Loading history…</div>';
+
+  // ── Fetch from Case_History sheet (permanent, cross-device) ──────
+  window._fpiUploadSeq = (window._fpiUploadSeq||0)+1;
+  var _hcb = "fpiHistCb_"+window._fpiUploadSeq;
+  var _hTimer = setTimeout(function(){
+    // Sheet timed out — fall back to localStorage
+    try{delete window[_hcb];}catch(e){}
+    renderHistoryFromLocal(el);
+  }, 8000);
+
+  window[_hcb] = function(data){
+    clearTimeout(_hTimer);
+    try{delete window[_hcb];}catch(e){}
+    if(data && data.history && data.history.length){
+      // Normalise rows from Case_History sheet
+      var updates = data.history.map(function(row){
         return {
-          caseId  : u.caseId   || "",
-          caseType: u.caseType || "",
-          status  : u.status   || "",
-          notes   : u.notes    || "",
-          date    : u.date     || "",
-          police  : u.police   || "",
-          photos  : u.photos   || 0,
-          utr     : u.utr      || "",
-          recovery: u.recovery || 0
+          caseId  : row["Case ID"]   || "",
+          caseType: "",
+          status  : row["Status"]    || "",
+          notes   : row["Remarks"]   || "",
+          date    : (row["Timestamp"]||"").substring(0,10),
+          police  : row["Police"]    || "",
+          photos  : parseInt(row["Photos"]||0)||0,
+          utr     : row["UTR"]       || "",
+          recovery: parseFloat(row["Recovery"]||0)||0
         };
       });
+      // Also merge unsaved session updates (belt-and-suspenders)
+      var seenKeys={};
+      updates.forEach(function(u){ seenKeys[u.caseId+"_"+u.date+"_"+u.status]=true; });
+      myCases.forEach(function(c){
+        (c.updates||[]).forEach(function(u){
+          var k=c.id+"_"+(u.date||"")+"_"+(u.status||"");
+          if(!seenKeys[k]){ seenKeys[k]=true;
+            updates.push({caseId:c.id,caseType:c.cat||"",status:u.status||"",
+              notes:u.notes||"",date:u.date||"",police:u.police||"",
+              photos:u.photos||0,utr:u.utr||"",recovery:u.recovery||0}); }
+        });
+      });
+      renderHistoryList(el, updates);
+    } else {
+      renderHistoryFromLocal(el);
     }
-  }catch(_he){}
+  };
 
-  // Also merge from myCases in memory (catches updates made this session
-  // before they were saved, and fills gaps)
-  const seenKeys = {};
-  updates.forEach(function(u){ seenKeys[u.caseId+"_"+u.date+"_"+u.status] = true; });
+  var _hs = document.createElement("script");
+  _hs.src = APPS_SCRIPT_URL+"?action=get_history&email="+encodeURIComponent(currentUser.email||"")
+    +"&callback="+_hcb;
+  _hs.onerror = function(){ clearTimeout(_hTimer); try{delete window[_hcb];}catch(e){}
+    renderHistoryFromLocal(el); };
+  document.head.appendChild(_hs);
+  return; // async — renderHistoryList called from callback
+}
+
+function renderHistoryFromLocal(el){
+  // Fallback: build history from localStorage + in-memory myCases
+  var updates = [];
+  try{
+    var _updKey3 = "fpi_updates_"+(currentUser.email||"guest");
+    var _storedUpd = JSON.parse(localStorage.getItem(_updKey3)||"[]");
+    updates = _storedUpd.map(function(u){
+      return { caseId:u.caseId||"", caseType:u.caseType||"", status:u.status||"",
+        notes:u.notes||"", date:u.date||"", police:u.police||"",
+        photos:u.photos||0, utr:u.utr||"", recovery:u.recovery||0 };
+    });
+  }catch(_he){}
+  var seenKeys={};
+  updates.forEach(function(u){ seenKeys[u.caseId+"_"+u.date+"_"+u.status]=true; });
   myCases.forEach(function(c){
     (c.updates||[]).forEach(function(u){
-      const key = c.id+"_"+(u.date||"")+"_"+(u.status||"");
-      if(!seenKeys[key]){
-        seenKeys[key] = true;
+      var k=c.id+"_"+(u.date||"")+"_"+(u.status||"");
+      if(!seenKeys[k]){ seenKeys[k]=true;
         updates.push({caseId:c.id,caseType:c.cat||"",status:u.status||"",
           notes:u.notes||"",date:u.date||"",police:u.police||"",
-          photos:u.photos||0,utr:u.utr||c.utr||"",recovery:u.recovery||c.recovery||0});
-      }
+          photos:u.photos||0,utr:u.utr||c.utr||"",recovery:u.recovery||c.recovery||0}); }
     });
   });
+  renderHistoryList(el, updates);
+}
+
+function renderHistoryList(el, updates){
   if(!updates.length){
-    el.innerHTML=`<div class="slbl">MY UPDATE HISTORY</div>`+emptyState("📋","No updates yet","Your field updates will appear here.");
+    el.innerHTML='<div class="slbl">MY UPDATE HISTORY</div>'
+      +emptyState("📋","No updates yet","Your field updates will appear here.");
     return;
   }
   updates.sort((a,b)=>new Date(b.date)-new Date(a.date));
