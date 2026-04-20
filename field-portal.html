@@ -182,9 +182,22 @@ textarea.fc{resize:none;min-height:76px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .utr-detected{background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.3);border-radius:8px;padding:9px 12px;margin-top:8px;display:none;}
 .utr-detected-lbl{font-size:9px;color:var(--grn);font-family:var(--mono);font-weight:600;margin-bottom:3px;}
-.bif-opt{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--bd);border-radius:7px;padding:4px 9px;font-size:11px;font-weight:500;color:var(--txt);cursor:pointer;transition:all .15s;white-space:nowrap;}
-.bif-opt:has(input:checked){background:rgba(29,78,216,.08);border-color:var(--acc);color:var(--acc);font-weight:700;}
-.bif-opt input[type=checkbox]{accent-color:var(--acc);width:13px;height:13px;cursor:pointer;}
+/* ── Bifurcation multi-select dropdown ── */
+.bif-wrap{position:relative}
+.bif-field{display:flex;flex-wrap:wrap;gap:4px;align-items:center;min-height:40px;background:var(--sf);border:1.5px solid var(--bd);border-radius:10px;padding:5px 8px;cursor:text;transition:border-color .15s}
+.bif-field:focus-within{border-color:var(--acc)}
+.bif-chip{display:inline-flex;align-items:center;gap:3px;background:rgba(29,78,216,.1);color:var(--acc);border:1px solid rgba(29,78,216,.25);border-radius:5px;padding:2px 6px;font-size:10.5px;font-weight:600;white-space:nowrap}
+.bif-chip-x{cursor:pointer;font-size:12px;font-weight:700;color:var(--acc);line-height:1;padding:0 1px}
+.bif-chip-x:hover{color:var(--red)}
+.bif-search{border:none;outline:none;background:transparent;font-size:12px;color:var(--txt);font-family:var(--sans);min-width:80px;flex:1;padding:2px 4px}
+.bif-dropdown{display:none;position:absolute;z-index:200;top:calc(100% + 3px);left:0;right:0;background:#fff;border:1.5px solid var(--bd);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);max-height:200px;overflow-y:auto}
+.bif-dropdown.open{display:block}
+.bif-item{padding:8px 12px;font-size:12px;color:var(--txt);cursor:pointer;border-bottom:1px solid var(--sf)}
+.bif-item:last-child{border-bottom:none}
+.bif-item:hover,.bif-item.highlighted{background:rgba(29,78,216,.06);color:var(--acc)}
+.bif-item.selected{color:var(--acc);font-weight:600}
+.bif-item.selected::before{content:"✓ ";font-size:10px}
+.bif-empty{padding:10px 12px;font-size:11px;color:var(--txt3);text-align:center}
 .utr-detected-val{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--navy);}
 
 /* LOGIN SCREEN */
@@ -492,43 +505,36 @@ textarea.fc{resize:none;min-height:76px;}
           <option value="closed">Case Closed</option>
         </select>
       </div>
-      <!-- STATUS BIFURCATION multi-select -->
+      <!-- STATUS BIFURCATION — searchable multi-select dropdown -->
       <div class="fgrp" id="bifurcation-grp">
         <label class="fl">Status Bifurcation <span style="font-weight:400;color:var(--txt3)">(select all that apply)</span></label>
-        <div id="bifurcation-options" style="background:var(--sf);border:1.5px solid var(--bd);border-radius:10px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;max-height:200px;overflow-y:auto">
-          <label class="bif-opt"><input type="checkbox" value="Riders blacklisted/terminated"> Riders blacklisted/terminated</label>
-          <label class="bif-opt"><input type="checkbox" value="HI Removed"> HI Removed</label>
-          <label class="bif-opt"><input type="checkbox" value="TL Removed"> TL Removed</label>
-          <label class="bif-opt"><input type="checkbox" value="Franchise termination raised"> Franchise termination raised</label>
-          <label class="bif-opt"><input type="checkbox" value="Overall loss recovered"> Overall loss recovered</label>
-          <label class="bif-opt"><input type="checkbox" value="Partial loss recovered"> Partial loss recovered</label>
-          <label class="bif-opt"><input type="checkbox" value="Rider absconding"> Rider absconding</label>
-          <label class="bif-opt"><input type="checkbox" value="FPI actions underway"> FPI actions underway</label>
-          <label class="bif-opt"><input type="checkbox" value="Add on recovery expected"> Add on recovery expected</label>
-          <label class="bif-opt"><input type="checkbox" value="Riders inactive"> Riders inactive</label>
-          <label class="bif-opt"><input type="checkbox" value="Briefing done"> Briefing done</label>
-          <label class="bif-opt"><input type="checkbox" value="FR Payout deduction raised"> FR Payout deduction raised</label>
-          <label class="bif-opt"><input type="checkbox" value="Held shipments recovered"> Held shipments recovered</label>
-          <label class="bif-opt"><input type="checkbox" value="Franchise inactive"> Franchise inactive</label>
-          <label class="bif-opt"><input type="checkbox" value="LMA vendor debit raised"> LMA vendor debit raised</label>
-          <label class="bif-opt"><input type="checkbox" value="Rider debit raised"> Rider debit raised</label>
-          <label class="bif-opt"><input type="checkbox" value="HOV merchandise recovered"> HOV merchandise recovered</label>
-          <label class="bif-opt"><input type="checkbox" value="HI salary hold"> HI salary hold</label>
-          <label class="bif-opt"><input type="checkbox" value="Police actions"> Police actions</label>
-          <label class="bif-opt"><input type="checkbox" value="Police complaint registered"> Police complaint registered</label>
-          <label class="bif-opt"><input type="checkbox" value="FIR initiated"> FIR initiated</label>
-          <label class="bif-opt"><input type="checkbox" value="Partner absconding"> Partner absconding</label>
-          <label class="bif-opt"><input type="checkbox" value="Payout/SD on hold"> Payout/SD on hold</label>
-          <label class="bif-opt"><input type="checkbox" value="Visit in pipeline"> Visit in pipeline</label>
-          <label class="bif-opt"><input type="checkbox" value="TL salary hold"> TL salary hold</label>
-          <label class="bif-opt"><input type="checkbox" value="Zero Net risk"> Zero Net risk</label>
-          <label class="bif-opt"><input type="checkbox" value="Remotely handled/long distance"> Remotely handled/long distance</label>
-          <label class="bif-opt"><input type="checkbox" value="Seller fraud"> Seller fraud</label>
-          <label class="bif-opt"><input type="checkbox" value="Franchise VBO case"> Franchise VBO case</label>
+        <div class="bif-wrap" id="bif-wrap">
+          <div class="bif-field" id="bif-field" onclick="bifFocus()">
+            <span id="bif-chips"></span>
+            <input type="text" class="bif-search" id="bif-search" placeholder="Search or select…"
+              oninput="bifFilter()" onfocus="bifOpen()" onkeydown="bifKeydown(event)" autocomplete="off">
+          </div>
+          <div class="bif-dropdown" id="bif-dropdown"></div>
         </div>
+        <!-- Hidden: stores comma-separated selected values for submitUpdate to read -->
+        <input type="hidden" id="bifurcation-hidden" value="">
       </div>
 
       <div class="fgrp"><label class="fl">Riders Involved (names / IDs)</label><input type="text" class="fc" placeholder="e.g. Deepak Sharma, ID: 12345" id="us-riders"></div>
+      <div class="fgrp">
+        <label class="fl">Riders Involved Count</label>
+        <input type="number" class="fc" id="us-riders-count" placeholder="Enter number of riders"
+          min="0" step="1" pattern="[0-9]*" inputmode="numeric"
+          oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+      <div class="fgrp">
+        <label class="fl">Case Continued</label>
+        <select class="fc" id="us-case-continued">
+          <option value="">— Select —</option>
+          <option value="PO">PO</option>
+          <option value="P1">P1</option>
+        </select>
+      </div>
       <div class="fgrp"><label class="fl">Police Action Status</label>
         <select class="fc" id="us-police">
           <option value="No Police Action">No Police Action</option>
@@ -755,6 +761,10 @@ function openUpdate(caseId,sub){
   document.getElementById("us-status").value="";
   document.getElementById("us-notes").value="";
   document.getElementById("us-riders").value="";
+  var ridersCount = document.getElementById("us-riders-count");
+  if(ridersCount) ridersCount.value="";
+  var caseCont = document.getElementById("us-case-continued");
+  if(caseCont) caseCont.value="";
   document.getElementById("us-police").value="No Police Action";
   document.getElementById("cl-box").style.display="none";
   document.getElementById("ev-gal").innerHTML="";
@@ -799,8 +809,8 @@ function openUpdate(caseId,sub){
   var swErr = document.getElementById("sw-hub-error");
   if(swErr) swErr.style.display = "none";
   document.getElementById("cl-utr").value="";
-  // Reset bifurcation checkboxes
-  document.querySelectorAll("#bifurcation-options input[type=checkbox]").forEach(function(cb){ cb.checked=false; });
+  // Reset bifurcation multi-select widget
+  bifReset();
 
   const c = myCases.find(x=>x.id===caseId);
 
@@ -1005,12 +1015,10 @@ async function submitUpdate(){
   // Case was previously closed — sheet will add new row (handled server-side)
 
   const notes  = document.getElementById("us-notes").value.trim();
-  // Read status bifurcation multi-select
-  var bifurcationVals = [];
-  document.querySelectorAll("#bifurcation-options input[type=checkbox]:checked").forEach(function(cb){
-    bifurcationVals.push(cb.value);
-  });
-  var bifurcation = bifurcationVals.join(", ");
+  // Read status bifurcation from hidden field (set by the multi-select widget)
+  var bifurcation = (document.getElementById("bifurcation-hidden")||{}).value||"";
+  const ridersCount    = parseInt((document.getElementById("us-riders-count")||{}).value||"0")||0;
+  const caseContinued  = (document.getElementById("us-case-continued")||{}).value||"";
   const utr    = document.getElementById("cl-utr").value.trim();
   const amt    = parseInt(document.getElementById("cl-amt")?.value||"0")||0;
   const police = document.getElementById("us-police").value;
@@ -1088,16 +1096,18 @@ async function submitUpdate(){
   // Step 1: Sync base status fields via JSONP GET
   const syncCb = "fpiUpdCb_"+Date.now();
   const syncParams = new URLSearchParams({
-    action           : "update_case_status",
-    case_id          : caseId,
-    status           : status,
-    recovery         : amt,
-    utr              : utr,
-    police           : police,
-    remarks          : notes,
-    status_bifurcation: bifurcation,
-    case_closed_date : closedDate,
-    callback         : syncCb
+    action             : "update_case_status",
+    case_id            : caseId,
+    status             : status,
+    recovery           : amt,
+    utr                : utr,
+    police             : police,
+    remarks            : notes,
+    status_bifurcation : bifurcation,
+    riders_count       : ridersCount,
+    case_continued     : caseContinued,
+    case_closed_date   : closedDate,
+    callback           : syncCb
   });
 
   window[syncCb] = function(sheetResult){
@@ -11254,6 +11264,119 @@ function extractUTRFromImage(base64){
 })();
 
 // ── Sign out ──────────────────────────────────────────────
+// ── Status Bifurcation multi-select widget ────────────────────────────
+var _BIF_OPTIONS = ["Riders blacklisted/terminated", "HI Removed", "TL Removed", "Franchise termination raised", "Overall loss recovered", "Partial loss recovered", "Rider absconding", "FPI actions underway", "Add on recovery expected", "Riders inactive", "Briefing done", "FR Payout deduction raised", "Held shipments recovered", "Franchise inactive", "LMA vendor debit raised", "Rider debit raised", "HOV merchandise recovered", "HI salary hold", "Police actions", "Police complaint registered", "FIR initiated", "Partner absconding", "Payout/SD on hold", "Visit in pipeline", "TL salary hold", "Zero Net risk", "Remotely handled/long distance", "Seller fraud", "Franchise VBO case"];
+var _bifSelected = [];   // array of selected option strings
+var _bifHighlight = -1;
+
+function bifReset(){
+  _bifSelected = [];
+  _bifHighlight = -1;
+  var h = document.getElementById("bifurcation-hidden");
+  var ch = document.getElementById("bif-chips");
+  var dd = document.getElementById("bif-dropdown");
+  var s  = document.getElementById("bif-search");
+  if(h)  h.value = "";
+  if(ch) ch.innerHTML = "";
+  if(dd) dd.innerHTML = "";
+  if(dd) dd.classList.remove("open");
+  if(s)  s.value = "";
+  if(s)  s.placeholder = "Search or select…";
+}
+
+function bifRenderChips(){
+  var ch = document.getElementById("bif-chips");
+  var h  = document.getElementById("bifurcation-hidden");
+  if(!ch) return;
+  ch.innerHTML = _bifSelected.map(function(v){
+    return '<span class="bif-chip">'+v+'<span class="bif-chip-x" onclick="bifRemove(event,\''+v.replace(/'/g,"\\'")+'\')">&times;</span></span>';
+  }).join("");
+  if(h) h.value = _bifSelected.join(", ");
+  var s = document.getElementById("bif-search");
+  if(s) s.placeholder = _bifSelected.length ? "" : "Search or select…";
+}
+
+function bifRemove(e, val){
+  e.stopPropagation();
+  _bifSelected = _bifSelected.filter(function(v){ return v !== val; });
+  bifRenderChips();
+  bifRenderDropdown(document.getElementById("bif-search")?document.getElementById("bif-search").value:"");
+}
+
+function bifRenderDropdown(query){
+  var dd = document.getElementById("bif-dropdown");
+  if(!dd) return;
+  var q = (query||"").toLowerCase();
+  var filtered = _BIF_OPTIONS.filter(function(o){ return o.toLowerCase().indexOf(q) >= 0; });
+  if(!filtered.length){
+    dd.innerHTML = '<div class="bif-empty">No matches</div>';
+    return;
+  }
+  _bifHighlight = -1;
+  dd.innerHTML = filtered.map(function(o, i){
+    var sel = _bifSelected.indexOf(o) >= 0;
+    return '<div class="bif-item'+(sel?" selected":"")+'" data-val="'+o.replace(/"/g,"&quot;")+'" data-idx="'+i+'" onclick="bifToggle(\''+o.replace(/'/g,"\\'")+'\')">'+(sel?"✓ ":"")+o+'</div>';
+  }).join("");
+}
+
+function bifToggle(val){
+  var idx = _bifSelected.indexOf(val);
+  if(idx >= 0) _bifSelected.splice(idx, 1);
+  else _bifSelected.push(val);
+  bifRenderChips();
+  var s = document.getElementById("bif-search");
+  bifRenderDropdown(s ? s.value : "");
+  if(s) s.focus();
+}
+
+function bifFilter(){
+  var s = document.getElementById("bif-search");
+  var dd = document.getElementById("bif-dropdown");
+  if(dd) dd.classList.add("open");
+  bifRenderDropdown(s ? s.value : "");
+}
+
+function bifOpen(){
+  var dd = document.getElementById("bif-dropdown");
+  if(dd){ dd.classList.add("open"); bifRenderDropdown(""); }
+}
+
+function bifFocus(){
+  var s = document.getElementById("bif-search");
+  if(s) s.focus();
+  bifOpen();
+}
+
+function bifKeydown(e){
+  var dd = document.getElementById("bif-dropdown");
+  var items = dd ? dd.querySelectorAll(".bif-item") : [];
+  if(e.key === "ArrowDown"){
+    e.preventDefault();
+    _bifHighlight = Math.min(_bifHighlight + 1, items.length - 1);
+  } else if(e.key === "ArrowUp"){
+    e.preventDefault();
+    _bifHighlight = Math.max(_bifHighlight - 1, 0);
+  } else if(e.key === "Enter" && _bifHighlight >= 0){
+    e.preventDefault();
+    if(items[_bifHighlight]) bifToggle(items[_bifHighlight].getAttribute("data-val"));
+    return;
+  } else if(e.key === "Escape"){
+    if(dd) dd.classList.remove("open");
+    return;
+  } else { return; }
+  items.forEach(function(it, i){ it.classList.toggle("highlighted", i === _bifHighlight); });
+  if(items[_bifHighlight]) items[_bifHighlight].scrollIntoView({block:"nearest"});
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function(e){
+  var wrap = document.getElementById("bif-wrap");
+  if(wrap && !wrap.contains(e.target)){
+    var dd = document.getElementById("bif-dropdown");
+    if(dd) dd.classList.remove("open");
+  }
+});
+
 document.addEventListener("DOMContentLoaded",()=>{
   const profilePage=document.getElementById("page-profile");
   if(profilePage){
