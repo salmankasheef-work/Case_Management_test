@@ -182,6 +182,9 @@ textarea.fc{resize:none;min-height:76px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .utr-detected{background:rgba(22,163,74,.07);border:1.5px solid rgba(22,163,74,.3);border-radius:8px;padding:9px 12px;margin-top:8px;display:none;}
 .utr-detected-lbl{font-size:9px;color:var(--grn);font-family:var(--mono);font-weight:600;margin-bottom:3px;}
+.bif-opt{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--bd);border-radius:7px;padding:4px 9px;font-size:11px;font-weight:500;color:var(--txt);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.bif-opt:has(input:checked){background:rgba(29,78,216,.08);border-color:var(--acc);color:var(--acc);font-weight:700;}
+.bif-opt input[type=checkbox]{accent-color:var(--acc);width:13px;height:13px;cursor:pointer;}
 .utr-detected-val{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--navy);}
 
 /* LOGIN SCREEN */
@@ -445,8 +448,33 @@ textarea.fc{resize:none;min-height:76px;}
       <!-- START WORKING BANNER (shown if not yet started) -->
       <div id="start-working-banner" style="display:none;margin-bottom:13px">
         <div style="background:rgba(29,78,216,.06);border:1.5px solid rgba(29,78,216,.2);border-radius:10px;padding:13px">
-          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px">Not started yet</div>
-          <div style="font-size:11px;color:var(--txt3);margin-bottom:10px">Tap below to mark this case as actively in progress</div>
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px">Not started yet</div>
+          <div style="font-size:11px;color:var(--txt3);margin-bottom:10px">Upload at least 1 hub photo before starting</div>
+          <!-- Hub image upload — mandatory, shown only before case starts -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px">
+            <div>
+              <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('sw-hub-img-1')">
+                <input type="file" id="sw-hub-img-1" accept="image/*" style="display:none" onchange="handleHubImage(1,'sw-hub-img-1','sw-hub-prev-1','sw-hub-ph-1','sw-hub-thumb-1')">
+                <div id="sw-hub-prev-1" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="sw-hub-thumb-1" src="" style="width:100%;height:100%;object-fit:cover"></div>
+                <div id="sw-hub-ph-1"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 1 <span style="color:var(--red)">*</span></div></div>
+              </div>
+            </div>
+            <div>
+              <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('sw-hub-img-2')">
+                <input type="file" id="sw-hub-img-2" accept="image/*" style="display:none" onchange="handleHubImage(2,'sw-hub-img-2','sw-hub-prev-2','sw-hub-ph-2','sw-hub-thumb-2')">
+                <div id="sw-hub-prev-2" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="sw-hub-thumb-2" src="" style="width:100%;height:100%;object-fit:cover"></div>
+                <div id="sw-hub-ph-2"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 2</div></div>
+              </div>
+            </div>
+            <div>
+              <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('sw-hub-img-3')">
+                <input type="file" id="sw-hub-img-3" accept="image/*" style="display:none" onchange="handleHubImage(3,'sw-hub-img-3','sw-hub-prev-3','sw-hub-ph-3','sw-hub-thumb-3')">
+                <div id="sw-hub-prev-3" style="display:none;width:100%;height:56px;border-radius:5px;overflow:hidden"><img id="sw-hub-thumb-3" src="" style="width:100%;height:100%;object-fit:cover"></div>
+                <div id="sw-hub-ph-3"><div class="uicon" style="font-size:16px">📷</div><div style="font-size:9px;color:var(--txt3)">Hub 3</div></div>
+              </div>
+            </div>
+          </div>
+          <div id="sw-hub-error" style="display:none;color:var(--red);font-size:11px;font-weight:600;margin-bottom:8px">⚠ Upload at least 1 hub photo to continue</div>
           <button class="btn btn-p" style="width:100%" onclick="markStartWorking()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Start Working
@@ -458,17 +486,48 @@ textarea.fc{resize:none;min-height:76px;}
       <div class="fgrp"><label class="fl">Daily Status <span class="fr">*</span></label>
         <select class="fc" id="us-status" onchange="handleStatusChange()">
           <option value="">Select today's status...</option>
-          <option value="wip">&#9679; WIP — Work In Progress</option>
-          <option value="rider_inv">a. Rider investigation ongoing</option>
-          <option value="hi_tl_inv">b. HI/TL investigation ongoing</option>
-          <option value="rider_abs_action">c. Rider absconded — Police action initiated</option>
-          <option value="rider_abs_pending">d. Rider absconded — Police action pending</option>
-          <option value="hi_tl_abs">e. HI/TL absconded</option>
-          <option value="cx_fraud">f. Customer fraud — Police liaison done</option>
-          <option value="other_pending">g. Other — Pending</option>
-          <option value="closed">h. Case Closed</option>
+          <option value="open">OPEN</option>
+          <option value="wip">WIP — Work In Progress</option>
+          <option value="partial_closed">Partially Closed</option>
+          <option value="closed">Case Closed</option>
         </select>
       </div>
+      <!-- STATUS BIFURCATION multi-select -->
+      <div class="fgrp" id="bifurcation-grp">
+        <label class="fl">Status Bifurcation <span style="font-weight:400;color:var(--txt3)">(select all that apply)</span></label>
+        <div id="bifurcation-options" style="background:var(--sf);border:1.5px solid var(--bd);border-radius:10px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;max-height:200px;overflow-y:auto">
+          <label class="bif-opt"><input type="checkbox" value="Riders blacklisted/terminated"> Riders blacklisted/terminated</label>
+          <label class="bif-opt"><input type="checkbox" value="HI Removed"> HI Removed</label>
+          <label class="bif-opt"><input type="checkbox" value="TL Removed"> TL Removed</label>
+          <label class="bif-opt"><input type="checkbox" value="Franchise termination raised"> Franchise termination raised</label>
+          <label class="bif-opt"><input type="checkbox" value="Overall loss recovered"> Overall loss recovered</label>
+          <label class="bif-opt"><input type="checkbox" value="Partial loss recovered"> Partial loss recovered</label>
+          <label class="bif-opt"><input type="checkbox" value="Rider absconding"> Rider absconding</label>
+          <label class="bif-opt"><input type="checkbox" value="FPI actions underway"> FPI actions underway</label>
+          <label class="bif-opt"><input type="checkbox" value="Add on recovery expected"> Add on recovery expected</label>
+          <label class="bif-opt"><input type="checkbox" value="Riders inactive"> Riders inactive</label>
+          <label class="bif-opt"><input type="checkbox" value="Briefing done"> Briefing done</label>
+          <label class="bif-opt"><input type="checkbox" value="FR Payout deduction raised"> FR Payout deduction raised</label>
+          <label class="bif-opt"><input type="checkbox" value="Held shipments recovered"> Held shipments recovered</label>
+          <label class="bif-opt"><input type="checkbox" value="Franchise inactive"> Franchise inactive</label>
+          <label class="bif-opt"><input type="checkbox" value="LMA vendor debit raised"> LMA vendor debit raised</label>
+          <label class="bif-opt"><input type="checkbox" value="Rider debit raised"> Rider debit raised</label>
+          <label class="bif-opt"><input type="checkbox" value="HOV merchandise recovered"> HOV merchandise recovered</label>
+          <label class="bif-opt"><input type="checkbox" value="HI salary hold"> HI salary hold</label>
+          <label class="bif-opt"><input type="checkbox" value="Police actions"> Police actions</label>
+          <label class="bif-opt"><input type="checkbox" value="Police complaint registered"> Police complaint registered</label>
+          <label class="bif-opt"><input type="checkbox" value="FIR initiated"> FIR initiated</label>
+          <label class="bif-opt"><input type="checkbox" value="Partner absconding"> Partner absconding</label>
+          <label class="bif-opt"><input type="checkbox" value="Payout/SD on hold"> Payout/SD on hold</label>
+          <label class="bif-opt"><input type="checkbox" value="Visit in pipeline"> Visit in pipeline</label>
+          <label class="bif-opt"><input type="checkbox" value="TL salary hold"> TL salary hold</label>
+          <label class="bif-opt"><input type="checkbox" value="Zero Net risk"> Zero Net risk</label>
+          <label class="bif-opt"><input type="checkbox" value="Remotely handled/long distance"> Remotely handled/long distance</label>
+          <label class="bif-opt"><input type="checkbox" value="Seller fraud"> Seller fraud</label>
+          <label class="bif-opt"><input type="checkbox" value="Franchise VBO case"> Franchise VBO case</label>
+        </div>
+      </div>
+
       <div class="fgrp"><label class="fl">Riders Involved (names / IDs)</label><input type="text" class="fc" placeholder="e.g. Deepak Sharma, ID: 12345" id="us-riders"></div>
       <div class="fgrp"><label class="fl">Police Action Status</label>
         <select class="fc" id="us-police">
@@ -479,9 +538,9 @@ textarea.fc{resize:none;min-height:76px;}
       </div>
       <div class="fgrp"><label class="fl">Remarks</label><textarea class="fc" placeholder="Describe today's ground activity, findings, next steps..." id="us-notes"></textarea></div>
 
-      <!-- HUB IMAGES — always visible, works from all tabs -->
-      <div style="margin-bottom:13px">
-        <label class="fl">🏢 Hub Images <span style="font-weight:400;color:var(--txt3)">(up to 3, optional)</span></label>
+      <!-- HUB IMAGES in form — shown only for unstarted cases (from Cases tab) -->
+      <div id="hub-in-form" style="margin-bottom:13px;display:none">
+        <label class="fl">🏢 Hub Images <span style="font-weight:400;color:var(--txt3)">(up to 3)</span></label>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
           <div>
             <div class="uzone" style="padding:8px 4px;min-height:64px" onclick="triggerUp('hub-img-1')">
@@ -724,17 +783,24 @@ function openUpdate(caseId,sub){
   if(slipAdd) slipAdd.style.display  = "none";
   // Reset hub images so they don't carry over from previous case
   window._hubBase64 = {};
-  [1,2,3].forEach(function(n){
-    var prev  = document.getElementById("hub-prev-"+n);
-    var ph    = document.getElementById("hub-ph-"+n);
-    var thumb = document.getElementById("hub-thumb-"+n);
-    var inp   = document.getElementById("hub-img-"+n);
-    if(prev)  prev.style.display  = "none";
-    if(ph)    ph.style.display    = "block";
-    if(thumb) thumb.src           = "";
-    if(inp)   inp.value           = "";
+  // Reset both the start-working banner hub inputs AND the in-form hub inputs
+  ["","sw-"].forEach(function(prefix){
+    [1,2,3].forEach(function(n){
+      var prev  = document.getElementById(prefix+"hub-prev-"+n);
+      var ph    = document.getElementById(prefix+"hub-ph-"+n);
+      var thumb = document.getElementById(prefix+"hub-thumb-"+n);
+      var inp   = document.getElementById(prefix+"hub-img-"+n);
+      if(prev)  prev.style.display  = "none";
+      if(ph)    ph.style.display    = "block";
+      if(thumb) thumb.src           = "";
+      if(inp)   inp.value           = "";
+    });
   });
+  var swErr = document.getElementById("sw-hub-error");
+  if(swErr) swErr.style.display = "none";
   document.getElementById("cl-utr").value="";
+  // Reset bifurcation checkboxes
+  document.querySelectorAll("#bifurcation-options input[type=checkbox]").forEach(function(cb){ cb.checked=false; });
 
   const c = myCases.find(x=>x.id===caseId);
 
@@ -753,6 +819,10 @@ function openUpdate(caseId,sub){
 
   const isFeatured = c && caseStatusCategory(c.st)==="featured";
   document.getElementById("start-working-banner").style.display = isFeatured ? "block" : "none";
+  // Hub-in-form: show only for unstarted cases (isFeatured) so they can add hub images
+  // Once case is open, hub images are locked (added only once at start)
+  var hubInForm = document.getElementById("hub-in-form");
+  if(hubInForm) hubInForm.style.display = isFeatured ? "block" : "none";
   document.getElementById("sh-update").classList.add("open");
 }
 
@@ -760,11 +830,21 @@ async function markStartWorking(){
   var caseId = document.getElementById("us-id").textContent;
   var c = myCases.find(function(x){ return x.id===caseId; });
   if(!c) return;
+
+  // ── Validate: at least 1 hub image must be selected ──────────────
+  var hasHub = window._hubBase64 && (window._hubBase64[1] || window._hubBase64[2] || window._hubBase64[3]);
+  if(!hasHub){
+    var swErr = document.getElementById("sw-hub-error");
+    if(swErr) swErr.style.display = "block";
+    showToast("⚠ Upload at least 1 hub photo first","warn");
+    return;
+  }
+
   var startDate = new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
-  c.st = "rider_inv";
+  c.st = "open";
   c.startDate = startDate;
   document.getElementById("start-working-banner").style.display="none";
-  document.getElementById("us-status").value="rider_inv";
+  document.getElementById("us-status").value="open";
   showToast("Starting case — uploading hub photos…");
 
   // ── Upload hub images 1/2/3 if present ────────────────────────────
@@ -925,6 +1005,12 @@ async function submitUpdate(){
   // Case was previously closed — sheet will add new row (handled server-side)
 
   const notes  = document.getElementById("us-notes").value.trim();
+  // Read status bifurcation multi-select
+  var bifurcationVals = [];
+  document.querySelectorAll("#bifurcation-options input[type=checkbox]:checked").forEach(function(cb){
+    bifurcationVals.push(cb.value);
+  });
+  var bifurcation = bifurcationVals.join(", ");
   const utr    = document.getElementById("cl-utr").value.trim();
   const amt    = parseInt(document.getElementById("cl-amt")?.value||"0")||0;
   const police = document.getElementById("us-police").value;
@@ -1002,15 +1088,16 @@ async function submitUpdate(){
   // Step 1: Sync base status fields via JSONP GET
   const syncCb = "fpiUpdCb_"+Date.now();
   const syncParams = new URLSearchParams({
-    action         : "update_case_status",
-    case_id        : caseId,
-    status         : status,
-    recovery       : amt,
-    utr            : utr,
-    police         : police,
-    remarks        : notes,
-    case_closed_date: closedDate,
-    callback       : syncCb
+    action           : "update_case_status",
+    case_id          : caseId,
+    status           : status,
+    recovery         : amt,
+    utr              : utr,
+    police           : police,
+    remarks          : notes,
+    status_bifurcation: bifurcation,
+    case_closed_date : closedDate,
+    callback         : syncCb
   });
 
   window[syncCb] = function(sheetResult){
@@ -1433,18 +1520,27 @@ function handleSlipUpload(event){
 }
 // ── Hub image preview (for Start Working) ────────────────────────────
 window._hubBase64 = {};  // {1: base64, 2: base64, 3: base64}
-function handleHubImage(num){
-  var input = document.getElementById("hub-img-"+num);
+function handleHubImage(num, inputId, prevId, phId, thumbId){
+  // Works for both banner inputs (sw-hub-img-N) and form inputs (hub-img-N)
+  var iId    = inputId  || "hub-img-"+num;
+  var pId    = prevId   || "hub-prev-"+num;
+  var phElId = phId     || "hub-ph-"+num;
+  var tId    = thumbId  || "hub-thumb-"+num;
+  var input  = document.getElementById(iId);
   if(!input || !input.files || !input.files[0]) return;
   var reader = new FileReader();
   reader.onload = function(e){
+    if(!window._hubBase64) window._hubBase64 = {};
     window._hubBase64[num] = e.target.result;
-    var prev  = document.getElementById("hub-prev-"+num);
-    var ph    = document.getElementById("hub-ph-"+num);
-    var thumb = document.getElementById("hub-thumb-"+num);
+    var prev  = document.getElementById(pId);
+    var ph    = document.getElementById(phElId);
+    var thumb = document.getElementById(tId);
     if(thumb) thumb.src = e.target.result;
     if(prev)  prev.style.display = "block";
     if(ph)    ph.style.display   = "none";
+    // Hide validation error if user uploads
+    var swErr = document.getElementById("sw-hub-error");
+    if(swErr) swErr.style.display = "none";
     showToast("Hub photo "+num+" attached ✓");
   };
   reader.readAsDataURL(input.files[0]);
@@ -11601,14 +11697,24 @@ async function loadMyCases(){
 function fpFromType(t){if(!t)return"fp-q";t=t.toLowerCase();if(t.includes("x-ray"))return"fp-x";if(t.includes("pv"))return"fp-p";if(t.includes("dbnu"))return"fp-d";if(t.includes("rtod"))return"fp-r";if(t.includes("lh"))return"fp-l";return"fp-q";}
 function statusKeyFromLabel(label){
   const map={
-    "rider investigation" :"rider_inv",
-    "hi/tl investigation" :"hi_tl_inv",
-    "absconded·fir filed"  :"rider_abs_action",
-    "absconded·fir pend"   :"rider_abs_pending",
-    "hi/tl absconded"      :"hi_tl_abs",
-    "cx fraud"             :"cx_fraud",
-    "other pending"        :"other_pending",
+    // New simplified statuses
+    "open"                 :"open",
+    "wip"                  :"wip",
+    "wip — work in progress":"wip",
+    "work in progress"     :"wip",
+    "partially closed"     :"partial_closed",
+    "partial closed"       :"partial_closed",
+    "partial_closed"       :"partial_closed",
+    "case closed"          :"closed",
     "closed"               :"closed",
+    // Legacy statuses (for backward compat with existing sheet data)
+    "rider investigation"  :"open",
+    "hi/tl investigation"  :"open",
+    "absconded·fir filed"  :"open",
+    "absconded·fir pend"   :"open",
+    "hi/tl absconded"      :"open",
+    "cx fraud"             :"open",
+    "other pending"        :"open",
     "unassigned"           :"unassigned",
     "pending date"         :"pending_date"
   };
@@ -11802,8 +11908,9 @@ async function submitEvidence(){
 // ── Case status categories ────────────────────────────────
 function caseStatusCategory(st){
   if(st==="closed") return "closed";
-  if(["rider_inv","hi_tl_inv","rider_abs_action","rider_abs_pending",
-      "hi_tl_abs","cx_fraud","other_pending","wip"].includes(st)) return "open";
+  if(["open","wip","partial_closed",
+      "rider_inv","hi_tl_inv","rider_abs_action","rider_abs_pending",
+      "hi_tl_abs","cx_fraud","other_pending"].includes(st)) return "open";
   return "featured";
 }
 
@@ -11868,7 +11975,7 @@ function caseCardFull(c){
 // ── Render cases pages ────────────────────────────────────
 function renderPortalCases(){
   const highAlert=myCases.filter(c=>c.pri==="High"&&c.st!=="closed");
-  const activePg =myCases.filter(c=>["rider_inv","hi_tl_inv","other_pending","cx_fraud","rider_abs_action","rider_abs_pending","wip"].includes(c.st));
+  const activePg =myCases.filter(c=>["open","wip","partial_closed","rider_inv","hi_tl_inv","other_pending","cx_fraud","rider_abs_action","rider_abs_pending"].includes(c.st));
   const closed   =myCases.filter(c=>c.st==="closed").slice(0,3);
   renderAlertsList(highAlert,activePg,closed);
   renderFeaturedCases();
@@ -11993,11 +12100,16 @@ function renderHistory(){
     return;
   }
   updates.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const statusColors={rider_inv:"var(--acc)",hi_tl_inv:"var(--acc)",closed:"var(--grn)",
-    rider_abs_action:"var(--red)",rider_abs_pending:"var(--red)",cx_fraud:"var(--pur)",other_pending:"var(--txt3)"};
-  const statusLabels={rider_inv:"Rider investigation",hi_tl_inv:"HI/TL investigation",
-    closed:"Case Closed",rider_abs_action:"Absconded — FIR filed",
-    rider_abs_pending:"Absconded — FIR pending",cx_fraud:"Customer fraud",other_pending:"Pending"};
+  const statusColors={
+    open:"var(--acc)",wip:"var(--org)",partial_closed:"var(--yel)",closed:"var(--grn)",
+    rider_inv:"var(--acc)",hi_tl_inv:"var(--acc)",
+    rider_abs_action:"var(--red)",rider_abs_pending:"var(--red)",
+    cx_fraud:"var(--pur)",other_pending:"var(--txt3)"};
+  const statusLabels={
+    open:"Open",wip:"WIP",partial_closed:"Partially Closed",closed:"Case Closed",
+    rider_inv:"Open",hi_tl_inv:"Open",
+    rider_abs_action:"Open",rider_abs_pending:"Open",
+    cx_fraud:"Open",other_pending:"Open"};
   el.innerHTML=`<div class="slbl">MY UPDATE HISTORY (${updates.length})</div>`+
     updates.map(u=>{
       const col=statusColors[u.status]||"var(--org)";
