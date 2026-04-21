@@ -12390,7 +12390,9 @@ function renderHistory(){
           caseContinued : row["Case Continued"]      || "",
           hub           : row["Hub"]                 || "",
           city          : row["City"]                || "",
-          closedDate    : row["Closed Date"]         || ""
+          closedDate    : row["Closed Date"]         || "",
+          agentName     : row["Agent Name"]           || "",
+          agentEmail    : row["Agent Email"]          || ""
         };
       });
       // Also merge unsaved session updates (belt-and-suspenders)
@@ -12500,72 +12502,99 @@ function renderHistoryList(el, updates){
 function openHistoryDetail(idx){
   var u = (window._historyData||[])[idx];
   if(!u) return;
+
   var statusLabels={open:"Open",wip:"WIP",partial_closed:"Partially Closed",closed:"Case Closed",
     rider_inv:"Open",hi_tl_inv:"Open",rider_abs_action:"Open",rider_abs_pending:"Open",
     cx_fraud:"Open",other_pending:"Open"};
-  var statusColors={open:"var(--acc)",wip:"var(--org)",partial_closed:"var(--yel)",closed:"var(--grn)"};
-  var lbl = statusLabels[u.status]||u.status;
-  var col = statusColors[u.status]||"var(--org)";
+  var statusColors={
+    open:"#1d4ed8",wip:"#ea580c",partial_closed:"#ca8a04",closed:"#16a34a",
+    rider_inv:"#1d4ed8",hi_tl_inv:"#1d4ed8",rider_abs_action:"#dc2626",
+    rider_abs_pending:"#dc2626",cx_fraud:"#7c3aed",other_pending:"#6b7280"};
+  var lbl = statusLabels[u.status] || u.status;
+  var col = statusColors[u.status] || "#ea580c";
 
   // Header
-  document.getElementById("hd-caseid").textContent = u.caseId+(u.caseType?" · "+u.caseType:"");
-  document.getElementById("hd-datetime").textContent = u.date;
+  document.getElementById("hd-caseid").textContent = u.caseId + (u.caseType ? " · " + u.caseType : "");
+  document.getElementById("hd-datetime").textContent = u.date + (u.agentName ? " · " + u.agentName : "");
 
-  // Build detail rows — every field
-  function row(label, value, accent){
-    if(!value && value !== 0) return "";
-    return `<div style="display:flex;gap:0;border-bottom:1px solid var(--sf2)">
-      <div style="width:42%;padding:9px 12px;font-size:11px;font-weight:700;color:var(--txt3);font-family:var(--mono);letter-spacing:.03em;text-transform:uppercase;flex-shrink:0">${label}</div>
-      <div style="flex:1;padding:9px 12px;font-size:12px;color:${accent||"var(--navy)"};font-weight:${accent?"700":"500"}">${value}</div>
-    </div>`;
+  // Helper: single field row — only renders if value is non-empty
+  function row(label, value, style){
+    var v = (value === 0 || value === "0") ? value : (value || "");
+    var isZero = (v === 0 || v === "0" || v === 0);
+    if(!v && !isZero) return "";
+    return '<div style="display:flex;border-bottom:1px solid var(--sf2)">'
+      + '<div style="width:44%;padding:9px 12px;font-size:10.5px;font-weight:700;color:var(--txt3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.03em;flex-shrink:0;line-height:1.4">' + label + '</div>'
+      + '<div style="flex:1;padding:9px 12px;font-size:12px;' + (style||"color:var(--navy);font-weight:500") + ';line-height:1.4;word-break:break-word">' + String(v) + '</div>'
+      + '</div>';
+  }
+
+  // Helper: render a card section only if it has content
+  function section(rows){
+    var content = rows.join("");
+    if(!content) return "";
+    return '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">' + content + '</div>';
   }
 
   var body = "";
-  // Status banner
-  body += `<div style="background:${col};border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-    <span style="font-size:14px;font-weight:800;color:#fff;font-family:var(--disp)">${lbl}</span>
-    <span style="font-size:10px;color:rgba(255,255,255,.8);font-family:var(--mono)">${u.date}</span>
-  </div>`;
 
-  body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
-  body += row("Case ID",      u.caseId);
-  body += row("Category",     u.caseType);
-  body += row("Hub / City",   [u.hub,u.city].filter(Boolean).join(", "));
-  body += '</div>';
+  // ── Status banner ──────────────────────────────────────────────────
+  body += '<div style="background:' + col + ';border-radius:9px;padding:11px 15px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">'
+    + '<span style="font-size:15px;font-weight:800;color:#fff;font-family:var(--disp)">' + lbl + '</span>'
+    + '<span style="font-size:10px;color:rgba(255,255,255,.8);font-family:var(--mono)">' + u.date + '</span>'
+    + '</div>';
 
-  body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
-  // Recovery highlighted prominently
-  if(u.recovery > 0){
-    body += `<div style="display:flex;gap:0;border-bottom:1px solid var(--sf2)">
-      <div style="width:42%;padding:9px 12px;font-size:11px;font-weight:700;color:var(--txt3);font-family:var(--mono);letter-spacing:.03em;text-transform:uppercase;flex-shrink:0">Recovery</div>
-      <div style="flex:1;padding:9px 12px;font-size:14px;color:var(--grn);font-weight:800">₹${Number(u.recovery).toLocaleString("en-IN")}</div>
-    </div>`;
+  // ── Section 1: Case Info ───────────────────────────────────────────
+  body += section([
+    row("Case ID",    u.caseId,   "color:var(--navy);font-weight:700;font-family:var(--mono)"),
+    row("Category",   u.caseType),
+    row("Hub",        u.hub),
+    row("City",       u.city),
+    row("Updated By", u.agentName || u.agentEmail)
+  ]);
+
+  // ── Section 2: Financial ───────────────────────────────────────────
+  var recVal = Number(u.recovery||0);
+  var recRow = "";
+  if(recVal > 0){
+    recRow = '<div style="display:flex;border-bottom:1px solid var(--sf2)">'
+      + '<div style="width:44%;padding:9px 12px;font-size:10.5px;font-weight:700;color:var(--txt3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.03em;flex-shrink:0">Recovery</div>'
+      + '<div style="flex:1;padding:9px 12px;font-size:15px;font-weight:800;color:#16a34a">₹' + recVal.toLocaleString("en-IN") + '</div>'
+      + '</div>';
   }
-  body += row("UTR / Ref",    u.utr,    "var(--acc)");
-  body += row("Police Action",u.police && u.police!=="No Police Action" ? u.police : "");
-  body += row("Photos",       u.photos > 0 ? u.photos+" photo"+(u.photos>1?"s":"")+" uploaded" : "");
-  body += '</div>';
+  body += section([
+    recRow,
+    row("UTR / Ref No",  u.utr,    "color:var(--acc);font-weight:700"),
+    row("Police Action", (u.police && u.police !== "No Police Action") ? u.police : ""),
+    row("Evidence Photos", u.photos > 0 ? u.photos + " photo" + (u.photos > 1 ? "s" : "") + " uploaded" : "")
+  ]);
 
-  body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
-  body += row("Bifurcation",  u.bifurcation);
-  body += row("Riders",       u.riders);
-  body += row("Riders Count", u.ridersCount > 0 ? u.ridersCount : "");
-  body += row("Case Continued", u.caseContinued);
-  body += '</div>';
+  // ── Section 3: Actions & Status ───────────────────────────────────
+  body += section([
+    row("Status Bifurcation", u.bifurcation),
+    row("Riders Involved",    u.riders),
+    row("Riders Count",       (u.ridersCount > 0) ? u.ridersCount : ""),
+    row("Case Continued",     u.caseContinued),
+    row("Closed Date",        u.closedDate, "color:var(--grn);font-weight:700")
+  ]);
 
-  var allNotes = [u.closureNotes, u.notes].filter(Boolean).join(" · ");
-  if(allNotes){
-    body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
-    body += `<div style="padding:9px 12px 4px;font-size:11px;font-weight:700;color:var(--txt3);font-family:var(--mono);letter-spacing:.03em;text-transform:uppercase">Remarks / Notes</div>`;
-    body += `<div style="padding:4px 12px 12px;font-size:12px;color:var(--navy);line-height:1.6;white-space:pre-wrap">${allNotes}</div>`;
-    body += '</div>';
+  // ── Section 4: Remarks / Notes ────────────────────────────────────
+  var remarksTxt  = (u.notes||"").trim();
+  var closureTxt  = (u.closureNotes||"").trim();
+  var notesBlock  = "";
+  if(remarksTxt || closureTxt){
+    notesBlock = '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
+    if(remarksTxt){
+      notesBlock += '<div style="padding:8px 12px 3px;font-size:10.5px;font-weight:700;color:var(--txt3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.03em">Remarks</div>'
+        + '<div style="padding:3px 12px 10px;font-size:12px;color:var(--navy);line-height:1.6;white-space:pre-wrap">' + remarksTxt + '</div>';
+    }
+    if(closureTxt){
+      notesBlock += (remarksTxt ? '<div style="border-top:1px solid var(--sf2)"></div>' : '')
+        + '<div style="padding:8px 12px 3px;font-size:10.5px;font-weight:700;color:var(--txt3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.03em">Closure Notes</div>'
+        + '<div style="padding:3px 12px 10px;font-size:12px;color:var(--navy);line-height:1.6;white-space:pre-wrap">' + closureTxt + '</div>';
+    }
+    notesBlock += '</div>';
   }
-
-  if(u.closedDate){
-    body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
-    body += row("Closed Date", u.closedDate, "var(--grn)");
-    body += '</div>';
-  }
+  body += notesBlock;
 
   document.getElementById("hd-body").innerHTML = body;
   document.getElementById("sh-hist-detail").classList.add("open");
