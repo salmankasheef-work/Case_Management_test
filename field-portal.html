@@ -447,6 +447,22 @@ textarea.fc{resize:none;min-height:76px;}
   </div>
 </div>
 
+<!-- HISTORY DETAIL SHEET -->
+<div class="ov" id="sh-hist-detail">
+  <div class="ovbg" onclick="closeSheet('sh-hist-detail')"></div>
+  <div class="sheet">
+    <div class="sh"></div>
+    <div class="shdr">
+      <div>
+        <div class="stitle" id="hd-caseid">Update Detail</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--txt3)" id="hd-datetime"></div>
+      </div>
+      <button class="sclose" onclick="closeSheet('sh-hist-detail')">×</button>
+    </div>
+    <div class="sbody" id="hd-body"></div>
+  </div>
+</div>
+
 <!-- UPDATE SHEET -->
 <div class="ov" id="sh-update">
   <div class="ovbg" onclick="closeSheet('sh-update')"></div>
@@ -912,8 +928,31 @@ async function markStartWorking(){
       document.head.appendChild(swS);
       setTimeout(function(){try{swS.remove();delete window[swCb];}catch(e){}},10000);
     }catch(e){}
+    // ── Log "Start Working" to Case_History sheet ──────────────────
+    try{
+      window._fpiUploadSeq = (window._fpiUploadSeq||0)+1;
+      var _swlcb = "fpiSwLogCb_"+window._fpiUploadSeq;
+      var _swlp  = new URLSearchParams({
+        action       : "log_update",
+        case_id      : caseId,
+        agent_email  : currentUser.email||"",
+        agent_name   : currentUser.name||"",
+        status       : "open",
+        remarks      : "Case started — Start Working",
+        hub          : c ? (c.hub||"")  : "",
+        city         : c ? (c.city||"") : "",
+        category     : c ? (c.cat||"")  : "",
+        callback     : _swlcb
+      });
+      window[_swlcb]=function(d){try{delete window[_swlcb];}catch(e){}};
+      var _swls=document.createElement("script");
+      _swls.src=APPS_SCRIPT_URL+"?"+_swlp.toString();
+      document.head.appendChild(_swls);
+      setTimeout(function(){try{_swls.remove();delete window[_swlcb];}catch(e){}},10000);
+    }catch(_swle){}
     showToast("✅ Case started — "+startDate);
     renderCasesTab(); renderOpenCases(); renderWipCases();
+    renderHistory();
   }
 
   // Collect hub images that were selected
@@ -11523,7 +11562,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 // ══════════════════════════════════════════════════════════
 const PORTAL_SHEET_ID = "1GWG94A2LyvP7QRBcgsUWOLJPtCwhVDpdkKmRKHMuS_w";
 // ★ CHANGE THIS URL if you redeploy Apps Script
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtG-mkDh2bwlFRJaX3UxBI39tszTBNvq9tyKEwWRDJ6IwY_YXrQFWv6TjxKhdagG2vMQ/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZbJQEbW4UnFueRSLW3EIgQQLmwSu4ZHEGztml87CumO_y8Y94jkT6d7FdY-OUKICynQ/exec";
 const COLORS = ["#3b8ef8","#27c77a","#9b72f9","#f5c542","#f04f2b","#ff7eb3","#22d3ee","#a78bfa","#fb923c","#34d399"];
 
 let currentUser  = {name:"",email:"",initials:"",pod:"",zone:"",desig:"",color:""};
@@ -12407,6 +12446,9 @@ function renderHistoryFromLocal(el){
   renderHistoryList(el, updates);
 }
 
+// Global store for history data (indexed for openHistoryDetail)
+window._historyData = [];
+
 function renderHistoryList(el, updates){
   if(!updates.length){
     el.innerHTML='<div class="slbl">MY UPDATE HISTORY</div>'
@@ -12414,6 +12456,9 @@ function renderHistoryList(el, updates){
     return;
   }
   updates.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  // Store in global so openHistoryDetail can access by index
+  window._historyData = updates;
+
   const statusColors={
     open:"var(--acc)",wip:"var(--org)",partial_closed:"var(--yel)",closed:"var(--grn)",
     rider_inv:"var(--acc)",hi_tl_inv:"var(--acc)",
@@ -12424,32 +12469,106 @@ function renderHistoryList(el, updates){
     rider_inv:"Open",hi_tl_inv:"Open",
     rider_abs_action:"Open",rider_abs_pending:"Open",
     cx_fraud:"Open",other_pending:"Open"};
+
   el.innerHTML=`<div class="slbl">MY UPDATE HISTORY (${updates.length})</div>`+
-    updates.map(u=>{
+    updates.map((u, idx)=>{
       const col=statusColors[u.status]||"var(--org)";
-      const lbl=statusLabels[u.status]||u.status||u.status;
-      // ── Badges row ──
+      const lbl=statusLabels[u.status]||u.status;
+      // ── Summary badges (shown on card) ──
       const tags=[];
       if(u.recovery > 0) tags.push(`<span class="bdg" style="font-size:9px;background:rgba(22,163,74,.12);color:var(--grn);border:1px solid rgba(22,163,74,.25)">₹${Number(u.recovery).toLocaleString("en-IN")} recovered</span>`);
       if(u.utr)           tags.push(`<span class="bdg bg" style="font-size:9px">UTR: ${u.utr}</span>`);
       if(u.police && u.police!=="No Police Action") tags.push(`<span class="bdg by" style="font-size:9px">${u.police}</span>`);
       if(u.photos > 0)    tags.push(`<span class="bdg" style="font-size:9px;background:rgba(29,78,216,.07);color:var(--acc);border:1px solid rgba(29,78,216,.2)">${u.photos} photo${u.photos>1?"s":""}</span>`);
-      if(u.caseContinued) tags.push(`<span class="bdg" style="font-size:9px;background:rgba(124,58,237,.08);color:var(--pur);border:1px solid rgba(124,58,237,.2)">${u.caseContinued}</span>`);
-      // ── Detail lines ──
-      const details=[];
-      if(u.riders)      details.push(`<span style="color:var(--txt3)">Riders:</span> ${u.riders}`);
-      if(u.ridersCount) details.push(`<span style="color:var(--txt3)">Count:</span> ${u.ridersCount}`);
-      if(u.hub||u.city) details.push(`<span style="color:var(--txt3)">Hub:</span> ${[u.hub,u.city].filter(Boolean).join(", ")}`);
-      if(u.bifurcation) details.push(`<span style="color:var(--txt3)">Bifurcation:</span> ${u.bifurcation}`);
       const noteTxt = u.closureNotes || u.notes || "";
       return`<div class="hi" style="border-left:3px solid ${col}">
         <div class="hitop"><div class="histatus">${lbl}</div><div class="hitime">${u.date}</div></div>
         <div class="hicase" style="font-weight:600">${u.caseId}${u.caseType?" · "+u.caseType:""}</div>
-        ${noteTxt?`<div class="hinote" style="margin-top:4px">${noteTxt}</div>`:""}
-        ${details.length?`<div style="margin-top:5px;font-size:10.5px;color:var(--txt);display:flex;flex-direction:column;gap:2px">${details.map(d=>`<div>${d}</div>`).join("")}</div>`:""}
+        ${noteTxt?`<div class="hinote" style="margin-top:4px;white-space:pre-wrap">${noteTxt}</div>`:""}
         ${tags.length?`<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap">${tags.join("")}</div>`:""}
+        <div style="margin-top:8px;text-align:right">
+          <button class="btn" onclick="openHistoryDetail(${idx})"
+            style="font-size:10.5px;padding:5px 13px;background:var(--sf);border:1.5px solid var(--bd);color:var(--acc);font-weight:700">
+            View Details →
+          </button>
+        </div>
       </div>`;
     }).join("");
+}
+
+// ── Open History Detail bottom sheet ─────────────────────────────────
+function openHistoryDetail(idx){
+  var u = (window._historyData||[])[idx];
+  if(!u) return;
+  var statusLabels={open:"Open",wip:"WIP",partial_closed:"Partially Closed",closed:"Case Closed",
+    rider_inv:"Open",hi_tl_inv:"Open",rider_abs_action:"Open",rider_abs_pending:"Open",
+    cx_fraud:"Open",other_pending:"Open"};
+  var statusColors={open:"var(--acc)",wip:"var(--org)",partial_closed:"var(--yel)",closed:"var(--grn)"};
+  var lbl = statusLabels[u.status]||u.status;
+  var col = statusColors[u.status]||"var(--org)";
+
+  // Header
+  document.getElementById("hd-caseid").textContent = u.caseId+(u.caseType?" · "+u.caseType:"");
+  document.getElementById("hd-datetime").textContent = u.date;
+
+  // Build detail rows — every field
+  function row(label, value, accent){
+    if(!value && value !== 0) return "";
+    return `<div style="display:flex;gap:0;border-bottom:1px solid var(--sf2)">
+      <div style="width:42%;padding:9px 12px;font-size:11px;font-weight:700;color:var(--txt3);font-family:var(--mono);letter-spacing:.03em;text-transform:uppercase;flex-shrink:0">${label}</div>
+      <div style="flex:1;padding:9px 12px;font-size:12px;color:${accent||"var(--navy)"};font-weight:${accent?"700":"500"}">${value}</div>
+    </div>`;
+  }
+
+  var body = "";
+  // Status banner
+  body += `<div style="background:${col};border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:14px;font-weight:800;color:#fff;font-family:var(--disp)">${lbl}</span>
+    <span style="font-size:10px;color:rgba(255,255,255,.8);font-family:var(--mono)">${u.date}</span>
+  </div>`;
+
+  body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
+  body += row("Case ID",      u.caseId);
+  body += row("Category",     u.caseType);
+  body += row("Hub / City",   [u.hub,u.city].filter(Boolean).join(", "));
+  body += '</div>';
+
+  body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
+  // Recovery highlighted prominently
+  if(u.recovery > 0){
+    body += `<div style="display:flex;gap:0;border-bottom:1px solid var(--sf2)">
+      <div style="width:42%;padding:9px 12px;font-size:11px;font-weight:700;color:var(--txt3);font-family:var(--mono);letter-spacing:.03em;text-transform:uppercase;flex-shrink:0">Recovery</div>
+      <div style="flex:1;padding:9px 12px;font-size:14px;color:var(--grn);font-weight:800">₹${Number(u.recovery).toLocaleString("en-IN")}</div>
+    </div>`;
+  }
+  body += row("UTR / Ref",    u.utr,    "var(--acc)");
+  body += row("Police Action",u.police && u.police!=="No Police Action" ? u.police : "");
+  body += row("Photos",       u.photos > 0 ? u.photos+" photo"+(u.photos>1?"s":"")+" uploaded" : "");
+  body += '</div>';
+
+  body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
+  body += row("Bifurcation",  u.bifurcation);
+  body += row("Riders",       u.riders);
+  body += row("Riders Count", u.ridersCount > 0 ? u.ridersCount : "");
+  body += row("Case Continued", u.caseContinued);
+  body += '</div>';
+
+  var allNotes = [u.closureNotes, u.notes].filter(Boolean).join(" · ");
+  if(allNotes){
+    body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
+    body += `<div style="padding:9px 12px 4px;font-size:11px;font-weight:700;color:var(--txt3);font-family:var(--mono);letter-spacing:.03em;text-transform:uppercase">Remarks / Notes</div>`;
+    body += `<div style="padding:4px 12px 12px;font-size:12px;color:var(--navy);line-height:1.6;white-space:pre-wrap">${allNotes}</div>`;
+    body += '</div>';
+  }
+
+  if(u.closedDate){
+    body += '<div style="background:#fff;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:12px">';
+    body += row("Closed Date", u.closedDate, "var(--grn)");
+    body += '</div>';
+  }
+
+  document.getElementById("hd-body").innerHTML = body;
+  document.getElementById("sh-hist-detail").classList.add("open");
 }
 
 function renderProfile(){
