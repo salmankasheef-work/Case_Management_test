@@ -1320,10 +1320,26 @@ async function submitUpdate(){
         window._hubBase64 = {};
       }
 
-      // ── Closure: upload slips then send email ──────────────────────
+      // ── Upload slips: closed → upload then email; partial_closed → upload only ──
       if(status==="closed"){
         _uploadAllSlips(caseId, function(slipUrls){
           _doClosureEmail(caseId, c, amt, utr, police, closureNotes, evidUrls, closedDate, slipUrls);
+        });
+      } else if(status==="partial_closed"){
+        _uploadAllSlips(caseId, function(slipUrls){
+          // No email for partial_closed — slips are uploaded and saved to sheet only
+          if(slipUrls && slipUrls.length){
+            var pcb = "fpiPcSlip_"+Date.now();
+            var pp  = new URLSearchParams({
+              action:"update_case_status", case_id:caseId,
+              utr_slip_url:slipUrls.join(", "), callback:pcb
+            });
+            window[pcb]=function(){try{delete window[pcb];}catch(e){}};
+            var ps=document.createElement("script");
+            ps.src=APPS_SCRIPT_URL+"?"+pp.toString();
+            document.head.appendChild(ps);
+            setTimeout(function(){try{ps.remove();delete window[pcb];}catch(e){}},10000);
+          }
         });
       }
     }
